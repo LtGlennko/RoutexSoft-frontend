@@ -1,0 +1,49 @@
+.v-appBar{
+    height: 66px !important;
+  }
+  
+  .v-toolbar__content{
+    height: 66px !important;
+  }
+  
+  .v-toolbar__title{
+    margin-right: 20px;
+    text-align: center;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+  }
+  
+  .cargo{
+    font-size: small !important;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .v-btn__content{
+    margin-right: 20px;
+  }
+  
+  .theme--light.v-btn.v-btn--icon {
+    color: rgba(0, 0, 0, 0.74);
+  }
+
+  .v-toolbar__content .v-btn.v-btn--icon.v-size--default, .v-toolbar__extension .v-btn.v-btn--icon.v-size--default {
+      height: 55px !important; 
+      width: 90px !important;
+      margin-left: 10px;
+  }
+  
+  .v-btn--icon.v-size--default .v-icon, .v-btn--fab.v-size--default .v-icon {
+      font-size: 37px !important;
+      margin: center;
+  }
+  
+  .v-btn--round {
+      border-radius: 0% !important;
+  }
+  
+  .smile_face{
+    width: 3.8%;
+    height: auto;
+    margin-right: 30px;
+  }
