@@ -1,11 +1,16 @@
 .content_Title{
     background-color: #003A3C;
+    height: 65px !important;
 }
 
 
-.title{
-    font-size: x-large;
+.v-application .title {
+    font-size: 25px !important; 
     font-weight: bold;
+}
+
+.v-application ul, .v-application ol {
+    padding-left: 0px;
 }
 
 .v-navigation-drawer{
@@ -25,7 +30,7 @@
 }
 
 .v-list-item__icon {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .theme--light.v-navigation-drawer {
