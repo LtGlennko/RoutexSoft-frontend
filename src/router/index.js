@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Principal from '../views/Principal/Principal.vue'
+import Search from '../views/Search.vue'
 
 Vue.use(VueRouter)
 
@@ -62,8 +63,12 @@ Vue.use(VueRouter)
     path: '/Search',
     name: 'Search',
     component: () => import('../views/Search.vue')
+  },
+  {
+    path: '/Manager',
+    name: 'Manager',
+    component: Manager
   }
-  
 ]
 
 const router = new VueRouter({

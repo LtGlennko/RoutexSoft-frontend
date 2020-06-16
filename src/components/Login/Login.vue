@@ -93,7 +93,8 @@ export default {
 				SideB.setRole("Registrador")
 			}
 			else if(this.email=="3"){
-
+				this.$router.push('/Manager')
+				SideB.setRole("Gerente")
 			}
 			else if(this.email=="4"){
 
