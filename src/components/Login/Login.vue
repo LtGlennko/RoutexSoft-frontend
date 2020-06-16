@@ -16,12 +16,14 @@
 			</v-card-title>
 			<v-card-text>
 				<v-form>
-					<v-text-field
+					<!-- Se cambiará el keyup.enter para contraseña cuando se tenga usuarios-->
+					<v-text-field 
 						color="teal darken-3"
 						v-model="email"
 						:rules="emailRules"
 						label="Correo electrónico"
 						prepend-icon="mdi-account-circle"
+						v-on:keyup.enter="validate()"
 						required
 					/>
 					<v-text-field
@@ -46,7 +48,7 @@
 					<div class="my-2">
 						<v-btn
 							color="success"
-							@click="validate"
+							@click="validate()"
 						>
 							Acceder
 						</v-btn>
@@ -58,12 +60,14 @@
 				</v-row>
 			</v-card-actions>
 		</v-card>
-	</v-app>    
+	</v-app>
 </template>
 
 <script>
 
 import SideB from '@/components/Common/sidebar.vue'
+import {mapState, mapActions} from 'vuex'
+
 export default {
     name: 'Login',
 	data: () => ({
@@ -77,20 +81,18 @@ export default {
 		]
 	}),
 
-	components: {
-		SideB
-	},
-
 	methods: {
+		...mapActions(['setActionRole']),
 		validate () {
 			if(this.email=="1"){
 				this.$router.push('/ManageUsers')
-				console.log('Se pasara el rol')
-				SideB.setRole("Administrador")
+				console.log('Se pasara el rol1')
+				this.setActionRole("Administrador")
 			}
 			else if(this.email=="2"){
 				this.$router.push('/SelectClients')
-				SideB.setRole("Registrador")
+				console.log('Se pasara el rol2')
+				this.setActionRole("Registrador")
 			}
 			else if(this.email=="3"){
 
