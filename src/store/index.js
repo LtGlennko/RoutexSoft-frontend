@@ -14,6 +14,9 @@ export default new Vuex.Store({
     setActFightPlans(state,edit){
       state.editFightPlan = edit;
     },
+    setActRole(state,edit){
+      state.editRole = edit;
+    },
   },
   actions: {
     setActionUser(context,edit){
@@ -21,6 +24,9 @@ export default new Vuex.Store({
     },
     setActionFightPlans(context,edit){
       context.commit('setActFightPlans',edit);
+    },
+    setActionRole(context,edit){
+      context.commit('setActRole',edit);
     },
   },
   modules: {

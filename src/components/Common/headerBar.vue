@@ -5,11 +5,12 @@
         <img class="img-fluid smile_face" src="@/images/smile_face.png" alt=""> 
         <v-toolbar-title>
           GLENN LOZANO TAPIA 
-          <div class="cargo">
-            ADMINISTRADOR
-          </div>
+          <v-toolbar-items
+            class="cargo"
+            v-text="editRole">
+          </v-toolbar-items>
         </v-toolbar-title>
-        <v-btn icon >
+        <v-btn icon @click="logout()">
           <v-icon left>mdi-logout</v-icon> Salir
         </v-btn>
       </v-app-bar>
@@ -21,10 +22,18 @@
 </style>
 
 <script>
+
+  import { mapState, mapActions } from 'vuex';
+
   export default {
     name: 'headerBar',
+    computed :{
+        ...mapState (['editRole']),
+    },
     methods:{
-      
+      logout () {
+				this.$router.push('/Login')
+      }
     }
   }
 </script>
