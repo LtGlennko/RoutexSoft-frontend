@@ -6,7 +6,7 @@
                     <!-- FORM TO ADD A USER-->
                     <v-form v-if="!editUser">
                         <v-card-title class="titleCard">
-                            Gestionar Usuarios > Añadir Usuarios
+                            Gestionar Usuarios > Añadir Usuario
                         </v-card-title>
                     
                         <v-row justify="center" class="ml-5 mr-5">
@@ -94,7 +94,7 @@
                     <!-- FORM TO MODIFY A USER-->
                     <v-form v-if="editUser">
                         <v-card-title class="titleCard">
-                            Gestionar Usuarios > Modificar Usuarios
+                            Gestionar Usuarios > Modificar Usuario
                         </v-card-title>
                     
                         <v-row justify="center" class="ml-5 mr-5">
@@ -105,6 +105,7 @@
                                     :rules="[() => !!name || 'Este campo es requerido']"
                                     :error-messages="errorMessages"
                                     label="Nombres"
+                                
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" >
@@ -170,7 +171,7 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col cols="6" class="colButton">
-                                    <v-btn class="mb-2 buttonCreate" @click=createUser()>Guardar</v-btn>
+                                    <v-btn class="mb-2 buttonCreate" @click=modifyUser()>Guardar</v-btn>
                                 </v-col>
                                 <v-col cols="6" class="colButton">
                                     <v-btn class="mb-2 buttonCancel" @click=$router.go(-1)>Cancelar</v-btn>
@@ -240,6 +241,13 @@ export default {
                 icon: 'success',
                 title: '<p style="font-family:Roboto;">Enhorabuena</p>',
                 html: '<p style="font-family:Roboto;">Usuario creado satisfactoriamente</p>'
+            })
+        },
+        modifyUser(){
+            Swal.fire({
+                icon: 'success',
+                title: '<p style="font-family:Roboto;">Enhorabuena</p>',
+                html: '<p style="font-family:Roboto;">Usuario modificado satisfactoriamente</p>'
             })
         }
             

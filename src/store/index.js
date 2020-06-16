@@ -11,10 +11,16 @@ export default new Vuex.Store({
     setActUser(state,edit){
       state.editUser = edit;
     },
+    setActFightPlans(state,edit){
+      state.editFightPlan = edit;
+    },
   },
   actions: {
     setActionUser(context,edit){
       context.commit('setActUser',edit);
+    },
+    setActionFightPlans(context,edit){
+      context.commit('setActFightPlans',edit);
     },
   },
   modules: {
