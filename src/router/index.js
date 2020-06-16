@@ -48,6 +48,11 @@ Vue.use(VueRouter)
       },
     ]
   },
+  {
+    path: '/Login',
+    name: 'Login',
+    component: () => import('../components/Login/Login.vue')
+  }
   
 ]
 
