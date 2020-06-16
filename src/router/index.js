@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Principal from '../views/Principal.vue'
+import Principal from '../views/Principal/Principal.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +30,21 @@ Vue.use(VueRouter)
         path: '/ConfigureParameters',
         name: 'ConfigureParameters',
         component: () => import('../components/Administrator/ConfigureParameters.vue')
+      },
+      {
+        path: '/CreateUser',
+        name: 'CreateUser',
+        component: () => import('../components/Administrator/CreateUser.vue')
+      },
+      {
+        path: '/ModifyWarehouses',
+        name: 'ModifyWarehouses',
+        component: () => import('../components/Administrator/ModifyWarehouses.vue')
+      },
+      {
+        path: '/CreateFlightPlan',
+        name: 'CreateFlightPlan',
+        component: () => import('../components/Administrator/CreateFlightPlan.vue')
       },
     ]
   },

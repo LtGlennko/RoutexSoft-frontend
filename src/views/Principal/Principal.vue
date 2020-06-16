@@ -2,16 +2,15 @@
     <div id="principal">
         <headerBar/>
         <sidebar/>
-        <v-content>
-            <v-fade-transition mode="out-in">
-                <router-view />
-            </v-fade-transition>
-        </v-content>         
+        <v-content tag="div">
+            <v-container fluid fill-height>
+                <router-view></router-view>
+            </v-container>
+        </v-content>        
     </div>
 </template>
 
 <style src="@/styles/Common/Principal.css" scoped>
-
 </style>
 
 <script>
