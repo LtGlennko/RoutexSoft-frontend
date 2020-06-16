@@ -54,6 +54,9 @@
 <script>
   export default {
     name: 'sidebar',
+    props: {
+        rol: String
+    },
     data: () => ({
         user1: "Administrador",
         item: 0,
@@ -75,5 +78,11 @@
             { text: 'Reporte Paquetes', icon: 'mdi-chart-bar', to:'/ManageUsers' },
         ],
     }),
+    actions: {      
+      setRole(context,role){
+        console.log('Se dara el rooool')
+        props.rol=role
+      }
+    },
   }
 </script>

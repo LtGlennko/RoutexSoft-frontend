@@ -31,6 +31,11 @@ Vue.use(VueRouter)
         name: 'ConfigureParameters',
         component: () => import('../components/Administrator/ConfigureParameters.vue')
       },
+      {
+        path: '/SelectClients',
+        name: 'SelectClients',
+        component: () => import('../components/Registrar/SelectClients.vue')
+      }
     ]
   },
   {
