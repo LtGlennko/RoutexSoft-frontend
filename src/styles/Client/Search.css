@@ -1,0 +1,83 @@
+.bars {
+    background-color: #003A3C;
+    width: 1440px;
+    height: 73px;
+}
+.background {
+    width: 1440px;
+    height: 952px;
+}
+.title-R {
+    background-color: #014A4D;
+    width: 150px;
+    height: 150px;
+}
+.title {
+    color: rgba(0, 58, 60, 0.8);
+    font-family: Chewy;
+    font-size: 53px;
+    line-height: 62px;
+    width: 323px;
+    text-align: left;
+}
+.rectangle {
+    background-color: rgba(239, 239, 246, 0.92);
+    border: 1px solid #8492A6;
+    border-radius: 10px;
+    opacity: 0.8;
+    width: 925px;
+    height: 255px;
+}
+.rectangle-title-h1 {
+    color: #106F74;
+    font-family: Roboto;
+    font-size: 40px;
+    line-height: 62px;
+    width: 348px;
+    text-align: left;
+}
+.rectangle-title-h2 {
+    color: #106F74;
+    font-family: Roboto;
+    font-size: 22px;
+    line-height: 62px;
+    width: 697px;
+    text-align: left;
+}
+.rectangle-title-h3 {
+    color: #8190A5;
+    font-family: Roboto;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 62px;
+    width: 697px;
+    text-align: left;
+}
+.rectangle-h3 {
+    background-color: #FFFFFF;
+    border: 2px solid #D2D2DC;
+    border-radius: 5px;
+    width: 461px;
+    height: 59px;
+}
+.button-h3 {
+    background-color: #137073;
+    border: 2px solid #D2D2DC;
+    border-radius: 5px;
+    width: 324px;
+    height: 59px;
+}
+.button-title-h3 {
+    color: #FFFFFF;
+    font-family: Roboto;
+    font-size: 22px;
+    line-height: 62px;
+    width: 200px;
+    text-align: left;
+}
+  
+   
+  
+  
+  
+    

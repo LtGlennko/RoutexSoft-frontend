@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Principal from '../views/Principal.vue'
+import Search from '../views/Search.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,11 @@ Vue.use(VueRouter)
     path: '/Login',
     name: 'Login',
     component: () => import('../components/Login/Login.vue')
+  },
+  {
+    path: '/Search',
+    name: 'Search',
+    component: () => import('../views/Search.vue')
   }
   
 ]
