@@ -35,7 +35,8 @@ Vue.use(VueRouter)
         path: '/SelectClients',
         name: 'SelectClients',
         component: () => import('../components/Registrar/SelectClients.vue')
-      }
+      },
+      {
         path: '/CreateUser',
         name: 'CreateUser',
         component: () => import('../components/Administrator/CreateUser.vue')
@@ -49,7 +50,7 @@ Vue.use(VueRouter)
         path: '/CreateFlightPlan',
         name: 'CreateFlightPlan',
         component: () => import('../components/Administrator/CreateFlightPlan.vue')
-      },
+      }
     ]
   },
   {
