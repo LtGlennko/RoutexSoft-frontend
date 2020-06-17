@@ -1,0 +1,21 @@
+.mb-2{
+    color: white;
+    background-color: #137073 !important;
+    float: right;
+}
+
+.titleCard{
+    font-size: 28px !important;
+}
+
+.mr-5{
+    color: #137073;
+}
+
+.iconTable{
+    color: #137073;
+}
+
+.swal2-title{
+ font-family: "Roboto";
+}

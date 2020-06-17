@@ -95,7 +95,9 @@ export default {
 				this.setActionRole("Registrador")
 			}
 			else if(this.email=="3"){
-
+				this.$router.push('/GestHistory')
+				console.log('Se pasara el rol3')
+				this.setActionRole("Gerente")
 			}
 			else if(this.email=="4"){
 
