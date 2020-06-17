@@ -50,6 +50,11 @@ Vue.use(VueRouter)
         path: '/CreateFlightPlan',
         name: 'CreateFlightPlan',
         component: () => import('../components/Administrator/CreateFlightPlan.vue')
+      },
+      {
+        path: '/GestHistory',
+        name: 'GestHistory',
+        component: () => import('../components/Manager/GestHistory.vue')
       }
     ]
   },

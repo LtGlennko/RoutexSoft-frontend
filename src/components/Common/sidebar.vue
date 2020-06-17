@@ -71,10 +71,10 @@
                 { text: 'Clientes', icon: 'mdi-account-box', to:'/ManageUsers' },
             ],
             optionManager: [
-                { text: 'Cargar Historial', icon: 'mdi-upload', to:'/ManageUsers'},
-                { text: 'Simulacion', icon: 'mdi-account-multiple', to:'/ManageUsers' },
-                { text: 'Reporte Rutas', icon: 'mdi-chart-areaspline', to:'/ManageUsers' },
-                { text: 'Reporte Paquetes', icon: 'mdi-chart-bar', to:'/ManageUsers' },
+                { text: 'Cargar Historial', icon: 'mdi-upload', to:'/GestHistory'},
+                { text: 'Simulacion', icon: 'mdi-chart-donut-variant', to:'/GestSimulation' },
+                { text: 'Reporte Rutas', icon: 'mdi-map-check', to:'/GestRutes' },
+                { text: 'Reporte Paquetes', icon: 'mdi-package-variant', to:'/GestPackages' },
             ],
         }),
         computed :{
