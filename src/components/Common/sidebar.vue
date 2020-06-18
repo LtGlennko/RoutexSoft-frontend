@@ -66,7 +66,7 @@
                 { text: 'Configurar Parametros', icon: 'mdi-brightness-7', to:'/ConfigureParameters' },
             ],
             optionRegistrar: [
-                { text: 'Crear Envios', icon: 'mdi-send', to:'/ManageUsers'},
+                { text: 'Crear Envios', icon: 'mdi-send', to:'/SelectClients'},
                 { text: 'Paquetes', icon: 'mdi-package-variant', to:'/ManageUsers' },
                 { text: 'Clientes', icon: 'mdi-account-box', to:'/ManageUsers' },
             ],
