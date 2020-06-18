@@ -55,7 +55,17 @@ Vue.use(VueRouter)
         path: '/GestHistory',
         name: 'GestHistory',
         component: () => import('../components/Manager/GestHistory.vue')
-      }
+      },
+      {
+        path: '/CreateClients',
+        name: 'CreateClients',
+        component: () => import('../components/Registrar/CreateClients.vue')
+      },
+      {
+        path: '/CreateSending',
+        name: 'CreateSending',
+        component: () => import('../components/Registrar/CreateSending.vue')
+      },
     ]
   },
   {
