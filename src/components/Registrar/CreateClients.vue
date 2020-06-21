@@ -5,12 +5,12 @@
                 <v-col>
                     <!-- FORM TO ADD A RENDER-->
                     <v-form>
-                        <v-card-title class="titleCard" v-if="editClient==='Remitente'">
-                            Crear Cliente > Remitente
+                        <v-card-title class="titleCard" v-if="!editUser">
+                            Crear Cliente
                         </v-card-title>
 
                         <v-card-title class="titleCard" v-if="editClient==='Destinatario'">
-                            Crear Cliente > Destinatario
+                            Editar Cliente
                         </v-card-title>
                     
                         <v-row justify="center" class="ml-5 mr-5">
@@ -64,8 +64,8 @@
                         <v-card-actions>
                             <v-row>
                             <v-col cols="6" class="colButton">
-                            <v-btn class="mb-2 buttonCreate" v-if="editClient==='Remitente'" @click=createSender()>Guardar</v-btn>
-                            <v-btn class="mb-2 buttonCreate" v-if="editClient==='Destinatario'" @click=createAddresseer()>Guardar</v-btn>
+                            <v-btn class="mb-2 buttonCreate" v-if="editClient==='Remitente'" @click=createClient()>Guardar</v-btn>
+                            <v-btn class="mb-2 buttonCreate" v-if="editClient==='Destinatario'" @click=modifyClient()>Guardar</v-btn>
                             </v-col>
                             <v-col cols="6" class="colButton">
                             <v-btn class="mb-2 buttonCancel" @click=$router.go(-1)>Cancelar</v-btn>
@@ -124,18 +124,18 @@ export default {
          },
     },
     methods:{
-        createSender(){
+        createClient(){
             Swal.fire({
                 icon: 'success',
                 title: '<p style="font-family:Roboto;">Enhorabuena</p>',
-                html: '<p style="font-family:Roboto;">Cliente remitente creado satisfactoriamente</p>'
+                html: '<p style="font-family:Roboto;">Cliente creado satisfactoriamente</p>'
             })
         },
-        createAddresseer(){
+        modifyClient(){
             Swal.fire({
                 icon: 'success',
                 title: '<p style="font-family:Roboto;">Enhorabuena</p>',
-                html: '<p style="font-family:Roboto;">Cliente destinatario creado satisfactoriamente</p>'
+                html: '<p style="font-family:Roboto;">Cliente modificado satisfactoriamente</p>'
             })
         }
     }    
