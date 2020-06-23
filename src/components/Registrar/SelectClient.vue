@@ -4,8 +4,11 @@
             <!--Tabla de remitente-->
             <v-row>
                 <v-col>
-                    <v-card-title class="titleCard">
-                        Clientes
+                    <v-card-title v-if="editClient==='A'" class="titleCard">
+                        Selecciona Destinatario
+                    </v-card-title>
+                    <v-card-title v-if="editClient==='S'" class="titleCard">
+                        Selecciona Remitente
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -18,9 +21,6 @@
                                         single-line
                                         hide-details
                                     ></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=createClient()>Añadir Cliente</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-subtitle>
@@ -43,6 +43,10 @@
                                 </v-icon>
                             </template>
                         </v-data-table>
+
+                        <v-col >
+                            <br><v-btn class="mb-2 ml-10" @click=$router.go(-1)>Regresar</v-btn>
+                        </v-col>
                     </v-card-text>
                 </v-col>
             </v-row>
@@ -61,7 +65,7 @@ import 'sweetalert2/src/sweetalert2.scss'
 import {mapState, mapActions} from 'vuex'
 
 export default {
-    name: 'ManageClients',
+    name: 'SelectClient',
     data () {
         return {
             footerProps:{'items-per-page-Text':'Filas por página:  ', 'items-per-page-options': [5,10,15]},

@@ -71,6 +71,11 @@ Vue.use(VueRouter)
         name: 'ManageClients',
         component: () => import('../components/Registrar/ManageClients.vue')
       },
+      {
+        path: '/SelectClient',
+        name: 'SelectClient',
+        component: () => import('../components/Registrar/SelectClient.vue')
+      },
     ]
   },
   {
