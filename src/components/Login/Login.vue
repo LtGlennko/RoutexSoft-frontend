@@ -90,7 +90,7 @@ export default {
 				this.setActionRole("Administrador")
 			}
 			else if(this.email=="2"){
-				this.$router.push('/SelectClients')
+				this.$router.push('/CreateSending')
 				console.log('Se pasara el rol2')
 				this.setActionRole("Registrador")
 			}

@@ -1,21 +1,18 @@
 <template>
     <v-container>
-        <v-card-title class="mainTitle">
-            Crear Envío > Selección Remitente/Destinatario
-        </v-card-title>
         <v-card> 
             <!--Tabla de remitente-->
             <v-row>
                 <v-col>
-                    <v-card-title class="titleCard1">
-                        Remitente
+                    <v-card-title class="titleCard">
+                        Clientes
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
                             <v-row>
                                 <v-col cols="6">
                                     <v-text-field
-                                        v-model="search1"
+                                        v-model="search"
                                         append-icon="mdi-magnify"
                                         label="Buscar Cliente"
                                         single-line
@@ -23,70 +20,34 @@
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=createSender()>Añadir Cliente</v-btn>
+                                    <br><v-btn class="mb-2" @click=createClient()>Añadir Cliente</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-subtitle>
                     
                         <v-data-table   :headers="headers"
-                                        :items="senders"
+                                        :items="clients"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
                                         :no-results-text="filterNoResultsText"
                                         :footer-props="footerProps"
-                                        :search="search1"
+                                        :search="search"
                                         class="elevation-1">
-                        </v-data-table>
-                    </v-card-text>
-                </v-col>
-            </v-row>
-            <!--Tabla de destinatario-->
-            <v-row>
-                <v-col>
-                    <v-card-title class="titleCard2">
-                        Destinatario
-                    </v-card-title>
-                    <v-card-text>
-                        <v-card-subtitle>
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-text-field
-                                        v-model="search2"
-                                        append-icon="mdi-magnify"
-                                        label="Buscar Cliente"
-                                        single-line
-                                        hide-details
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=createAddressee()>Añadir Cliente</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-subtitle>
-                    
-                        <v-data-table   :headers="headers"
-                                        :items="addressees"
-                                        :items-per-page="5"
-                                        :loading-text="loadingText"
-                                        :no-data-text="noDataText"
-                                        :no-results-text="filterNoResultsText"
-                                        :footer-props="footerProps"
-                                        :search="search2"
-                                        class="elevation-1">
+                            <template v-slot:item.actions="{ items }">
+                                <v-icon medium class="mr-5" @click="editClient()" >
+                                    mdi-pencil
+                                </v-icon>
+                                <v-icon medium class="iconTable" v-on:click="deleteClient()">
+                                    mdi-delete
+                                </v-icon>
+                            </template>
                         </v-data-table>
                     </v-card-text>
                 </v-col>
             </v-row>
         </v-card>
         <v-divider class="mt-1"></v-divider>
-        <v-card-actions>
-            <v-row>
-                <v-col cols="6" class="colButton">
-                    <v-btn class="mb-2 buttonCreate" @click=finalDataSending()>Crear Envío</v-btn>
-                </v-col>
-            </v-row>
-        </v-card-actions>
     </v-container>
 </template>
 
@@ -100,16 +61,15 @@ import 'sweetalert2/src/sweetalert2.scss'
 import {mapState, mapActions} from 'vuex'
 
 export default {
-    name: 'SelectClients',
+    name: 'ManageClients',
     data () {
         return {
             footerProps:{'items-per-page-Text':'Filas por página:  ', 'items-per-page-options': [5,10,15]},
-            search1: '',
-            search2: '',
+            search: '',
             loadingText: 'Cargando clientes',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
             noDataText: 'No hay clientes para mostrar',
-            senders: [
+            clients: [
                 {
                     dni: '18232212',
                     name: 'Pancho',
@@ -123,9 +83,7 @@ export default {
                     lastName: 'yankee',
                     emailAddress: 'osuna@gmail.com',
                     nroTlf: '+53 9012112',
-                }
-            ],
-            addressees: [
+                },
                 {
                     dni: '73424483',
                     name: 'INGA',
@@ -182,19 +140,25 @@ export default {
         
     },
     methods:{
-        ...mapActions(['setActionClient']),
-        createSender(){
+        ...mapActions(['setActionClient', 'setActionSender', 'setActionAddressee']),
+        createClient(){
             this.$router.push('/CreateClients');
-            this.setActionClient('Remitente');
+            this.setActionClient(false);
         },
-        createAddressee(){
+        editClient(){
             this.$router.push('/CreateClients');
-            this.setActionClient('Destinatario');
+            this.setActionClient(true);
         },
-        finalDataSending(){
-            this.$router.push('/CreateSending');
-            this.setActionSender('Felipe Huerta');
-            this.setActionAddressee('Martin Paniagua');
+        deleteUser(){
+            Swal.fire({
+                title: '<p style="font-family:Roboto;">¿Está seguro que desea eliminar este usuario?</p>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '<p style="font-family:Roboto;">Sí, eliminar</p>',
+                cancelButtonText : '<p style="font-family:Roboto;">Cancelar</p>'
+            })
         },
     }
 

@@ -32,11 +32,6 @@ Vue.use(VueRouter)
         component: () => import('../components/Administrator/ConfigureParameters.vue')
       },
       {
-        path: '/SelectClients',
-        name: 'SelectClients',
-        component: () => import('../components/Registrar/SelectClients.vue')
-      },
-      {
         path: '/CreateUser',
         name: 'CreateUser',
         component: () => import('../components/Administrator/CreateUser.vue')
@@ -65,6 +60,16 @@ Vue.use(VueRouter)
         path: '/CreateSending',
         name: 'CreateSending',
         component: () => import('../components/Registrar/CreateSending.vue')
+      },
+      {
+        path: '/ManagePackages',
+        name: 'ManagePackages',
+        component: () => import('../components/Registrar/ManagePackages.vue')
+      },
+      {
+        path: '/ManageClients',
+        name: 'ManageClients',
+        component: () => import('../components/Registrar/ManageClients.vue')
       },
     ]
   },
