@@ -72,6 +72,16 @@ Vue.use(VueRouter)
     path: '/Login',
     name: 'Login',
     component: () => import('../components/Login/Login.vue')
+  },
+  {
+    path: '/ClientPrincipal',
+    name: 'ClientPrincipal',
+    component: () => import('../views/Principal/ClientPrincipal.vue')
+  },
+  {
+    path: '/TrackPackage',
+    name: 'TrackPackage',
+    component: () => import('../views/Principal/SubViews/TrackPackage.vue')
   }
   
 ]

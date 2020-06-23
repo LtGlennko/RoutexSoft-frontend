@@ -1,0 +1,25 @@
+.topBar{
+    width: 100%;
+    height: 8%;
+    background-color: #003A3C;
+    margin: 0px;
+}
+
+.cardTopBar{
+    width: 100%;
+    height: 11%;
+    background-color: #22A3A9;
+    margin: 0px;
+}
+
+.cardClient{
+    height: 81%;
+}
+
+.cardTitle{
+    color: white;
+}
+
+.prueba{
+    background-color: transparent;
+}
