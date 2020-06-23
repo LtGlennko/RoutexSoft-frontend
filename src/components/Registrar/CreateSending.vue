@@ -25,9 +25,52 @@
             <v-tabs-items v-model="tab">
                 <v-tab-item :value="'tab-1'">
                     <v-card flat>
-                        <v-card-title>
-                            Remitente no seleccionado
-                        </v-card-title>
+                        <v-row>
+                            <v-col cols="5" class="colButton">
+                                <v-btn class="mb-2 buttonCreate" @click=selectSender()>Seleccionar Cliente</v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <!-- FORM TO SELECT A ADDRESSEER -->
+                                <v-form>
+                                    <v-row justify="center" class="ml-5 mr-5">
+                                        <v-col cols="6" >
+                                            <v-text-field
+                                                ref="Sdni"
+                                                v-model="Sdni"
+                                                label="DNI"
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" >
+                                            <v-text-field
+                                                ref="Sname"
+                                                v-model="Sname"
+                                                label="Nombres"
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" >
+                                            <v-text-field
+                                                ref="SlastName"
+                                                v-model="SlastName"
+                                                label="Apellidos"
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" >
+                                            <v-text-field
+                                                ref="Semail"
+                                                v-model="Semail"
+                                                label="Correo electrónico"
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-form>
+                            </v-col>
+                        </v-row>
                     </v-card>
                 </v-tab-item>
                 <v-tab-item :value="'tab-2'">
@@ -36,7 +79,6 @@
                             <v-col cols="5" class="colButton">
                                 <v-btn class="mb-2 buttonCreate" @click=selectAddresseer()>Seleccionar Cliente</v-btn>
                             </v-col>
-                            <v-card-subtitle> No seleccionado </v-card-subtitle>
                         </v-row>
                         <v-row>
                             <v-col>
@@ -115,20 +157,16 @@
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="6" >
-                                            <v-text-field
-                                                ref="source"
-                                                v-model="source"
-                                                :rules="[rules.required]"
+                                            <v-select
+                                                :items="items"
                                                 label="Origen"
-                                            ></v-text-field>
+                                            ></v-select>
                                         </v-col>
                                         <v-col cols="6" >
-                                            <v-text-field
-                                                ref="destination"
-                                                v-model="destination"
-                                                :rules="[rules.required]"
+                                            <v-select
+                                                :items="items"
                                                 label="Destino"
-                                            ></v-text-field>
+                                            ></v-select>
                                         </v-col>
                                         <!---Nro telf no obligatorio-->
                                         
@@ -170,6 +208,7 @@ import PrincipalVue from '../../views/Principal/Principal.vue';
 export default {
     name: 'CreateSending',
     data: () => ({
+        items: ['Brasil', 'Ecuador', 'Venezuela', 'Colombia'],
         tab: null,
         errorMessages: '',
         Sdni: ' ',
@@ -180,13 +219,14 @@ export default {
         type: null,
         source: null,
         destination: null,
+        name:null,
         rules: {
             required: value => !!value || 'Este campo es requerido',
             counter: value => value.length <= 20 || 'Máximo 20 caracteres',
         },
     }),    
     computed :{
-        ...mapState (['editSender', 'editAddressee']),
+        ...mapState (['editSender', 'editAddressee','airports']),
         form () {
             return {
                 sender: this.sender,
@@ -200,6 +240,21 @@ export default {
         },
     },
     methods:{
+        ...mapActions(['completeAirports','setActionClient']),
+
+        getAriports: function() {
+            userDA.getAllAirports().then((res) =>{
+                this.completeAirports(res.data);
+                console.log();
+            }).catch(error =>{
+                Swal.fire({
+                    title: 'Error',
+                    type: 'error',
+                    text: 'Error obteniendo los clientes'
+                })
+            });
+        },
+
         createSending(){
             Swal.fire({
                 icon: 'success',
@@ -207,6 +262,16 @@ export default {
                 html: '<p style="font-family:Roboto;">Envío del paquete registrado, se le notificará cuando la ruta haya sido creada</p>'
             })
         },
+
+        selectAddresseer(){
+            this.$router.push('/SelectClient');
+            this.setActionClient('A');
+        },
+
+        selectSender(){
+            this.$router.push('/SelectClient');
+            this.setActionClient('S');
+        }
     }
 }
 </script>

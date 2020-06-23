@@ -10,3 +10,8 @@ import Axios from 'axios'
     return Axios.post(url,data)
 }
 */
+
+export function getAllAirports(){
+    let url = process.env.VUE_APP_API_URL + 'api/airports/';  /*Switch to real url*/
+    return axios.get(url);
+}

@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {  
-    edit:''
+    edit:'',
+    airports:[]
   },
   mutations: {
     setActUser(state,edit){
@@ -26,6 +27,24 @@ export default new Vuex.Store({
     setActAddressee(state,edit){
       state.editAddressee = edit;
     },
+
+
+    fillAirports(state,airport){
+      state.airports=[];
+      let airport_data = airport.airports;
+      for (let i=0; i< airport_data.length;i++){
+        state.airports.push({
+          idAeropuerto : airport_data[i].idAeropuerto,
+          nombre : airport_data[i].nombre,
+          codAero : airport_data[i].codAero,
+          pais : airport_data[i].pais,
+          capacidad : airport_data[i].capacidad,
+          huso : airport_data[i].huso
+        });
+      }
+    },
+
+
   },
   actions: {
     setActionUser(context,edit){
@@ -46,6 +65,12 @@ export default new Vuex.Store({
     setActionAddressee(context,edit){
       context.commit('setActAddressee',edit);
     },
+
+    completeAirports(context,airports_data){
+      context.commit('fillAirports',airports_data);
+    },
+
+
   },
   modules: {
   }
