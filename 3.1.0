@@ -1,0 +1,14 @@
+
+> fibers@5.0.0 install C:\Users\Lt Glennko\Desktop\DP1\RoutexSoft\RoutexSoft-frontend\node_modules\fibers
+> node build.js || nodejs build.js
+
+`win32-x64-72` exists; testing
+Binary is fine; exiting
++ fibers@5.0.0
+updated 1 package and audited 1211 packages in 18.972s
+
+43 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+

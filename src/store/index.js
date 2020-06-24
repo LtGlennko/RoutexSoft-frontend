@@ -1,12 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as userDA from '@/dataAccess/userDA.js'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {  
     edit:'',
-    airports:[]
+    airports:[],
+    countries: [],
+    originCountry:'',
+    destinationCountry:'',
+    clientCreate :{
+      idPerson : -1,
+      documentNumber : '',
+      name : '',
+      lastname : '',
+      email : '',
+      cellphone : ''
+    },
   },
   mutations: {
     setActUser(state,edit){
@@ -27,7 +39,10 @@ export default new Vuex.Store({
     setActAddressee(state,edit){
       state.editAddressee = edit;
     },
-
+    
+    setRequestCountry (state, countries) {
+      state.countries = countries
+    },
 
     fillAirports(state,airport){
       state.airports=[];
@@ -42,6 +57,14 @@ export default new Vuex.Store({
           huso : airport_data[i].huso
         });
       }
+    },
+
+    fillPersonCreate(state,person_data){
+      state.clientCreate.idPerson = person_data.idPerson;
+      state.clientCreate.name = person_data.name;
+      state.clientCreate.lastname = person_data.lastname;
+      state.clientCreate.email = person_data.email;
+      state.clientCreate.documentNumber = person_data.documentNumber;
     },
 
 
@@ -68,6 +91,26 @@ export default new Vuex.Store({
 
     completeAirports(context,airports_data){
       context.commit('fillAirports',airports_data);
+    },
+
+    completePersonCreate(context,person_data){
+      context.commit('fillPersonCreate',person_data);
+    },
+
+
+
+    async obtainCountry (context) {
+      let response = await userDA.getAllAirports()
+      const API_RESULT = response.data
+      let newData = []
+      API_RESULT.data.forEach((elem) => {
+        let newRecord = {
+          text: elem.country,
+          value: elem.idAeropuerto
+        }
+        newData.push(newRecord)
+      })
+      context.commit('setRequestCountry', newData)
     },
 
 
