@@ -88,7 +88,7 @@
                     <v-card flat>
                         <v-row>
                             <v-col cols="5" class="colButton">
-                                <v-btn class="mb-2 buttonCreate" @click=selectAddresseer()>Seleccionar Cliente</v-btn>
+                                <v-btn class="mb-2 buttonCreate" @click=getAriports()>Seleccionar Cliente</v-btn>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -258,9 +258,13 @@ export default {
         ...mapActions(['completeAirports','setActionClient','completePersonCreate','obtainCountry']),
 
         getAriports: function() {
+            console.log('Antes de DA');
             userDA.getAllAirports().then((res) =>{
+                console.log('Se consultara servicio');
+                console.log(res);
                 this.completeAirports(res.data);
-                console.log();
+                console.log('Se recibió el servicio de aeropuertos');
+                console.log(res.data);
             }).catch(error =>{
                 Swal.fire({
                     title: 'Error',

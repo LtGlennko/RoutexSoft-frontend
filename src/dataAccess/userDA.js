@@ -1,4 +1,4 @@
-import Axios from 'axios'
+import axios from 'axios'
 
 /**
  * This function calls the backend server to do login
@@ -12,7 +12,7 @@ import Axios from 'axios'
 */
 
 export function getAllAirports(){
-    let url = process.env.VUE_APP_API_URL + 'api/airports/';  /*Switch to real url*/
+    let url = process.env.VUE_APP_API_URL + 'api/airport/';  /*Switch to real url*/
     return axios.get(url);
 }
 
