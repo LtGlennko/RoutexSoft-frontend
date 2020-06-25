@@ -3,80 +3,73 @@
         <v-card> 
             <v-row>
                 <v-col>
-                    <v-card-title class="titleCard">
-                         Simulación > Generar Simulación
+                    <v-card-title class="titleCard" v-text='editActSim'>
                     </v-card-title>
-                    <v-card-text>
-                        <v-card-subtitle>
+                    <v-card>
+                        <v-card-actions>
                             <v-row>
-                                <v-col cols="6">
-                                    <v-text-field
-                                        v-model="search"
-                                        append-icon="mdi-magnify"
-                                        label="Ingrese el campo a buscar"
-                                        single-line
-                                        hide-details
-                                    ></v-text-field>
+                                <v-col cols="2">
+                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-play-circle </v-icon>
                                 </v-col>
-                                <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=GenerateSim()>Generar Simulación</v-btn>
+                                <v-col cols="2">
+                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-pause-circle </v-icon>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-step-forward </v-icon>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-step-backward </v-icon>
+                                </v-col>
+                                <v-col cols="3">
+                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-stop-circle </v-icon>
                                 </v-col>
                             </v-row>
-                        </v-card-subtitle>
-                    
-                        <v-data-table   :headers="headers"
-                                        :items="simulation_details"
-                                        :items-per-page="5"
-                                        :loading-text="loadingText"
-                                        :no-data-text="noDataText"
-                                        :no-results-text="filterNoResultsText"
-                                        :footer-props="footerProps"
-                                        :search="search"
-                                        class="elevation-1">
-                        </v-data-table>
-                        <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=$router.go(-1)>Regresar</v-btn>
-                                </v-col>
-                    </v-card-text>
+                            
+                        </v-card-actions>
+                        <v-row>
+                            <v-col class="cosa-rara">
+                                <img class="img" src="@/images/world-map2.png" alt=""> 
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col class="nani">
+                                <br><v-btn class="mb-3" @click=$router.go(-1)>Regresar</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-card>
                 </v-col>
             </v-row>
         </v-card>
     </v-container>
 </template>
-<style src="@/styles/Manager/GetSimulation.css" scoped>
+<style src="@/styles/Manager/Simulation.css" scoped>
 
 </style>
 <script>
-
+import {mapState, mapActions} from 'vuex'
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 export default {
     name: 'Simulation',
     data(){
         return{
-            search: '',
+            /*search: '',
             loadingText: 'Cargando usuarios',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
             noDataText: 'No hay usuarios para mostrar',
-            uwu: [
+            simulation: [
                 {
-                    id_simulation: '1',
-                    date_created: '04/09/19',
-                    time_created: '17:49',
-                    time_duration: '765',
-                    state:'Terminado - Colapso'
-                },
-                {
-                    id_simulation: '2',
+                    id_simulation: '3',
                     date_created: '25/06/20',
-                    time_created: '20:01',
+                    time_created: '18:55',
                     time_duration: '-',
-                    state:'En proceso'
-                }
-            ],
+                    state:'En Proceso'
+                },
+            ],*/
         }
     },
     computed: {
+        ...mapState(['editActSim']),
         headers () {
             let items = []
             items.push({

@@ -52,7 +52,7 @@
 
 </style>
 <script>
-
+import {mapState, mapActions} from 'vuex'
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 export default {
@@ -114,18 +114,30 @@ export default {
                 sortable: true,
                 value: 'state'
             })
+            items.push({
+                text: 'ACCIONES',
+                align: 'center',
+                sortable: false,
+                value: 'actions'
+            })
             
             return items
         },
     },
     methods:{
-        DeleteSim(){
+        ...mapActions(['setActionSimulation']),
+        GenerateSim(){
             Swal.fire({
                 html: '<p style="font-family:Roboto;">Se ha iniciado la ejecución de la simulación</p>'
             })
             this.$router.push('/Simulation');
+            this.setActionSimulation('Simulación > Generar Simulación');
         },
-        DetailSim(){
+        detailSim(){
+            this.$router.push('/Simulation');
+            this.setActionSimulation('Simulación > Ver Simulación');
+        },
+        deleteSim(){
             Swal.fire({
                 title: '<p style="font-family:Roboto;">¿Está seguro que desea eliminar esta simulación?</p>',
                 icon: 'warning',
