@@ -67,6 +67,11 @@ Vue.use(VueRouter)
         component: () => import('../components/Manager/GestSimulation.vue')
       },
       {
+        path: '/Simulation',
+        name: 'Simulation',
+        component: () => import('../components/Manager/Simulation.vue')
+      },
+      {
         path: '/CreateClients',
         name: 'CreateClients',
         component: () => import('../components/Registrar/CreateClients.vue')

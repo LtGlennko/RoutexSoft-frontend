@@ -1,44 +1,5 @@
 <template>
-    <v-container>
-        <v-card> 
-            <v-row>
-                <v-col>
-                    <v-card-title class="titleCard">
-                         Simulación
-                    </v-card-title>
-                    <v-card-text>
-                        <v-card-subtitle>
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-text-field
-                                        v-model="search"
-                                        append-icon="mdi-magnify"
-                                        label="Ingrese el campo a buscar"
-                                        single-line
-                                        hide-details
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=GenerateSim()>Generar Simulación</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-subtitle>
-                    
-                        <v-data-table   :headers="headers"
-                                        :items="uwu"
-                                        :items-per-page="5"
-                                        :loading-text="loadingText"
-                                        :no-data-text="noDataText"
-                                        :no-results-text="filterNoResultsText"
-                                        :footer-props="footerProps"
-                                        :search="search"
-                                        class="elevation-1">
-                        </v-data-table>
-                    </v-card-text>
-                </v-col>
-            </v-row>
-        </v-card>
-    </v-container>
+    
 </template>
 <style src="@/styles/Manager/GetSimulation.css" scoped>
 
@@ -48,7 +9,7 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 export default {
-    name: 'GestSimulation',
+    name: 'Simulation',
     data(){
         return{
             search: '',
