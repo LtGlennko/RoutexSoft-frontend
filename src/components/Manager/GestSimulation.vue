@@ -25,7 +25,7 @@
                         </v-card-subtitle>
                     
                         <v-data-table   :headers="headers"
-                                        :items="uwu"
+                                        :items="simulation_details"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
@@ -33,6 +33,14 @@
                                         :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
+                                        <template v-slot:item.actions="{ items }">
+                                            <v-icon medium class="mr-5" @click="detailSim()" >
+                                                mdi-eye
+                                            </v-icon>
+                                            <v-icon medium class="iconTable" v-on:click="deleteSim()">
+                                                mdi-delete
+                                            </v-icon>
+                                        </template>
                         </v-data-table>
                     </v-card-text>
                 </v-col>
@@ -55,7 +63,7 @@ export default {
             loadingText: 'Cargando usuarios',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
             noDataText: 'No hay usuarios para mostrar',
-            uwu: [
+            simulation_details: [
                 {
                     id_simulation: '1',
                     date_created: '04/09/19',
@@ -111,11 +119,22 @@ export default {
         },
     },
     methods:{
-        GenerateSim(){
+        DeleteSim(){
             Swal.fire({
                 html: '<p style="font-family:Roboto;">Se ha iniciado la ejecución de la simulación</p>'
             })
             this.$router.push('/Simulation');
+        },
+        DetailSim(){
+            Swal.fire({
+                title: '<p style="font-family:Roboto;">¿Está seguro que desea eliminar esta simulación?</p>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '<p style="font-family:Roboto;">Sí, eliminar</p>',
+                cancelButtonText : '<p style="font-family:Roboto;">Cancelar</p>'
+            })
         }
     }
 }
