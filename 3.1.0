@@ -1,14 +1,6 @@
 
-> fibers@5.0.0 install C:\Users\Lt Glennko\Desktop\DP1\RoutexSoft\RoutexSoft-frontend\node_modules\fibers
+> fibers@5.0.0 install C:\Users\Leonella\Desktop\PUCP\DP1\proyecto 2.1\RoutexSoft-frontend\node_modules\fibers
 > node build.js || nodejs build.js
 
-`win32-x64-72` exists; testing
-Binary is fine; exiting
-+ fibers@5.0.0
-updated 1 package and audited 1211 packages in 18.972s
 
-43 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-
+C:\Users\Leonella\Desktop\PUCP\DP1\proyecto 2.1\RoutexSoft-frontend\node_modules\fibers>if not defined npm_config_node_gyp (node "C:\Program Files\nodejs\node_modules\npm\node_modules\npm-lifecycle\node-gyp-bin\\..\..\node_modules\node-gyp\bin\node-gyp.js" rebuild --release )  else (node "C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\bin\node-gyp.js" rebuild --release ) 

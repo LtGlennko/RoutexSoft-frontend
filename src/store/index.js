@@ -19,6 +19,14 @@ export default new Vuex.Store({
       email : '',
       cellphone : ''
     },
+    airportCreate:{
+      idAeropuerto:-1,
+      codAero:'',
+      pais:'',
+      ciudad:'',
+      abrev:'',
+      capacidad:-1,
+    }
   },
   mutations: {
     setActUser(state,edit){
@@ -44,19 +52,28 @@ export default new Vuex.Store({
       state.countries = countries
     },
 
-    fillAirports(state,airport){
+    fillAirports(state,airport_data){
       state.airports=[];
-      let airport_data = airport.airports;
-      for (let i=0; i< airport_data.length;i++){
+      for (let airport of airport_data){
         state.airports.push({
-          idAeropuerto : airport_data[i].idAeropuerto,
-          nombre : airport_data[i].nombre,
-          codAero : airport_data[i].codAero,
-          pais : airport_data[i].pais,
-          capacidad : airport_data[i].capacidad,
-          huso : airport_data[i].huso
+          idAeropuerto : airport.idAeropuerto,
+          codAero : airport.codAero,
+          pais : airport.pais,
+          ciudad : airport.ciudad,
+          abrev : airport.abrev,
+          capacidad : airport.capacidad
         });
       }
+    },
+
+    setAirportInd(state,index){
+      state.selectedAirportIndex = index;
+      state.airportCreate.idAeropuerto = state.airports[index].idAeropuerto;
+      state.airportCreate.codAero = state.airports[index].codAero;
+      state.airportCreate.pais = state.airports[index].pais;
+      state.airportCreate.ciudad = state.airports[index].ciudad;
+      state.airportCreate.abrev = state.airports[index].abrev;
+      state.airportCreate.capacidad = state.airports[index].capacidad;
     },
 
     fillPersonCreate(state,person_data){
@@ -89,6 +106,10 @@ export default new Vuex.Store({
       context.commit('setActAddressee',edit);
     },
 
+    setAirportIndex(context,index){
+      context.commit('setAirportInd',index);
+    },
+
     completeAirports(context,airports_data){
       context.commit('fillAirports',airports_data);
     },
@@ -103,9 +124,9 @@ export default new Vuex.Store({
       let response = await userDA.getAllAirports()
       const API_RESULT = response.data
       let newData = []
-      API_RESULT.data.forEach((elem) => {
+      API_RESULT.forEach((elem) => {
         let newRecord = {
-          text: elem.country,
+          text: elem.pais + ' - ' + elem.ciudad,
           value: elem.idAeropuerto
         }
         newData.push(newRecord)

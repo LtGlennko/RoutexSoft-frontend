@@ -9,36 +9,36 @@
                 background-color="#137073"
                 centered
                 dark
-                icons-and-text
+                :icons-and-text=false
+                :grow=true
             >
                 <v-tabs-slider></v-tabs-slider>
-                <v-tab href="#tab-1">
+                <v-tab href="#tab-1" class="tabTitle">
                     Remitente
                 </v-tab>
-                <v-tab href="#tab-2">
+                <v-tab href="#tab-2" class="tabTitle">
                     Destinatario
                 </v-tab>
-                <v-tab href="#tab-3">
+                <v-tab href="#tab-3" class="tabTitle">
                     Datos Finales
                 </v-tab>
             </v-tabs>
-            <v-tabs-items v-model="tab">
+            <v-tabs-items v-model="tab" >
                 <v-tab-item :value="'tab-1'">
                     <v-card flat>
                         <v-row>
                             <!-- <v-col cols="5" class="colButton">
                                 <v-btn class="mb-2 buttonCreate" @click=selectSender()>Seleccionar Cliente</v-btn>
                             </v-col>-->
-                            <v-col cols="3" class="colButton ml-8">
+                            <v-col cols="4" class="colButton ml-8">
                                 <v-text-field 
-                                    v-model.trim.number="docNumber"
-                                    label="Número de documento"
-                                    
+                                    v-model.trim.number="docNumberSender"
+                                    label="Ingresar número de documento"
                                     min="0">
                                 </v-text-field>
                             </v-col> 
                             <v-col cols="3">
-                                <v-btn class="mb-2 my-2 buttonCreate" @click=getClient()>Buscar Cliente</v-btn>
+                                <v-btn class="mb-2 my-2 buttonCreate" @click=getSender()>Buscar Cliente</v-btn>
                             </v-col> 
                         </v-row>
                         <v-row>
@@ -87,9 +87,20 @@
                 <v-tab-item :value="'tab-2'">
                     <v-card flat>
                         <v-row>
-                            <v-col cols="5" class="colButton">
+                            <!--<v-col cols="5" class="colButton">
                                 <v-btn class="mb-2 buttonCreate" @click=getAriports()>Seleccionar Cliente</v-btn>
-                            </v-col>
+                            </v-col>-->
+                            <v-col cols="4" class="colButton ml-8">
+                                <v-text-field 
+                                    v-model.trim.number="docNumberAddressee"
+                                    label="Ingresar número de documento"
+                                    
+                                    min="0">
+                                </v-text-field>
+                            </v-col> 
+                            <v-col cols="3">
+                                <v-btn class="mb-2 my-2 buttonCreate" @click=getAddressee()>Buscar Cliente</v-btn>
+                            </v-col> 
                         </v-row>
                         <v-row>
                             <v-col>
@@ -152,8 +163,8 @@
                                         </v-col>
                                         <v-col cols="6" >
                                             <v-text-field
-                                                ref="type"
-                                                v-model="type"
+                                                ref="typeSending"
+                                                v-model="typeSending"
                                                 :rules="[rules.required]"
                                                 label="Tipo"
                                             ></v-text-field>
@@ -163,20 +174,21 @@
                                                 v-model="originCountry"
                                                 required
                                                 :items="countries"
-                                                label="Origen"
+                                                label="Pais - Ciudad de Origen"
                                             ></v-select>
                                         </v-col>
                                         <v-col cols="6" >
                                             <v-select
                                                 v-model="destinationCountry"
                                                 required
-                                                :items="items"
-                                                label="Destino"
+                                                :items="countries"
+                                                label="Pais - Ciudad de Destino"
                                             ></v-select>
                                         </v-col>
                                         <!---Nro telf no obligatorio-->
                                         
                                         <v-col cols="6" >
+                                            
                                         </v-col>
                                     </v-row>
                                     <v-divider class="mt-1"></v-divider>
@@ -200,7 +212,7 @@
     </v-container>
 </template>
 
-<style src="@/styles/Administrator/CreateUser.css" scoped>
+<style src="@/styles/Registrar/CreateSending.css" scoped>
 
 </style>
 
@@ -222,24 +234,27 @@ export default {
         SlastName: ' ',
         Semail: ' ',
         description: null,
-        type: null,
+        typeSending: null,
         source: null,
         destination: null,
         name:null,
-        docNumber:null,
+        docNumberSender:null,
+        docNumberAddressee:null,
         rules: {
             required: value => !!value || 'Este campo es requerido',
             counter: value => value.length <= 20 || 'Máximo 20 caracteres',
         },
-        async created (){
+        
+    }),   
+    async created (){
+        console.log('async create');
             let promises = [this.obtainCountry()]
             try {
                 await Promise.all(promises)
             }catch {
                
             }
-        }
-    }),   
+    },
     computed :{
         ...mapState (['editSender', 'editAddressee','airports','clientCreate','countries']),
         form () {
@@ -248,7 +263,7 @@ export default {
                 addressee: this.addressee,
                 name: this.name,
                 description: this.description,
-                type: this.type,
+                typeSending: this.typeSending,
                 source: this.source,
                 destination: this.destination,
             }
@@ -258,33 +273,42 @@ export default {
         ...mapActions(['completeAirports','setActionClient','completePersonCreate','obtainCountry']),
 
         getAriports: function() {
-            console.log('Antes de DA');
             userDA.getAllAirports().then((res) =>{
-                console.log('Se consultara servicio');
-                console.log(res);
                 this.completeAirports(res.data);
                 console.log('Se recibió el servicio de aeropuertos');
-                console.log(res.data);
             }).catch(error =>{
                 Swal.fire({
                     title: 'Error',
-                    type: 'error',
+                    icon: 'error',
                     text: 'Error obteniendo los clientes'
                 })
             });
         },
 
-        getClient(){
-                console.log(this.docNumber);
-                userDA.getPersonData(this.docNumber).then((res) =>{
-                    this.completePersonCreate(res.data);
-                }).catch(error =>{
-                        Swal.fire({
-                            title: '<p style="font-family:Roboto;">Error</p>',
-                            icon: 'error',
-                            html: '<p style="font-family:Roboto;">No se encontraron registros de la persona</p>'
-                        })
-                })
+        getSender(){
+            console.log(this.docNumberSender);
+            userDA.getPersonData(this.docNumberSender).then((res) =>{
+                this.completePersonCreate(res.data);
+            }).catch(error =>{
+                    Swal.fire({
+                        title: '<p style="font-family:Roboto;">Error</p>',
+                        icon: 'error',
+                        html: '<p style="font-family:Roboto;">No se encontraron registros de la persona</p>'
+                    })
+            })
+        },
+
+        getAddressee(){
+            console.log(this.docNumberAddressee);
+            userDA.getPersonData(this.docNumberAddressee).then((res) =>{
+                this.completePersonCreate(res.data);
+            }).catch(error =>{
+                    Swal.fire({
+                        title: '<p style="font-family:Roboto;">Error</p>',
+                        icon: 'error',
+                        html: '<p style="font-family:Roboto;">No se encontraron registros de la persona</p>'
+                    })
+            })
         },
 
         createSending(){
