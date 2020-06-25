@@ -10,32 +10,20 @@
                         </v-card-title>
                     
                         <v-row justify="center" class="ml-5 mr-5">
-                            <v-col cols="6" >
-                                <v-text-field
-                                    ref="name"
-                                    v-model="name"
-                                    label="Nombre"
-                                    placeholder="BOGO"
-                                    outlined
-                                    disabled
-                                ></v-text-field>
-                            </v-col>
+                            
                             <v-col cols="6" >
                                 <v-text-field
                                     ref="lastName"
-                                    v-model="country"
+                                    v-model="airportCreate.pais"
                                     label="Pais"
-                                    placeholder="COLOMBIA"
                                     outlined
                                     disabled
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" >
                                 <v-text-field
-                                    v-model="city"
+                                    v-model="airportCreate.ciudad"
                                     label="Ciudad"
-                                    placeholder="BOGOTA"
-                                    single-line
                                     outlined
                                     disabled
                                 ></v-text-field>
@@ -43,17 +31,25 @@
                             <v-col cols="6" >
                                 <v-text-field
                                     ref="oaci"
-                                    v-model="oaci"
+                                    v-model="airportCreate.codAero"
                                     label="OACI"
-                                    placeholder="SKBO"
                                     outlined
                                     disabled
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" >
                                 <v-text-field
-                                    ref="email"
-                                    v-model="capacity"
+                                    ref="name"
+                                    v-model="airportCreate.abrev"
+                                    label="Abreviatura"
+                                    outlined
+                                    disabled
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6" >
+                                <v-text-field
+                                
+                                    v-model="airportCreate.capacidad"
                                     label="Capacidad"
                                     :rules="[rules.required, rules.min, rules.max]"
                                     type="number"
@@ -86,7 +82,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
     name: 'ModifyWarehouses',
@@ -103,6 +100,7 @@ export default {
         }
     }),    
     computed :{
+        ...mapState(['selectedAirportIndex','airportCreate']),
          form () {
             return {
                 name: this.name,
@@ -115,12 +113,22 @@ export default {
     },
     methods:{
         modifyCapacity(){
-            Swal.fire({
-                icon: 'success',
-                title: '<p style="font-family:Roboto;">Enhorabuena</p>',
-                html: '<p style="font-family:Roboto;">Almacen modificado satisfactoriamente</p>'
+            console.log(this.airportCreate.capacidad);
+            userDA.editAirport(this.airportCreate.idAeropuerto,this.airportCreate.capacidad).then((res) =>{
+                Swal.fire({
+                    icon: 'success',
+                    title: '<p style="font-family:Roboto;">Enhorabuena</p>',
+                    html: '<p style="font-family:Roboto;">Capacidad del aeropuerto modificado satisfactoriamente</p>'
+                })
+               
+            }).catch(error =>{
+                Swal.fire({
+                    title : '<p style="font-family:Roboto;">Error</p>',
+                    icon : 'error',
+                    html : '<p style="font-family:Roboto;">Error al editar la capacidad del aeropuerto</p>'
+                })
             })
         }
-    }    
+    },    
 }
 </script>

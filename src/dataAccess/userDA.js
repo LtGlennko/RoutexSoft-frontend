@@ -24,3 +24,10 @@ export function getPersonData(dni){
     return axios.post(url,body);
 }
 
+export function editAirport(idAeropuerto,capacidad){
+    let url = process.env.VUE_APP_API_URL + 'api/airport/' + idAeropuerto
+    var body ={
+        "capacidad" : capacidad
+    }
+    return axios.put(url,body);
+}

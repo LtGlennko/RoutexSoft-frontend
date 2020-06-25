@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Gestionar Almacenes
+                        Gestionar Aeropuertos
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -25,7 +25,8 @@
                         </v-card-subtitle>
                     
                         <v-data-table   :headers="headers"
-                                        :items="warehouses"
+                                        :items="airports"
+                                        :item-key="idAero"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
@@ -33,8 +34,8 @@
                                         :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
-                            <template v-slot:item.actions="{ items }">
-                                <v-icon medium class="mr-5" @click="editUser()" >
+                            <template v-slot:item.actions="{ item}" >
+                                <v-icon medium class="mr-5" @click="editWarehouses(item)" >
                                     mdi-pencil
                                 </v-icon>
                             </template>
@@ -54,6 +55,7 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import {mapState, mapActions} from 'vuex'
+import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
     name: 'ManageWarehouses',
@@ -64,60 +66,41 @@ export default {
             loadingText: 'Cargando almacenes',
             filterNoResultsText: 'No se encontraron almacenes que cumplan con los filtros',
             noDataText: 'No hay almacenes para mostrar',
-            warehouses: [
-                {
-                    name: 'BOGO',
-                    country: 'COLOMBIA',
-                    city: 'BOGOTA',
-                    capacity: '200',
-                },
-                {
-                    name: 'QUIT',
-                    country: 'ECUADOR',
-                    city: 'QUITO',
-                    capacity: '200',
-                },
-                {
-                    name: 'CARA',
-                    country: 'VENEZUELA',
-                    city: 'CARACAS',
-                    capacity: '200',
-                },
-                {
-                    name: 'BRAS',
-                    country: 'BRASILIA',
-                    city: 'BRASIL',
-                    capacity: '200',
-                }
-            ],
         }
     },
+
+    mounted(){
+        this.getAirports();
+    },
+    
     computed: {
+        ...mapState (['airports']),
+
         headers () {
             let items = []
             items.push({
                 text: 'NOMBRE',
                 align: 'center',
                 sortable: true,
-                value: 'name',
+                value: 'codAero',
             })
             items.push({
                 text: 'PAIS',
                 align: 'center',
                 sortable: true,
-                value: 'country',
+                value: 'pais',
             })
             items.push({
                 text: 'CIUDAD',
                 align: 'center',
                 sortable: true,
-                value: 'city',
+                value: 'ciudad',
             })
             items.push({
                 text: 'CAPACIDAD',
                 align: 'center',
                 sortable: true,
-                value: 'capacity'
+                value: 'capacidad'
             })
             items.push({ 
                 text: 'ACCIONES',
@@ -131,8 +114,27 @@ export default {
         
     },    
     methods:{
-        editUser(){
+        ...mapActions(['completeAirports','setAirportIndex']),
+        
+        editWarehouses(item){
+            const index = this.airports.indexOf(item)
+            console.log('index: ',index);
             this.$router.push('/ModifyWarehouses');
+            this.setAirportIndex(index)
+        },
+        
+
+        getAirports: function() {
+            userDA.getAllAirports().then((res) =>{
+                this.completeAirports(res.data);
+                console.log('Se recibió el servicio de aeropuertos');
+            }).catch(error =>{
+                Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: 'Error obteniendo los aeropuertos'
+                })
+            });
         },
     }
 }
