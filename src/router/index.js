@@ -52,6 +52,21 @@ Vue.use(VueRouter)
         component: () => import('../components/Manager/GestHistory.vue')
       },
       {
+        path: '/GestPackages',
+        name: 'GestPackages',
+        component: () => import('../components/Manager/GestPackages.vue')
+      },
+      {
+        path: '/GestRutes',
+        name: 'GestRutes',
+        component: () => import('../components/Manager/GestRutes.vue')
+      },
+      {
+        path: '/GestSimulation',
+        name: 'GestSimulation',
+        component: () => import('../components/Manager/GestSimulation.vue')
+      },
+      {
         path: '/CreateClients',
         name: 'CreateClients',
         component: () => import('../components/Registrar/CreateClients.vue')

@@ -1,9 +1,12 @@
 .mb-2{
     color: white;
     background-color: #137073 !important;
-    float: right;
+    
 }
-
+.buttonLoadHistory{
+    color: white;
+    background-color: #137073 !important;
+}
 .titleCard{
     font-size: 28px !important;
 }
