@@ -69,14 +69,14 @@ export default {
             noDataText: 'No hay usuarios para mostrar',
             users: [
                 {
-                    name: 'Frozen Yogurt',
-                    lastName: 'Frozen Yogurt',
+                    name: 'ADRIANA',
+                    lastName: 'LOPEZ',
                     emailAddress: 'ALOPEZ@GMAIL.COM',
                     userName: 'ALOPEZ',
                 },
                 {
-                    name: 'Ice cream sandwich',
-                    lastName: 'Frozen Yogurt',
+                    name: 'JOSE',
+                    lastName: 'VARGAS',
                     emailAddress: 'JVARGAS@GMAIL.COM',
                     userName: 'JVARGAS',
                 }

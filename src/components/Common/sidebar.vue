@@ -61,7 +61,7 @@
             item: 0,
             optionAdministrator: [
                 { text: 'Gestionar Usuarios', icon: 'mdi-account-circle', to:'/ManageUsers'},
-                { text: 'Gestionar Almacenes', icon: 'mdi-store', to:'/ManageWarehouses' },
+                { text: 'Gestionar Aeropuertos', icon: 'mdi-store', to:'/ManageWarehouses' },
                 { text: 'Gestionar Planes de Vuelo', icon: 'mdi-airplane', to:'/ManageFlightPlans' },
                 { text: 'Configurar Parametros', icon: 'mdi-brightness-7', to:'/ConfigureParameters' },
             ],

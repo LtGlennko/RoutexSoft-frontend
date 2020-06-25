@@ -1,18 +1,22 @@
 <template>
 	<v-app>
+		<v-row class="topBar">
+            <v-col >
+            </v-col>
+        </v-row>
 		<center>
 			<img
 				src="@/images/tittle-login.png"
-				style="max-width: 50%"	
+				class="imgLogin"
 			/>
 		</center>
 		<v-card
 			color="blue-grey lighten-5"
 			width="400"
-			class="mx-auto"
+			class="mx-auto mb-5 cardTitlePrincipal"
 		>
-			<v-card-title>
-				<h1 class="display-1">Accede al Sistema</h1>
+			<v-card-title class="cardTitle">
+				<h1 class="display-1 titleLogin">Accede al Sistema</h1>
 			</v-card-title>
 			<v-card-text>
 				<v-form>
@@ -47,7 +51,7 @@
 				<v-col class="text-center" cols="4" sm="12">
 					<div class="my-2">
 						<v-btn
-							color="success"
+							class="btnValidate"
 							@click="validate()"
 						>
 							Acceder
@@ -60,8 +64,15 @@
 				</v-row>
 			</v-card-actions>
 		</v-card>
+		<v-row class="topBar">
+            <v-col >
+            </v-col>
+        </v-row>
 	</v-app>
 </template>
+
+<style src="@/styles/Login/Login.css" scoped>
+</style>
 
 <script>
 
