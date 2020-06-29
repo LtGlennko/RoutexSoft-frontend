@@ -17,6 +17,7 @@
     font-size: small !important;
     font-weight: bold;
     text-transform: uppercase;
+    justify-content: center;
   }
 
   .v-btn__content{

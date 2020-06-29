@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as userDA from '@/dataAccess/userDA.js'
 
 Vue.use(Vuex)
 
@@ -7,7 +8,29 @@ export default new Vuex.Store({
   state: {  
     edit:'',
     airports:[],
+<<<<<<< HEAD
     packages:[]
+=======
+    countries: [],
+    originCountry:'',
+    destinationCountry:'',
+    clientCreate :{
+      idPerson : -1,
+      documentNumber : '',
+      name : '',
+      lastname : '',
+      email : '',
+      cellphone : ''
+    },
+    airportCreate:{
+      idAeropuerto:-1,
+      codAero:'',
+      pais:'',
+      ciudad:'',
+      abrev:'',
+      capacidad:-1,
+    }
+>>>>>>> master
   },
   mutations: {
     setActUser(state,edit){
@@ -19,6 +42,9 @@ export default new Vuex.Store({
     setActRole(state,edit){
       state.editRole = edit;
     },
+    setActSim(state,edit){
+      state.editActSim = edit;
+    },
     setActClient(state,edit){
       state.editClient = edit;
     },
@@ -28,23 +54,26 @@ export default new Vuex.Store({
     setActAddressee(state,edit){
       state.editAddressee = edit;
     },
+    
+    setRequestCountry (state, countries) {
+      state.countries = countries
+    },
 
-
-    fillAirports(state,airport){
+    fillAirports(state,airport_data){
       state.airports=[];
-      let airport_data = airport.airports;
-      for (let i=0; i< airport_data.length;i++){
+      for (let airport of airport_data){
         state.airports.push({
-          idAeropuerto : airport_data[i].idAeropuerto,
-          nombre : airport_data[i].nombre,
-          codAero : airport_data[i].codAero,
-          pais : airport_data[i].pais,
-          capacidad : airport_data[i].capacidad,
-          huso : airport_data[i].huso
+          idAeropuerto : airport.idAeropuerto,
+          codAero : airport.codAero,
+          pais : airport.pais,
+          ciudad : airport.ciudad,
+          abrev : airport.abrev,
+          capacidad : airport.capacidad
         });
       }
     },
 
+<<<<<<< HEAD
     fillPackages(state,package){
       state.packages=[];
       let package_data = package.packages;
@@ -61,6 +90,24 @@ export default new Vuex.Store({
           longitud : package_data[i].longitud
         });
       }
+=======
+    setAirportInd(state,index){
+      state.selectedAirportIndex = index;
+      state.airportCreate.idAeropuerto = state.airports[index].idAeropuerto;
+      state.airportCreate.codAero = state.airports[index].codAero;
+      state.airportCreate.pais = state.airports[index].pais;
+      state.airportCreate.ciudad = state.airports[index].ciudad;
+      state.airportCreate.abrev = state.airports[index].abrev;
+      state.airportCreate.capacidad = state.airports[index].capacidad;
+    },
+
+    fillPersonCreate(state,person_data){
+      state.clientCreate.idPerson = person_data.idPerson;
+      state.clientCreate.name = person_data.name;
+      state.clientCreate.lastname = person_data.lastname;
+      state.clientCreate.email = person_data.email;
+      state.clientCreate.documentNumber = person_data.documentNumber;
+>>>>>>> master
     },
 
 
@@ -75,6 +122,9 @@ export default new Vuex.Store({
     setActionRole(context,edit){
       context.commit('setActRole',edit);
     },
+    setActionSimulation(context,edit){
+      context.commit('setActSim',edit);
+    },
     setActionClient(context,edit){
       context.commit('setActClient',edit);
     },
@@ -85,11 +135,35 @@ export default new Vuex.Store({
       context.commit('setActAddressee',edit);
     },
 
+    setAirportIndex(context,index){
+      context.commit('setAirportInd',index);
+    },
+
     completeAirports(context,airports_data){
       context.commit('fillAirports',airports_data);
     },
     completePackages(context,packages_data){
       context.commit('fillPackages',packages_data);
+    },
+
+    completePersonCreate(context,person_data){
+      context.commit('fillPersonCreate',person_data);
+    },
+
+
+
+    async obtainCountry (context) {
+      let response = await userDA.getAllAirports()
+      const API_RESULT = response.data
+      let newData = []
+      API_RESULT.forEach((elem) => {
+        let newRecord = {
+          text: elem.pais + ' - ' + elem.ciudad,
+          value: elem.idAeropuerto
+        }
+        newData.push(newRecord)
+      })
+      context.commit('setRequestCountry', newData)
     },
 
 

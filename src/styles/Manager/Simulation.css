@@ -1,0 +1,49 @@
+.mb-2{
+    color: white;
+    background-color: #137073 !important;
+    
+}
+.mb-3{
+    color: white;
+    background-color: #137073 !important;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+}
+.nani{
+    text-align: center;
+    align-items: center;
+    align-content: center;
+}
+.buttonLoadHistory{
+    color: white;
+    background-color: #137073 !important;
+}
+.titleCard{
+    font-size: 28px !important;
+}
+
+.mr-5{
+    color: #137073;
+    font-size: 50px;
+    text-align: right;
+    padding-left: 125px;
+}
+
+.iconTable{
+    color: #137073;
+}
+
+.swal2-title{
+ font-family: "Roboto";
+}
+
+.img{
+    height:720px;
+    width:950px;
+}
+.cosa-rara{
+    text-align: center;
+    align-content: center;
+    align-items: center;
+}
