@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {  
     edit:'',
-    airports:[]
+    airports:[],
+    packages:[]
   },
   mutations: {
     setActUser(state,edit){
@@ -44,6 +45,24 @@ export default new Vuex.Store({
       }
     },
 
+    fillAirports(state,package){
+      state.packages=[];
+      let package_data = package.packages;
+      for (let i=0; i< package_data.length;i++){
+        state.packages.push({
+          idPaquete : package_data[i].idPaquete,
+          codigoEnvio : package_data[i].codigoEnvio,
+          nombre : package_data[i].nombre,
+          remitente : package_data[i].remitente,
+          destinatario : package_data[i].destinatario,
+          origen : package_data[i].origen,
+          destino : package_data[i].destino,
+          latitud : package_data[i].latitud,
+          longitud : package_data[i].longitud
+        });
+      }
+    },
+
 
   },
   actions: {
@@ -68,6 +87,9 @@ export default new Vuex.Store({
 
     completeAirports(context,airports_data){
       context.commit('fillAirports',airports_data);
+    },
+    completePackages(context,packages_data){
+      context.commit('fillPackages',packages_data);
     },
 
 

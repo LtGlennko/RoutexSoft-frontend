@@ -123,6 +123,21 @@ export default {
     },    
     methods:{
         //...mapActions(['setActionUser']),
+        ...mapActions(['completePackages']),
+
+        getPackages: function() {
+            userDA.getAllPackages().then((res) =>{
+                this.completePackages(res.data);
+                console.log();
+            }).catch(error =>{
+                Swal.fire({
+                    title: 'Error',
+                    type: 'error',
+                    text: 'Error obteniendo los clientes'
+                })
+            });
+        },
+
         editUser(){
             this.$router.push('/CreateUser');
             this.setActionUser(true);
