@@ -77,6 +77,8 @@ export default new Vuex.Store({
           idPaquete : packageSW.idPaquete,
           codigoEnvio : packageSW.codigoEnvio,
           nombre : packageSW.nombre,
+          descripcion : packageSW.descripcion,
+          estadoEnvio : packageSW.estadoEnvio,
           remitente : packageSW.remitente,
           destinatario : packageSW.destinatario,
           origen : packageSW.origen,
