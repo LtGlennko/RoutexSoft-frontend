@@ -16,12 +16,11 @@ export function getAllAirports(){
     return axios.get(url);
 }
 
-<<<<<<< HEAD
 export function getAllPackages(){
     let url = process.env.VUE_APP_API_URL + 'api/package/';  /*Switch to real url*/
     return axios.get(url);
 }
-=======
+
 export function getPersonData(dni){
     let url = process.env.VUE_APP_API_URL + 'api/dniValidation/';
     var body ={
@@ -37,4 +36,3 @@ export function editAirport(idAeropuerto,capacidad){
     }
     return axios.put(url,body);
 }
->>>>>>> master

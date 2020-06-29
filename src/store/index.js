@@ -8,9 +8,7 @@ export default new Vuex.Store({
   state: {  
     edit:'',
     airports:[],
-<<<<<<< HEAD
-    packages:[]
-=======
+    packages:[],
     countries: [],
     originCountry:'',
     destinationCountry:'',
@@ -30,7 +28,6 @@ export default new Vuex.Store({
       abrev:'',
       capacidad:-1,
     }
->>>>>>> master
   },
   mutations: {
     setActUser(state,edit){
@@ -73,24 +70,23 @@ export default new Vuex.Store({
       }
     },
 
-<<<<<<< HEAD
-    fillPackages(state,package){
+    fillPackages(state,package_data){
       state.packages=[];
-      let package_data = package.packages;
-      for (let i=0; i< package_data.length;i++){
+      for (let packageSW of package_data){
         state.packages.push({
-          idPaquete : package_data[i].idPaquete,
-          codigoEnvio : package_data[i].codigoEnvio,
-          nombre : package_data[i].nombre,
-          remitente : package_data[i].remitente,
-          destinatario : package_data[i].destinatario,
-          origen : package_data[i].origen,
-          destino : package_data[i].destino,
-          latitud : package_data[i].latitud,
-          longitud : package_data[i].longitud
+          idPaquete : packageSW.idPaquete,
+          codigoEnvio : packageSW.codigoEnvio,
+          nombre : packageSW.nombre,
+          remitente : packageSW.remitente,
+          destinatario : packageSW.destinatario,
+          origen : packageSW.origen,
+          destino : packageSW.destino,
+          latitud : packageSW.latitud,
+          longitud : packageSW.longitud
         });
       }
-=======
+    },
+
     setAirportInd(state,index){
       state.selectedAirportIndex = index;
       state.airportCreate.idAeropuerto = state.airports[index].idAeropuerto;
@@ -107,7 +103,6 @@ export default new Vuex.Store({
       state.clientCreate.lastname = person_data.lastname;
       state.clientCreate.email = person_data.email;
       state.clientCreate.documentNumber = person_data.documentNumber;
->>>>>>> master
     },
 
 

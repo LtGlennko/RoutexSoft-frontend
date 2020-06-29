@@ -83,6 +83,9 @@ export default {
             ],
         }
     },
+    mounted(){
+        this.getPackages();
+    },
     computed: {
         headers () {
             let items = []
