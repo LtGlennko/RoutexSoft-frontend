@@ -45,7 +45,7 @@ export default new Vuex.Store({
       }
     },
 
-    fillAirports(state,package){
+    fillPackages(state,package){
       state.packages=[];
       let package_data = package.packages;
       for (let i=0; i< package_data.length;i++){

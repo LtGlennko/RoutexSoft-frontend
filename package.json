@@ -10,6 +10,7 @@
     "core-js": "^3.6.5",
     "sweetalert2": "^9.14.2",
     "vue": "^2.6.11",
+    "vue-cli": "^2.9.6",
     "vue-i18n": "^8.18.2",
     "vue-router": "^3.2.0",
     "vue-sweetalert2": "^3.0.5",
