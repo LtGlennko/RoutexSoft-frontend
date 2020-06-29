@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {  
     edit:'',
     airports:[],
+    packages:[],
     countries: [],
     originCountry:'',
     destinationCountry:'',
@@ -69,6 +70,25 @@ export default new Vuex.Store({
       }
     },
 
+    fillPackages(state,package_data){
+      state.packages=[];
+      for (let packageSW of package_data){
+        state.packages.push({
+          idPaquete : packageSW.idPaquete,
+          codigoEnvio : packageSW.codigoEnvio,
+          nombre : packageSW.nombre,
+          descripcion : packageSW.descripcion,
+          estadoEnvio : packageSW.estadoEnvio,
+          remitente : packageSW.remitente,
+          destinatario : packageSW.destinatario,
+          origen : packageSW.origen,
+          destino : packageSW.destino,
+          latitud : packageSW.latitud,
+          longitud : packageSW.longitud
+        });
+      }
+    },
+
     setAirportInd(state,index){
       state.selectedAirportIndex = index;
       state.airportCreate.idAeropuerto = state.airports[index].idAeropuerto;
@@ -118,6 +138,9 @@ export default new Vuex.Store({
 
     completeAirports(context,airports_data){
       context.commit('fillAirports',airports_data);
+    },
+    completePackages(context,packages_data){
+      context.commit('fillPackages',packages_data);
     },
 
     completePersonCreate(context,person_data){
