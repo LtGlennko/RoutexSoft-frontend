@@ -47,6 +47,7 @@
                         <v-col cols="2">
                         </v-col>
                     </v-row>
+                    
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-row >
