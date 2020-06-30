@@ -9,6 +9,7 @@ export default new Vuex.Store({
     edit:'',
     airports:[],
     clients:[],
+    packages:[],
     countries: [],
     originCountry:'',
     destinationCountry:'',
@@ -85,6 +86,25 @@ export default new Vuex.Store({
           continente : airport.continente,
           abrev : airport.abrev,
           capacidad : airport.capacidad
+        });
+      }
+    },
+
+    fillPackages(state,package_data){
+      state.packages=[];
+      for (let packageSW of package_data){
+        state.packages.push({
+          idPaquete : packageSW.idPaquete,
+          codigoEnvio : packageSW.codigoEnvio,
+          nombre : packageSW.nombre,
+          descripcion : packageSW.descripcion,
+          estadoEnvio : packageSW.estadoEnvio,
+          remitente : packageSW.remitente,
+          destinatario : packageSW.destinatario,
+          origen : packageSW.origen,
+          destino : packageSW.destino,
+          latitud : packageSW.latitud,
+          longitud : packageSW.longitud
         });
       }
     },
@@ -173,6 +193,9 @@ export default new Vuex.Store({
 
     completeAirports(context,airports_data){
       context.commit('fillAirports',airports_data);
+    },
+    completePackages(context,packages_data){
+      context.commit('fillPackages',packages_data);
     },
 
     completeSenderCreate(context,person_data){

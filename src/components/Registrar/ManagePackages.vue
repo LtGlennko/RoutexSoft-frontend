@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Gestionar Paquetes
+                        Visualizar Paquetes
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -18,14 +18,11 @@
                                         hide-details
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=createUser()>Añadir Usuario</v-btn>
-                                </v-col>
                             </v-row>
                         </v-card-subtitle>
                     
                         <v-data-table   :headers="headers"
-                                        :items="users"
+                                        :items="packages"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
@@ -33,12 +30,9 @@
                                         :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
-                            <template v-slot:item.actions="{ items }">
-                                <v-icon medium class="mr-5" @click="editUser()" >
-                                    mdi-pencil
-                                </v-icon>
-                                <v-icon medium class="iconTable" v-on:click="deleteUser()">
-                                    mdi-delete
+                            <template v-slot:item.actions="{ item}" >
+                                <v-icon medium class="mr-5" @click="viewRute(item)" >
+                                    mdi-call-split
                                 </v-icon>
                             </template>
                         </v-data-table>
@@ -57,6 +51,7 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import {mapState, mapActions} from 'vuex'
+import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
     name: 'ManagePackages',
@@ -67,51 +62,54 @@ export default {
             loadingText: 'Cargando usuarios',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
             noDataText: 'No hay usuarios para mostrar',
-            users: [
-                {
-                    name: 'Frozen Yogurt',
-                    lastName: 'Frozen Yogurt',
-                    emailAddress: 'ALOPEZ@GMAIL.COM',
-                    userName: 'ALOPEZ',
-                },
-                {
-                    name: 'Ice cream sandwich',
-                    lastName: 'Frozen Yogurt',
-                    emailAddress: 'JVARGAS@GMAIL.COM',
-                    userName: 'JVARGAS',
-                }
-            ],
         }
     },
+    mounted(){
+        this.getPackages();
+    },
     computed: {
+        ...mapState (['packages']),
+
         headers () {
             let items = []
             items.push({
-                text: 'NOMBRES',
+                text: 'COD. ENVÍO',
                 align: 'center',
                 sortable: true,
-                value: 'name',
+                value: 'codigoEnvio',
             })
             items.push({
-                text: 'APELLIDOS',
+                text: 'DESCRIPCIÓN',
                 align: 'center',
                 sortable: true,
-                value: 'lastName',
+                value: 'descripcion',
             })
             items.push({
-                text: 'CORREO ELECTRÓNICO',
+                text: 'REMITENTE',
                 align: 'center',
                 sortable: true,
-                value: 'emailAddress',
-            })
-            items.push({
-                text: 'USUARIO',
-                align: 'center',
-                sortable: true,
-                value: 'userName'
+                value: 'remitente.nombres',
             })
             items.push({ 
-                text: 'ACCIONES',
+                text: 'DESTINATARIO',
+                align: 'center',
+                sortable: true,
+                value: 'destinatario.nombres',
+            })
+            items.push({
+                text: 'ORIGEN',
+                align: 'center',
+                sortable: true,
+                value: 'origen.ciudad',
+            })
+            items.push({
+                text: 'DESTINO',
+                align: 'center',
+                sortable: true,
+                value: 'destino.ciudad',
+            })
+            items.push({ 
+                text: 'VER RUTA',
                 align: 'center',
                 sortable: false,
                 value: 'actions'
@@ -123,13 +121,29 @@ export default {
     },    
     methods:{
         //...mapActions(['setActionUser']),
-        editUser(){
-            this.$router.push('/CreateUser');
-            this.setActionUser(true);
+        ...mapActions(['completePackages']),
+
+        getPackages: function() {
+            userDA.getAllPackages().then((res) =>{
+                this.completePackages(res.data);
+                console.log('Se recibió el servicio de paquetes');
+                console.log(res.data);
+            }).catch(error =>{
+                Swal.fire({
+                    title: 'Error',
+                    type: 'error',
+                    text: 'Error obteniendo los clientes'
+                })
+            });
         },
+
+        viewRute(){
+            console.log('Se mostrará ruta');
+        },
+
         deletePackage(){
             Swal.fire({
-                title: '<p style="font-family:Roboto;">¿Está seguro que desea eliminar este usuario?</p>',
+                title: '<p style="font-family:Roboto;">¿Está seguro que desea eliminar este paquete?</p>',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#28a745',

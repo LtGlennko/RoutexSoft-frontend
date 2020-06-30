@@ -38,6 +38,12 @@ export function getPackageDataByTrackNumber(codigoEnvio){
         }
     });
 }
+    
+export function getAllPackages(){
+    let url = process.env.VUE_APP_API_URL + 'api/package/';  /*Switch to real url*/
+    return axios.get(url);
+}
+
 
 export function editAirport(idAeropuerto,capacidad){
     let url = process.env.VUE_APP_API_URL + 'api/airport/' + idAeropuerto
