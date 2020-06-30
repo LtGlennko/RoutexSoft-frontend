@@ -22,7 +22,7 @@
                         <v-card-subtitle>
                             <v-row>
                                 <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=LoadHistory()>Cargar Historial</v-btn>
+                                    <br><v-btn class="mb-2 buttonLoadHistory" @click=LoadHistory()>Cargar Historial</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-subtitle>
@@ -36,7 +36,8 @@
 <style src="@/styles/Manager/GestHistory.css" scoped>
 </style>
 <script>
-
+import Swal from 'sweetalert2'
+import 'sweetalert2/src/sweetalert2.scss'
 export default {
     name: 'GestHistory',
     data () {
@@ -66,25 +67,25 @@ export default {
         headers () {
             let items = []
             items.push({
-                text: 'Ciudad Origen',
+                text: 'CIUDAD ORIGEN',
                 align: 'center',
                 sortable: true,
                 value: 'first_city',
             })
             items.push({
-                text: 'Ciudad Destino',
+                text: 'CIUDAD DESTINO',
                 align: 'center',
                 sortable: true,
                 value: 'last_city',
             })
             items.push({
-                text: 'Hora Partida',
+                text: 'HORA PARTIDA',
                 align: 'center',
                 sortable: true,
                 value: 'first_time',
             })
             items.push({
-                text: 'Hora Salida',
+                text: 'HORA SALIDA',
                 align: 'center',
                 sortable: true,
                 value: 'last_time'
@@ -94,13 +95,15 @@ export default {
         },
         
     },    
-    /*methods:{
-        ...mapActions(['setActionUser']),
-        createUser(){
-            this.$router.push('/LoadHistory');
-            this.setActionUser(false);
-        },
-    }*/
+    methods:{
+        LoadHistory(){
+            Swal.fire({
+                icon: 'success',
+                title: '<p style="font-family:Roboto;">Enhorabuena</p>',
+                html: '<p style="font-family:Roboto;">Se ha cargado exitosamente el historial</p>'
+            })
+        }
+    }
     //Todavía tengo que ver como funciona los actions en el index.js del store
 
 }

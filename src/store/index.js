@@ -57,6 +57,9 @@ export default new Vuex.Store({
     setActRole(state,edit){
       state.editRole = edit;
     },
+    setActSim(state,edit){
+      state.editActSim = edit;
+    },
     setActClient(state,edit){
       state.editClient = edit;
     },
@@ -150,6 +153,9 @@ export default new Vuex.Store({
     },
     setActionRole(context,edit){
       context.commit('setActRole',edit);
+    },
+    setActionSimulation(context,edit){
+      context.commit('setActSim',edit);
     },
     setActionClient(context,edit){
       context.commit('setActClient',edit);
