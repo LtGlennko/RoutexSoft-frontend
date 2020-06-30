@@ -59,6 +59,7 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import {mapState, mapActions} from 'vuex'
+import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
     name: 'ManageClients',
@@ -69,78 +70,60 @@ export default {
             loadingText: 'Cargando clientes',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
             noDataText: 'No hay clientes para mostrar',
-            clients: [
-                {
-                    dni: '18232212',
-                    name: 'Pancho',
-                    lastName: 'Rodriguez',
-                    emailAddress: 'aia2043@gmail.com',
-                    nroTlf: '+54 2342311',
-                },
-                {
-                    dni: '73274372',
-                    name: 'daddy',
-                    lastName: 'yankee',
-                    emailAddress: 'osuna@gmail.com',
-                    nroTlf: '+53 9012112',
-                },
-                {
-                    dni: '73424483',
-                    name: 'INGA',
-                    lastName: 'Inga',
-                    emailAddress: 'lasmanoshaciaarriba@gmail.com',
-                    nroTlf: '+51 7624671',
-                },
-                {
-                    dni: '01213882',
-                    name: 'shaky shaky',
-                    lastName: 'sheky oh',
-                    emailAddress: 'aquillegotutiburon@gmail.com',
-                    nroTlf: '+53 3233211',
-                }
-            ],
+            
         }
     },
     computed: {
-        ...mapState (['editSender', 'editAddressee','editClient']),
+        ...mapState (['editSender', 'editAddressee','editClient','clients']),
         headers () {
             let items = []
             items.push({
-                text: 'DNI',
+                text: 'NUM DOCUMENTO',
                 align: 'center',
                 sortable: true,
-                value: 'dni',
+                value: 'docIden',
             })
             items.push({
                 text: 'NOMBRES',
                 align: 'center',
                 sortable: true,
-                value: 'name',
+                value: 'nombres',
             })
             items.push({
                 text: 'APELLIDOS',
                 align: 'center',
                 sortable: true,
-                value: 'lastName',
+                value: 'apellidos',
             })
             items.push({
                 text: 'CORREO ELECTRÓNICO',
                 align: 'center',
                 sortable: true,
-                value: 'emailAddress',
+                value: 'correo',
             })
-            items.push({
-                text: 'TELÉFONO',
-                align: 'center',
-                sortable: true,
-                value: 'nroTlf'
-            })            
+                       
             return items
         },
         
     },
+    mounted(){
+        this.getClients();
+    },
     methods:{
-        ...mapActions(['setActionClient', 'setActionSender', 'setActionAddressee']),
+        ...mapActions(['setActionClient', 'setActionSender', 'setActionAddressee','completeClients']),
+        getClients: function() {
+            userDA.getAllClients().then((res) =>{
+                this.completeClients(res.data);
+                console.log('Se recibió el servicio de clientes');
+            }).catch(error =>{
+                Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: 'Error obteniendo los clientes'
+                })
+            });
+        },
+
         createClient(){
             this.$router.push('/CreateClients');
             this.setActionClient(false);

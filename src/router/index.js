@@ -112,6 +112,11 @@ Vue.use(VueRouter)
     path: '/TrackPackage',
     name: 'TrackPackage',
     component: () => import('../views/Principal/SubViews/TrackPackage.vue')
+  },
+  {
+    path: '/prueba',
+    name: 'prueba',
+    component: () => import('../views/Principal/SubViews/prueba.vue')
   }
   
 ]

@@ -8,17 +8,26 @@ export default new Vuex.Store({
   state: {  
     edit:'',
     airports:[],
+    clients:[],
     packages:[],
     countries: [],
     originCountry:'',
     destinationCountry:'',
-    clientCreate :{
-      idPerson : -1,
-      documentNumber : '',
-      name : '',
-      lastname : '',
-      email : '',
-      cellphone : ''
+    SenderCreate :{
+      idCliente : -1,
+      docIden : '',
+      nombres : '',
+      apellidos : '',
+      correo : '',
+      nroTelef : ''
+    },
+    AddresseeCreate:{
+      idCliente : -1,
+      docIden : '',
+      nombres : '',
+      apellidos : '',
+      correo : '',
+      nroTelef : ''
     },
     airportCreate:{
       idAeropuerto:-1,
@@ -27,6 +36,16 @@ export default new Vuex.Store({
       ciudad:'',
       abrev:'',
       capacidad:-1,
+    },
+    PackageData:{
+      idPaquete:-1, 
+      codigoEnvio:'', 
+      nombre:'',  
+      descripcion:'',  
+      estadoEnvio:'',  
+      fechahoraRegistro:'',
+      origen:{},
+      destino:{},  
     }
   },
   mutations: {
@@ -64,6 +83,7 @@ export default new Vuex.Store({
           codAero : airport.codAero,
           pais : airport.pais,
           ciudad : airport.ciudad,
+          continente : airport.continente,
           abrev : airport.abrev,
           capacidad : airport.capacidad
         });
@@ -99,12 +119,47 @@ export default new Vuex.Store({
       state.airportCreate.capacidad = state.airports[index].capacidad;
     },
 
-    fillPersonCreate(state,person_data){
-      state.clientCreate.idPerson = person_data.idPerson;
-      state.clientCreate.name = person_data.name;
-      state.clientCreate.lastname = person_data.lastname;
-      state.clientCreate.email = person_data.email;
-      state.clientCreate.documentNumber = person_data.documentNumber;
+    fillSenderCreate(state,person_data){
+      state.SenderCreate.idCliente = person_data.idCliente;
+      state.SenderCreate.nombres = person_data.nombres;
+      state.SenderCreate.apellidos = person_data.apellidos;
+      state.SenderCreate.correo = person_data.correo;
+      state.SenderCreate.docIden = person_data.docIden;
+      state.SenderCreate.nroTelef = person_data.nroTelef;
+    },
+
+    fillAddresseeCreate(state,person_data){
+      state.AddresseeCreate.idCliente = person_data.idCliente;
+      state.AddresseeCreate.nombres = person_data.nombres;
+      state.AddresseeCreate.apellidos = person_data.apellidos;
+      state.AddresseeCreate.correo = person_data.correo;
+      state.AddresseeCreate.docIden = person_data.docIden;
+      state.AddresseeCreate.nroTelef = person_data.nroTelef;
+    },
+
+    fillClients(state,client_data){
+      state.clients=[];
+      for (let client of client_data){
+        state.clients.push({
+          idCliente : client.idCliente,
+          nombres : client.nombres,
+          apellidos : client.apellidos,
+          correo : client.correo,
+          docIden : client.docIden,
+          nroTelef : client.nroTelef
+        });
+      }
+    },
+
+    fillPackageData(state,package_data){
+      state.PackageData.idPaquete = package_data.idPaquete;
+      state.PackageData.codigoEnvio = package_data.codigoEnvio;
+      state.PackageData.nombre = package_data.nombre;
+      state.PackageData.descripcion = package_data.descripcion;
+      state.PackageData.estadoEnvio = package_data.estadoEnvio;
+      state.PackageData.origen = package_data.origen;
+      state.PackageData.destino = package_data.destino;
+      state.PackageData.fechahoraRegistro = package_data.fechahoraRegistro;
     },
 
 
@@ -143,10 +198,21 @@ export default new Vuex.Store({
       context.commit('fillPackages',packages_data);
     },
 
-    completePersonCreate(context,person_data){
-      context.commit('fillPersonCreate',person_data);
+    completeSenderCreate(context,person_data){
+      context.commit('fillSenderCreate',person_data);
     },
 
+    completeAddresseeCreate(context,person_data){
+      context.commit('fillAddresseeCreate',person_data);
+    },
+
+    completeClients(context,client_data){
+      context.commit('fillClients',client_data);
+    },
+
+    completePackageData(context,package_data){
+      context.commit('fillPackageData',package_data);
+    },
 
 
     async obtainCountry (context) {

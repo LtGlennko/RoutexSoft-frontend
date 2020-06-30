@@ -79,10 +79,16 @@ export default {
         headers () {
             let items = []
             items.push({
-                text: 'NOMBRE',
+                text: 'CÓDIGO AEREO',
                 align: 'center',
                 sortable: true,
                 value: 'codAero',
+            })
+            items.push({
+                text: 'CONTINENTE',
+                align: 'center',
+                sortable: true,
+                value: 'continente',
             })
             items.push({
                 text: 'PAIS',
