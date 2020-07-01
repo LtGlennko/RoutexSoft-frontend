@@ -26,6 +26,7 @@
                         <v-row>
                             <v-col cols="8">
                                 <v-text-field
+                                    v-model="trackNumber"
                                     class="mb-1 ml-10"
                                     placeholder="Ingrese el codigo de rastreo"
                                     solo>
@@ -51,12 +52,38 @@
 </style>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+import Swal from 'sweetalert2'
+import * as userDA from '@/dataAccess/userDA.js'
+
 export default {
     name: 'ClientPrincipal',
-     methods:{
+
+    data: () => ({
+        trackNumber:null,
+    }), 
+
+    computed :{
+        ...mapState (['PackageData']),
+    },
+
+    methods:{
+        ...mapActions(['completePackageData']),
         trackPackage(){
-            this.$router.push('/TrackPackage');
+            console.log(this.trackNumber);
+            userDA.getPackageDataByTrackNumber(this.trackNumber).then((res) =>{
+                this.completePackageData(res.data);
+                console.log(res.data);
+                this.$router.push('/TrackPackage');
+            }).catch(error =>{
+                    Swal.fire({
+                        title: '<p style="font-family:Roboto;">Error</p>',
+                        icon: 'error',
+                        html: '<p style="font-family:Roboto;">Código del paquete no encontrado</p>'
+                    })
+            })
+            
         }
-     }
+    }
 }
 </script>

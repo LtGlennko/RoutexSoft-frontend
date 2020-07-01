@@ -42,12 +42,11 @@
                             <h4 class="infoLabelPackage"> Destino Final: </h4>
                         </v-col>
                         <v-col cols="2" >
-                            <h4 class="infoPackage"> {{PackageData.destino.ciudad}}, {{PackageData.destino.pais}} </h4>
+                            <h4 class="infoPackage"> Madrid, España </h4>
                         </v-col>
                         <v-col cols="2">
                         </v-col>
                     </v-row>
-                    
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-row >
@@ -136,6 +135,24 @@ export default {
                 route: 'Lima, Perú',
                 state: 'Origen de salida'
                 
+            },
+            {
+                date: '2020-06-25',
+                time: '1:17 pm',
+                route: 'Quito, Ecuador',
+                state: 'En camino'
+            },
+            {
+                date: '2020-06-25',
+                time: '1:17 pm',
+                route: 'Quito, Ecuador',
+                state: 'En camino'
+            },
+            {
+                date: '2020-06-25',
+                time: '1:17 pm',
+                route: 'Quito, Ecuador',
+                state: 'En camino'
             },
             {
                 date: '2020-06-25',
