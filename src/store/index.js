@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {  
     edit:'',
+    email:'',
     airports:[],
     clients:[],
     packages:[],
@@ -58,6 +59,11 @@ export default new Vuex.Store({
     setActRole(state,edit){
       state.editRole = edit;
     },
+
+    setActEmail(state,email){
+      state.editEmail = email;
+    },
+
     setActSim(state,edit){
       state.editActSim = edit;
     },
@@ -173,6 +179,9 @@ export default new Vuex.Store({
     },
     setActionRole(context,edit){
       context.commit('setActRole',edit);
+    },
+    setActionEmail(context,email){
+      context.commit('setActEmail',email);
     },
     setActionSimulation(context,edit){
       context.commit('setActSim',edit);

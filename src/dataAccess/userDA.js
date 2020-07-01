@@ -57,14 +57,12 @@ export function createSending(idRemitente,idDestinatario,idOri,idDes,nombre,desc
     let url = process.env.VUE_APP_API_URL + 'api/package' 
     var body ={
         "nombre": nombre,
-        "descripcion": descripcion
+        "descripcion": descripcion,
+        "idRemitente": idRemitente,
+        "idDestinatario": idDestinatario,
+        "idOri": idOri,
+        "idDes": idDes
     }
     
-    return axios.post(url,body,{ params:{
-            idRemitente,
-            idDestinatario,
-            idOri,
-            idDes
-        }
-    });
+    return axios.post(url,body);
 }
