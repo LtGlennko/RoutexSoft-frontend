@@ -69,16 +69,34 @@ export default {
             noDataText: 'No hay usuarios para mostrar',
             users: [
                 {
-                    name: 'ADRIANA',
-                    lastName: 'LOPEZ',
-                    emailAddress: 'ALOPEZ@GMAIL.COM',
-                    userName: 'ALOPEZ',
+                    name: 'Jeremi Layoneil',
+                    lastName: 'Cardenas Santillan',
+                    emailAddress: '	jeremi.cardenas@pucp.edu.pe',
+                    userName: 'jcardenas',
                 },
                 {
-                    name: 'JOSE',
-                    lastName: 'VARGAS',
-                    emailAddress: 'JVARGAS@GMAIL.COM',
-                    userName: 'JVARGAS',
+                    name: 'Jorge Nicolas',
+                    lastName: 'Dueñas Ramirez',
+                    emailAddress: 'nicolas.duenas@pucp.pe',
+                    userName: 'jdueñas',
+                },
+                {
+                    name: 'Glenn Eduardo',
+                    lastName: '	Lozano Tapia',
+                    emailAddress: 'glozanot@pucp.edu.pe',
+                    userName: 'glozano',
+                },
+                {
+                    name: 'Paulo Cesar',
+                    lastName: 'Tuya Rodriguez',
+                    emailAddress: 'pctuya@pucp.pe',
+                    userName: 'ptuya',
+                },
+                {
+                    name: 'Leonella Alejandra',
+                    lastName: 'Huayta Guerrero',
+                    emailAddress: 'leonella.huayta@pucp.pe',
+                    userName: 'lhuayta',
                 }
             ],
         }

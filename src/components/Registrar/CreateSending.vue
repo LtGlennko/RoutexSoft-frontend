@@ -223,8 +223,7 @@ export default {
         SlastName: ' ',
         Semail: ' ',
         description: '',
-        typeSending: null,
-        source: null,
+        
         destination: null,
         name:null,
         docNumberSender:null,
@@ -247,6 +246,19 @@ export default {
                
             }
     },
+
+    mounted(){
+        console.log('data montada')
+        this.SenderCreate.docIden=''
+        this.SenderCreate.nombres=''
+        this.SenderCreate.apellidos=''
+        this.SenderCreate.correo=''
+        this.AddresseeCreate.docIden=''
+        this.AddresseeCreate.nombres=''
+        this.AddresseeCreate.apellidos=''
+        this.AddresseeCreate.correo=''
+    },
+
     computed :{
         ...mapState (['editSender', 'editAddressee','airports','SenderCreate','AddresseeCreate','countries']),
         form () {
@@ -255,8 +267,6 @@ export default {
                 addressee: this.addressee,
                 name: this.name,
                 description: this.description,
-                typeSending: this.typeSending,
-                source: this.source,
                 destination: this.destination,
             }
         },
@@ -269,6 +279,11 @@ export default {
             userDA.getPersonData(this.docNumberSender).then((res) =>{
                 this.completeSenderCreate(res.data);
             }).catch(error =>{
+                    this.docNumberSender=''
+                    this.SenderCreate.docIden=''
+                    this.SenderCreate.nombres=''
+                    this.SenderCreate.apellidos=''
+                    this.SenderCreate.correo=''
                     Swal.fire({
                         title: '<p style="font-family:Roboto;">Error</p>',
                         icon: 'error',
@@ -282,6 +297,11 @@ export default {
             userDA.getPersonData(this.docNumberAddressee).then((res) =>{
                 this.completeAddresseeCreate(res.data);
             }).catch(error =>{
+                    this.docNumberAddressee=''
+                    this.AddresseeCreate.docIden=''
+                    this.AddresseeCreate.nombres=''
+                    this.AddresseeCreate.apellidos=''
+                    this.AddresseeCreate.correo=''
                     Swal.fire({
                         title: '<p style="font-family:Roboto;">Error</p>',
                         icon: 'error',
@@ -304,11 +324,28 @@ export default {
                     html: '<p style="font-family:Roboto;">Envío del paquete registrado, se le notificará cuando la ruta haya sido creada</p>'
                 })
             }).catch(error =>{
-                Swal.fire({
-                    title : '<p style="font-family:Roboto;">Error</p>',
-                    icon : 'error',
-                    html : '<p style="font-family:Roboto;">Error al registrar el envío</p>'
-                })
+                const API_RESULT = error.response.data
+                console.log(API_RESULT)
+                console.log('mensaje de error: ',API_RESULT.apierror.debugMessage)
+                if(API_RESULT.apierror.debugMessage=='El idRemitente y el idDestinatario no pueden ser iguales'){
+                    Swal.fire({
+                        title : '<p style="font-family:Roboto;">Error</p>',
+                        icon : 'error',
+                        html : '<p style="font-family:Roboto;">El remitente y el destinatario no pueden ser iguales</p>'
+                    })
+                }else if(API_RESULT.apierror.debugMessage=='El idDes y el idOri no pueden ser iguales'){
+                    Swal.fire({
+                        title : '<p style="font-family:Roboto;">Error</p>',
+                        icon : 'error',
+                        html : '<p style="font-family:Roboto;">El pais de origen y destino no pueden ser iguales</p>'
+                    })
+                }else {
+                    Swal.fire({
+                        title : '<p style="font-family:Roboto;">Error</p>',
+                        icon : 'error',
+                        html : '<p style="font-family:Roboto;">No se puede crear el envio de paquete</p>'
+                    })
+                }
             })
         },
 

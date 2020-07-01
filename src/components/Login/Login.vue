@@ -25,7 +25,7 @@
 						color="teal darken-3"
 						v-model="email"
 						:rules="emailRules"
-						label="Correo electrónico"
+						label="Usuario"
 						prepend-icon="mdi-account-circle"
 						v-on:keyup.enter="validate()"
 						required
@@ -41,9 +41,7 @@
 						@click:append="showPassword = !showPassword"
 						required
 					/>
-					<h6>
-						En correo: 1=Administrador, 2=Registrador, 3=Gerente, 4=Cliente
-					</h6>
+					
 				</v-form>
 			</v-card-text>
 			<v-card-actions>
@@ -93,25 +91,25 @@ export default {
 	}),
 
 	methods: {
-		...mapActions(['setActionRole']),
+		...mapActions(['setActionRole','setActionEmail']),
 		validate () {
-			if(this.email=="1"){
+			if(this.email=="lhuayta"){
 				this.$router.push('/ManageUsers')
 				console.log('Se pasara el rol1')
 				this.setActionRole("Administrador")
+				this.setActionEmail(this.email)
 			}
-			else if(this.email=="2"){
+			else if(this.email=="glozano" || this.email=="jcardenas" || this.email=="ptuya"){
 				this.$router.push('/CreateSending')
 				console.log('Se pasara el rol2')
 				this.setActionRole("Registrador")
+				this.setActionEmail(this.email)
 			}
-			else if(this.email=="3"){
+			else if(this.email=="jdueñas"){
 				this.$router.push('/GestHistory')
 				console.log('Se pasara el rol3')
 				this.setActionRole("Gerente")
-			}
-			else if(this.email=="4"){
-
+				this.setActionEmail(this.email)
 			}
 			else{
 				alert('Usuario o contraseña incorrecto')
