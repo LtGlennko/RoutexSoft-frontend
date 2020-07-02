@@ -46,7 +46,15 @@ export default new Vuex.Store({
       estadoEnvio:'',  
       fechahoraRegistro:'',
       origen:{},
-      destino:{},  
+      destino:{},
+      ruta:{},  
+    },
+    clientCreate:{
+      docIden : '',
+      nombres : '',
+      apellidos : '',
+      correo : '',
+      nroTelef : ''
     }
   },
   mutations: {
@@ -166,6 +174,7 @@ export default new Vuex.Store({
       state.PackageData.origen = package_data.origen;
       state.PackageData.destino = package_data.destino;
       state.PackageData.fechahoraRegistro = package_data.fechahoraRegistro;
+      state.PackageData.ruta = package_data.ruta;
     },
 
 

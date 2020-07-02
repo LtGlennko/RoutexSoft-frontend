@@ -66,3 +66,17 @@ export function createSending(idRemitente,idDestinatario,idOri,idDes,nombre,desc
     
     return axios.post(url,body);
 }
+
+export function createClient(docIden,nombres,apellidos,correo,nroTelef){
+    let url = process.env.VUE_APP_API_URL + 'api/client'
+    
+    var body ={
+        "docIden" : docIden,
+        "nombres" : nombres,
+        "apellidos" : apellidos,
+        "correo" : correo,
+        "nroTelef" : nroTelef
+    }
+
+    return axios.post(url,body);
+}

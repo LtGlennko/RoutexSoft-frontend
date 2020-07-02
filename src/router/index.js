@@ -95,7 +95,13 @@ Vue.use(VueRouter)
         path: '/SelectClient',
         name: 'SelectClient',
         component: () => import('../components/Registrar/SelectClient.vue')
-      },
+      }
+      ,
+      {
+        path: '/RouteDetail',
+        name: 'RouteDetail',
+        component: () => import('../components/Registrar/RouteDetail.vue')
+      }
     ]
   },
   {
@@ -112,11 +118,6 @@ Vue.use(VueRouter)
     path: '/TrackPackage',
     name: 'TrackPackage',
     component: () => import('../views/Principal/SubViews/TrackPackage.vue')
-  },
-  {
-    path: '/prueba',
-    name: 'prueba',
-    component: () => import('../views/Principal/SubViews/prueba.vue')
   }
   
 ]
