@@ -12,6 +12,11 @@ export default new Vuex.Store({
     clients:[],
     packages:[],
     countries: [],
+
+    //PARA SIMULACIÓN GRÁFICA
+    markers: [],
+    paths: [],
+
     originCountry:'',
     destinationCountry:'',
     SenderCreate :{
@@ -177,6 +182,26 @@ export default new Vuex.Store({
       state.PackageData.ruta = package_data.ruta;
     },
 
+    //PARA COMPLETAR EL MAPA DE SIMULACIÓN
+    fillMarkers(state,markers_data){
+      state.markers=[];
+      for (let marker of markers_data){
+        state.markers.push({
+          idAeropuerto : marker.idAeropuerto,
+          codAero : marker.codAero,
+          pais : marker.pais,
+          ciudad : marker.ciudad,
+          continente : marker.continente,
+          abrev : marker.abrev,
+          capacidad : marker.capacidad,
+          title: marker.abrev,
+          position: {
+            lat: marker.latitud,
+            lng: marker.longitud
+          }
+        });
+      }
+    },
 
   },
   actions: {
@@ -232,6 +257,14 @@ export default new Vuex.Store({
       context.commit('fillPackageData',package_data);
     },
 
+
+    //PARA COMPLETAR EL MAPA DE SIMULACIÓN
+    completeMarkers(context,markers_data){
+      context.commit('fillMarkers',markers_data);
+    },
+    completePaths(context,paths_data){
+      context.commit('fillPaths',paths_data);
+    },
 
     async obtainCountry (context) {
       let response = await userDA.getAllAirports()
