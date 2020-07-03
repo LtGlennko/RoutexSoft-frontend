@@ -125,6 +125,7 @@ export default {
         editWarehouses(item){
             const index = this.airports.indexOf(item)
             console.log('index: ',index);
+            console.log('codigo: ',item.ciudad);
             this.$router.push('/ModifyWarehouses');
             this.setAirportIndex(index)
         },

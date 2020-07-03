@@ -1,6 +1,6 @@
 .topBar{
     width: 100%;
-    height: 8%;
+    height: 50px;
     background-color: #003A3C;
     margin: 0px;
 }
@@ -56,5 +56,5 @@
 }
 
 .divItemTimeline{
-    width: 150px;
+    width: 250px;
 }

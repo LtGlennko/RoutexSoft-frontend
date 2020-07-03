@@ -9,14 +9,10 @@
                             Crear Cliente
                         </v-card-title>
 
-                        <v-card-title class="titleCard" v-if="editClient==='Destinatario'">
-                            Editar Cliente
-                        </v-card-title>
-                    
                         <v-row justify="center" class="ml-5 mr-5">
                             <v-col cols="6" >
                                 <v-text-field
-                                    v-model="dni"
+                                    v-model="docIden"
                                     :rules="[rules.required,rules.necessary]"
                                     label="DNI"
                                     maxlength="8"
@@ -25,25 +21,24 @@
                             <v-col cols="6" >
                                 <v-text-field
                                     ref="name"
-                                    v-model="name"
-                                    :rules="[() => !!name || 'Este campo es requerido']"
-                                    :error-messages="errorMessages"
+                                    v-model="nombres"
+                                    :rules="rules.name"
                                     label="Nombres"
+                                    required
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" >
                                 <v-text-field
                                     ref="lastName"
-                                    v-model="lastName"
-                                    :rules="[() => !!lastName || 'Este campo es requerido']"
-                                    :error-messages="errorMessages"
+                                    v-model="apellidos"
+                                    :rules="[rules.required]"
                                     label="Apellidos"
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" >
                                 <v-text-field
                                     ref="email"
-                                    v-model="email"
+                                    v-model="correo"
                                     :rules="[rules.required, rules.email]"
                                     label="Correo electrónico"
                                 ></v-text-field>
@@ -51,8 +46,8 @@
                             <!---Nro telf no obligatorio-->
                             <v-col cols="6" >
                                 <v-text-field
-                                    v-model="nroTlf"
-
+                                    v-model="nroTelef"
+                                    :rules="[rules.required]"
                                     label="Celular"
                                     maxlength="20"
                                 ></v-text-field>
@@ -64,8 +59,7 @@
                         <v-card-actions>
                             <v-row>
                             <v-col cols="6" class="colButton">
-                            <v-btn class="mb-2 buttonCreate" v-if="editClient==='Remitente'" @click=createClient()>Guardar</v-btn>
-                            <v-btn class="mb-2 buttonCreate" v-if="editClient==='Destinatario'" @click=modifyClient()>Guardar</v-btn>
+                            <v-btn class="mb-2 buttonCreate" @click=createClient()>Guardar</v-btn>
                             </v-col>
                             <v-col cols="6" class="colButton">
                             <v-btn class="mb-2 buttonCancel" @click=$router.go(-1)>Cancelar</v-btn>
@@ -89,16 +83,17 @@ import { mapState, mapActions } from 'vuex';
 import Swal from 'sweetalert2'
 import PrincipalVue from '../../views/Principal/Principal.vue';
 
+import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
     name: 'CreateClients',
     data: () => ({
         errorMessages: '',
-        dni: '',
-        name: null,
-        lastName: null,
-        email: null,
-        nroTlf: '',
+        docIden: '',
+        nombres: '',
+        apellidos: '',
+        correo: '',
+        nroTelef: '',
         rules: {
             required: value => !!value || 'Este campo es requerido',
             counter: value => value.length <= 20 || 'Máximo 20 caracteres',
@@ -108,28 +103,42 @@ export default {
             email: value => {
                 const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                 return pattern.test(value) || 'Correo electrónico inválido'
-            }
+            },
+            name: [val => (val || '').length > 0 || 'This field is required'],
         },
     }),    
     computed :{
          ...mapState (['editClient']),
          form () {
             return {
-                dni: this.dni,
-                name: this.name,
-                lastName: this.lastName,
-                email: this.email,
-                nroTlf: this.nroTlf,
+                docIden: this.docIden,
+                nombres: this.nombres,
+                apellidos: this.apellidos,
+                correo: this.correo,
+                nroTelef: this.nroTelef,
             }
          },
     },
     methods:{
         createClient(){
-            Swal.fire({
-                icon: 'success',
-                title: '<p style="font-family:Roboto;">Enhorabuena</p>',
-                html: '<p style="font-family:Roboto;">Cliente creado satisfactoriamente</p>'
+            console.log("documento:",this.docIden)
+            console.log("nombre:",this.nombres)
+            userDA.createClient(this.docIden,this.nombres,this.apellidos,this.correo,this.nroTelef).then((res) =>{
+                console.log("apellido:",this.apellidos)
+                Swal.fire({
+                    icon: 'success',
+                    title: '<p style="font-family:Roboto;">Enhorabuena</p>',
+                    html: '<p style="font-family:Roboto;">Cliente creado satisfactoriamente</p>'
+                })
+                this.$router.push('/ManageClients');
+            }).catch(error =>{
+                    Swal.fire({
+                        icon : 'error',
+                        title : '<p style="font-family:Roboto;">Error</p>',
+                        html : '<p style="font-family:Roboto;">Error al crear al cliente</p>'
+                    })
             })
+               
         },
         modifyClient(){
             Swal.fire({
