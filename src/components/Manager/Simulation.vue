@@ -28,7 +28,16 @@
                         </v-card-actions>
                         <v-row>
                             <v-col class="cosa-rara">
-                                <img class="img" src="@/images/world-map2.png" alt=""> 
+                                <gmap-map
+                                    :center="center"
+                                    :zoom="zoom"
+                                    style="width: 100%; height: 450px;">
+                                    <gmap-marker v-for="(marker) in markers"
+                                        :key="marker.key"
+                                        :position="marker"
+                                    >
+                                    </gmap-marker>
+                                </gmap-map>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -49,10 +58,28 @@
 import {mapState, mapActions} from 'vuex'
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
+import Vue from 'vue'
+import * as VueGoogleMaps from 'vue2-google-maps'
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyDKjcVHMCTYKk2keZygPn7LJ3IdF5ekfac'
+  }
+})
+
 export default {
     name: 'Simulation',
     data(){
         return{
+            center: {
+                lat: 36.60338869729776,
+                lng: -4.643738644531254
+            },
+            markers: [
+                { lat: 36.71395099999999, lng: -4.432000000000016 },
+                { lat: 36.51007199999999, lng: -4.882447400000046 }
+            ],
+            zoom: 7,
             /*search: '',
             loadingText: 'Cargando usuarios',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
