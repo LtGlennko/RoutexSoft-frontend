@@ -106,7 +106,7 @@
 
 
 
-<style src="@/styles/Client/prueba.css" scoped>
+<style src="@/styles/Client/TrackPackage.css" scoped>
 </style>
 
 <script>

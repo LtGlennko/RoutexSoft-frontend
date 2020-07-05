@@ -1,30 +1,5 @@
-.topBar{
-    width: 100%;
-    height: 8%;
-    background-color: #003A3C;
-    margin: 0px;
-}
-
-.topRow{
-    height: 84%;
-}
-
-.cardTopBar{
-    width: 100%;
-    height: 58px;
-    background-color: #22A3A9;
-    margin: 0px;
-    text-align: center;
-    color: white;
-    font-size: 25px;
-}
-
-.infoLabelPackage{
-    font-weight: 450;
-}
-
-.infoPackage{
-    font-weight: normal;
+.titleCard{
+    font-size: 28px !important;
 }
 
 .titleDetailTrack{
@@ -35,10 +10,9 @@
     height: 23%;
     color: black;
 }
-
 .timelinePrincipal{
     padding-bottom: 8px;
-    width: 65%;
+    margin-right: 0px;
 }
 
 .cardTitleTimeline{
@@ -56,5 +30,25 @@
 }
 
 .divItemTimeline{
-    width: 150px;
+    width: 250px;
+}
+
+.origenTitle{
+    text-align: center;
+    font-size: 16px;
+}
+
+.origenTitleDetail{
+    font-size: 20px !important;
+    font-weight: 600;
+}
+
+.buttonCancel{
+    color: white;
+    background-color: #137073 !important;
+    
+}
+
+.colButton{
+    text-align: center;
 }

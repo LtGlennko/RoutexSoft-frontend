@@ -68,7 +68,7 @@ export default {
         this.getPackages();
     },
     computed: {
-        ...mapState (['packages']),
+        ...mapState (['packages','PackageData']),
 
         headers () {
             let items = []
@@ -121,7 +121,7 @@ export default {
     },    
     methods:{
         //...mapActions(['setActionUser']),
-        ...mapActions(['completePackages']),
+        ...mapActions(['completePackages','completePackageData']),
 
         getPackages: function() {
             userDA.getAllPackages().then((res) =>{
@@ -137,8 +137,21 @@ export default {
             });
         },
 
-        viewRute(){
-            console.log('Se mostrará ruta');
+        viewRute(item){
+            console.log('Se mostrará la ruta');
+            console.log(item.codigoEnvio);
+            userDA.getPackageDataByTrackNumber(item.codigoEnvio).then((res) =>{
+                console.log(res.data);
+                this.completePackageData(res.data);
+                this.$router.push('/RouteDetail');
+            }).catch(error =>{
+                    Swal.fire({
+                        title: '<p style="font-family:Roboto;">Error</p>',
+                        icon: 'error',
+                        html: '<p style="font-family:Roboto;">Código del paquete no encontrado</p>'
+                    })
+            })
+
         },
 
         deletePackage(){
