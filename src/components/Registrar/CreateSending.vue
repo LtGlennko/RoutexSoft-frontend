@@ -206,7 +206,7 @@
 </style>
 
 <script>
-
+//src="https://smtpjs.com/v3/smtp.js
 import { mapState, mapActions } from 'vuex';
 import Swal from 'sweetalert2'
 import PrincipalVue from '../../views/Principal/Principal.vue';
@@ -316,6 +316,13 @@ export default {
             console.log('descripcion:',this.description);
             console.log('pais origen: ',this.originCountry);
             console.log(' nombre: ',this.nombre);
+            /*var link = "mailto:jeremi.cardenas@pucp.edu.pe"
+                     + "?cc=jeremi.cardenas@pucp.edu.pe"
+                     + "&subject" + escape("Prueba")
+                     + "&body=" + escape(document.getElementById('texto').value);
+            window.location.href = link;
+            Lo intenté, también con APIs externas, but fallé, iré por back para esto uwu
+            */
 
             userDA.createSending(this.SenderCreate.idCliente,this.AddresseeCreate.idCliente,this.originCountry,this.destinationCountry, this.nombre, this.description).then((res) =>{
                 Swal.fire({
