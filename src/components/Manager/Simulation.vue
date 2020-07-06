@@ -29,15 +29,15 @@
                         <v-row>
                             <v-col class="cosa-rara">
                                 <gmap-map
-                                    :center="center"
-                                    :zoom="zoom"
-                                    style="width: 100%; height: 450px;">
+                                    :center="mapCenter"
+                                    :zoom="mapZoom"
+                                    style="width: 100%; height: 750px;">
                                     <gmap-marker v-for="(marker) in markers"
                                         :key="marker.key"
                                         :position="marker.position"
                                         :title="marker.title"
-                                        :clickable="true"
-                                        :draggable="false"
+                                        :options="markerOptions"
+                                        {{setIcon(marker.title)}}
                                         @click="center=marker.position"
                                     >
                                     </gmap-marker>
@@ -69,6 +69,7 @@ import {mapState, mapActions} from 'vuex'
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import Vue from 'vue'
+//import * as math from 'Math'
 import * as userDA from '@/dataAccess/userDA.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
 
@@ -82,10 +83,12 @@ export default {
     name: 'Simulation',
     data(){
         return{
+            /*
             center: {
                 lat: 36.60338869729776,
                 lng: -4.643738644531254
             },
+
             markers: [
                 { 
                     title: 'Hola',
@@ -104,7 +107,7 @@ export default {
                     position: {
                         lat: 36.51007199999999, lng: -4.032447400000046
                     }
-                },
+                }, 
                 { 
                     title: 'Baby dont hurt me',
                     position: {
@@ -118,20 +121,28 @@ export default {
                     }
                 }
             ],
+            */
             paths: [
                 {
                     route: [
                         {lat: 36.71395099999999, lng: -4.432000000000016},
-                        {lat: 36.51007199999999, lng: -4.032447400000046}
+                        {lat: -36.51007199999999, lng: 4.032447400000046}
                     ]
                 },
                 {
                     route: [
-                        {lat: 36.31007199999999, lng: -4.882447400000046},
+                        {lat: -36.31007199999999, lng: -4.882447400000046},
                         {lat: 36.51007199999999, lng: -4.032447400000046}
                     ]
                 }
             ],
+            markerOptions:{
+              clickable: true,
+              draggable: false,
+              icon: {
+                  url: "http://maps.google.com/mapfiles/kml/paddle/wht-circle-lv.png"
+              }
+            },
             polylineOptions:{
                 strokeColor: '#008000', //Color de la línea
                 strokeWeight: 2, //Ancho de borde de la línea
@@ -148,7 +159,6 @@ export default {
                 ]
             },
 
-            zoom: 9
             /*search: '',
             loadingText: 'Cargando usuarios',
             filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
@@ -167,10 +177,11 @@ export default {
 
     mounted(){
         this.getMarkers();
+        this.getPaths();
     },
 
     computed: {
-        ...mapState(['editActSim']),
+        ...mapState(['markers', 'mapCenter', 'mapZoom']),
         headers () {
             let items = []
             items.push({
@@ -208,7 +219,7 @@ export default {
         },
     },
     methods:{
-        ...mapActions(['completeMarkers']),
+        ...mapActions(['completeMarkers', 'completePaths']),
 
         GenerateSim(){
             Swal.fire({
@@ -224,6 +235,9 @@ export default {
                 line.set("icons", icons);
             }, 20);
         },
+        setIcon(string){
+          console.log(string);
+        },
         getMarkers: function() {
             userDA.getAllAirports().then((res) =>{ //Obtiene los mismos datos que los aeropuertos
                 this.completeMarkers(res.data);
@@ -233,6 +247,18 @@ export default {
                     title: 'Error',
                     icon: 'error',
                     text: 'Error obteniendo los aeropuertos'
+                })
+            });
+        },
+        getPaths: function() {
+            userDA.getAllPathsOfplans().then((res) =>{
+                this.completePaths(res.data);
+                console.log('Se recibió el servicio de planes de vuelo');
+            }).catch(error =>{
+                Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: 'Error obteniendo los planes de vuelo'
                 })
             });
         },

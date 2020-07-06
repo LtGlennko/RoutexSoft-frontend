@@ -16,6 +16,13 @@ export default new Vuex.Store({
     //PARA SIMULACIÓN GRÁFICA
     markers: [],
     paths: [],
+    lstLat: [],
+    lstLng: [],
+    mapCenter :{
+      lat: -1,
+      lng: -1
+    },
+    mapZoom: 3,
 
     originCountry:'',
     destinationCountry:'',
@@ -185,6 +192,8 @@ export default new Vuex.Store({
     //PARA COMPLETAR EL MAPA DE SIMULACIÓN
     fillMarkers(state,markers_data){
       state.markers=[];
+      state.lstLat=[];
+      state.lstLng=[];
       for (let marker of markers_data){
         state.markers.push({
           idAeropuerto : marker.idAeropuerto,
@@ -194,11 +203,30 @@ export default new Vuex.Store({
           continente : marker.continente,
           abrev : marker.abrev,
           capacidad : marker.capacidad,
-          title: marker.abrev,
+          title: marker.codAero + ' - ' + marker.ciudad + ', ' + marker.pais,
           position: {
             lat: marker.latitud,
             lng: marker.longitud
           }
+        });
+        state.lstLat.push(marker.latitud)
+        state.lstLng.push(marker.longitud)
+      }
+      //Centrar el mapa
+      state.mapCenter.lat = (Math.min.apply(null, state.lstLat) + Math.max.apply(null, state.lstLat))/2
+      state.mapCenter.lng = (Math.min.apply(null, state.lstLng) + Math.max.apply(null, state.lstLng))/2
+    },
+
+    fillPaths(state,paths_data){
+      state.paths=[];
+      for (let path of paths_data){
+        state.paths.push({
+          idPlan : path.idPlan,
+          horaIni : path.horaIni,
+          horaFin : path.horaFin,
+          capacidad : path.capacidad,
+          //Aqui se almacenan las coordenadas del origen y destino en una lista de 2 elementos
+          route: path.route
         });
       }
     },
