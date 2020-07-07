@@ -31,25 +31,44 @@
                                 <gmap-map
                                     :center="mapCenter"
                                     :zoom="mapZoom"
+                                    ref="gmap"
                                     style="width: 100%; height: 750px;">
+
                                     <gmap-marker v-for="(marker) in markers"
                                         :key="marker.key"
                                         :position="marker.position"
                                         :title="marker.title"
-                                        :options="markerOptions"
-                                        {{setIcon(marker.title)}}
-                                        @click="center=marker.position"
+                                        :options="JSON.parse(JSON.stringify(markerOptions))"
+                                        @click="showInfo(marker)"
+                                        ref="gmarkers"
                                     >
                                     </gmap-marker>
+
                                     <gmap-polyline v-for="(path) in paths"
                                         :key="path.key"
                                         :path.sync="path.route"
-                                        :options="polylineOptions"
+                                        :options="JSON.parse(JSON.stringify(polylineOptions))"
+                                        ref="gpolylines"
                                     >
                                     </gmap-polyline>
+                                    
                                 </gmap-map>
                             </v-col>
                         </v-row>
+                        <v-col class="leyenda">
+                            <v-card-title>
+                                Ocupación de capacidades de planes de vuelo (%)
+                            </v-card-title>
+                            <v-card>
+                                <v-sheet v-for="(colorLg) in colorLegend"
+                                    :key="colorLg.key"
+                                    :color="colorLg.color"
+                                    :width="100"
+                                >
+                                    {{colorLg.text}}
+                                </v-sheet>
+                            </v-card>
+                        </v-col>
                         <v-row>
                             <v-col class="nani">
                                 <br><v-btn class="mb-3" @click=$router.go(-1)>Regresar</v-btn>
@@ -88,7 +107,14 @@ export default {
                 lat: 36.60338869729776,
                 lng: -4.643738644531254
             },
-
+            */
+            colorLegend: [
+                {text: ' > 0 - 20', color: 'light-green'},
+                {text: ' >20 - 40', color: 'lime'},
+                {text: ' >40 - 60', color: 'yellow'},
+                {text: ' >60 - 80', color: 'orange'},
+                {text: ' >80 - 100', color: 'red'}
+            ],
             markers: [
                 { 
                     title: 'Hola',
@@ -121,7 +147,6 @@ export default {
                     }
                 }
             ],
-            */
             paths: [
                 {
                     route: [
@@ -136,16 +161,17 @@ export default {
                     ]
                 }
             ],
-            markerOptions:{
+            markerOptions:{ //Opciones predeterminadas de cada marcador
               clickable: true,
               draggable: false,
+              visible: true,
               icon: {
-                  url: "http://maps.google.com/mapfiles/kml/paddle/wht-circle-lv.png"
+                  url: "http://maps.google.com/mapfiles/kml/paddle/red-circle-lv.png"
               }
             },
-            polylineOptions:{
-                strokeColor: '#008000', //Color de la línea
-                strokeWeight: 2, //Ancho de borde de la línea
+            polylineOptions:{ //Opciones predeterminadas de cada linea
+                strokeColor: '#000000', //Color de la línea
+                strokeWeight: 3, //Ancho de borde de la línea
                 icons:[
                     { icon:
                         {
@@ -178,6 +204,8 @@ export default {
     mounted(){
         this.getMarkers();
         this.getPaths();
+        this.customizeMarkers();
+        this.customizePolylines();
     },
 
     computed: {
@@ -227,16 +255,20 @@ export default {
             })
             this.$router.push('/Simulation');
         },
-        animateRouteIcons(line){
+        animateRouteIcon(line){
             var count = 0;
-            window.setInterval(function(){
-                var icons = line.get("icons");
-                icons[0].offset = count / 2 + "%";
-                line.set("icons", icons);
-            }, 20);
+            console.log("Lina con icon a animar")
+            /*window.setInterval(function(){
+                count = (count+1) % 200;
+                console.log("icono");
+                console.log(iconMobile);
+                line.options.icons[0].offset = count / 2 + "%";
+                console.log(iconMobile);
+            }, 20);*/
         },
-        setIcon(string){
-          console.log(string);
+        showInfo(marker){ //Mostrar información del aeropuerto
+            this.$refs.gmap.center = marker.position; //Centrar el mapa
+            console.log("Show info of: " + marker.title);
         },
         getMarkers: function() {
             userDA.getAllAirports().then((res) =>{ //Obtiene los mismos datos que los aeropuertos
@@ -262,6 +294,33 @@ export default {
                 })
             });
         },
+        customizeMarkers(){
+            console.log("Modificar opciones de markers");
+            this.$refs.gmarkers.forEach(gmarker => {
+                //console.log(gmarker);
+                var firstLetter = gmarker.title.toUpperCase()[0];
+                var expresion = /[A-Z0-9]/;
+                var arrayMatched = firstLetter.match(expresion);
+                //console.log("Coincidencias: "+arrayMatched);
+                if(arrayMatched != null){ //Solo personaliza valores alfanuméricos
+                    let customIcon = "http://maps.google.com/mapfiles/kml/paddle/"+firstLetter+"-lv.png";
+                    console.log(customIcon);
+                    console.log(gmarker.options.icon.url);
+                    gmarker.options.icon.url = customIcon;
+                }                
+            });
+        },
+        customizePolylines(){
+            console.log("Modificar opciones de polylines");
+            this.$refs.gpolylines.forEach(gpolyline => {
+                console.log(gpolyline.options);
+                gpolyline.options.strokeColor = this.colorLegend[4].color;
+                //Animación de vuelo
+                this.animateRouteIcon(gpolyline);
+                //Modificar color de línea según capacidad ingresada 
+            });
+            this.$refs.gpolylines[0].options.strokeColor = this.colorLegend[3].color;
+        }
     }
 }
 </script>
