@@ -82,6 +82,6 @@ export function createClient(docIden,nombres,apellidos,correo,nroTelef){
 }
 
 export function getAllPathsOfplans(){
-    let url = process.env.VUE_APP_API_URL + 'api/plans/';
+    let url = process.env.VUE_APP_API_URL + 'api/flightPlan/';
     return axios.get(url);
 }
