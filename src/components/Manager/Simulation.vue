@@ -3,7 +3,7 @@
         <v-card> 
             <v-row>
                 <v-col>
-                    <v-card-title class="titleCard" v-text='editActSim'>
+                    <v-card-title class="titleCard">
                     </v-card-title>
                     <v-card>
                         <v-card-actions>
@@ -38,7 +38,7 @@
                                         :key="marker.key"
                                         :position="marker.position"
                                         :title="marker.title"
-                                        :options="JSON.parse(JSON.stringify(markerOptions))"
+                                        :options="customedMarkerOptions(JSON.parse(JSON.stringify(markerOptions)), marker)"
                                         @click="showInfo(marker)"
                                         ref="gmarkers"
                                     >
@@ -47,7 +47,7 @@
                                     <gmap-polyline v-for="(path) in paths"
                                         :key="path.key"
                                         :path.sync="path.route"
-                                        :options="JSON.parse(JSON.stringify(polylineOptions))"
+                                        :options="customedPolylineOptions(JSON.parse(JSON.stringify(polylineOptions)), path)"
                                         ref="gpolylines"
                                     >
                                     </gmap-polyline>
@@ -115,7 +115,7 @@ export default {
                 {text: ' >60 - 80', color: 'orange'},
                 {text: ' >80 - 100', color: 'red'}
             ],
-            markers: [
+            /*markers: [
                 { 
                     title: 'Hola',
                     position: {
@@ -160,7 +160,7 @@ export default {
                         {lat: 36.51007199999999, lng: -4.032447400000046}
                     ]
                 }
-            ],
+            ],*/
             markerOptions:{ //Opciones predeterminadas de cada marcador
               clickable: true,
               draggable: false,
@@ -171,16 +171,16 @@ export default {
             },
             polylineOptions:{ //Opciones predeterminadas de cada linea
                 strokeColor: '#000000', //Color de la línea
-                strokeWeight: 3, //Ancho de borde de la línea
+                strokeWeight: 0.5, //Ancho de borde de la línea
                 icons:[
                     { icon:
                         {
                             path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                            scale: 5, //Tamaño del símbolo
+                            scale: 3, //Tamaño del símbolo
                             strokeColor: '#000000', //Color del símbolo
-                            strokeWeight: 2 //Ancho de borde del símbolo
+                            strokeWeight: 1 //Ancho de borde del símbolo
                         },
-                        offset: '50%'
+                        offset: '75%'
                     }
                 ]
             },
@@ -201,15 +201,21 @@ export default {
         }
     },
 
-    mounted(){
+    created(){
         this.getMarkers();
         this.getPaths();
-        this.customizeMarkers();
-        this.customizePolylines();
+    },
+
+    mounted(){
+        //this.customizeMarkers();
+        //this.customizePolylines();
+    },
+    updated(){
+        //this.customizeMarkers();
     },
 
     computed: {
-        ...mapState(['markers', 'mapCenter', 'mapZoom']),
+        ...mapState(['markers', 'paths', 'mapCenter', 'mapZoom']),
         headers () {
             let items = []
             items.push({
@@ -257,7 +263,7 @@ export default {
         },
         animateRouteIcon(line){
             var count = 0;
-            console.log("Lina con icon a animar")
+            console.log("Linea con icon a animar")
             /*window.setInterval(function(){
                 count = (count+1) % 200;
                 console.log("icono");
@@ -272,6 +278,9 @@ export default {
         },
         getMarkers: function() {
             userDA.getAllAirports().then((res) =>{ //Obtiene los mismos datos que los aeropuertos
+                console.log('Primer marker: '+res.data[0].codAero);
+                console.log('Datos: '+res.data);
+                //console.log('Tam lista markers: '+res.data.size());
                 this.completeMarkers(res.data);
                 console.log('Se recibió el servicio de aeropuertos');
             }).catch(error =>{
@@ -284,6 +293,14 @@ export default {
         },
         getPaths: function() {
             userDA.getAllPathsOfplans().then((res) =>{
+                console.log('Primer path: '+res.data[0].idPlan);
+                console.log('Datos: '+res.data);
+                //console.log('Tam lista vuelos: '+res.data.size());
+                const subList = res.data.slice(1, 3+1);
+                console.log('Sublista: '+subList);
+                //console.log('Tam sublista vuelos: '+res.data.size());
+                console.log('Primer path sub: '+res.data[0].idPlan);
+                console.log('Tercer path sub: '+res.data[2].idPlan);
                 this.completePaths(res.data);
                 console.log('Se recibió el servicio de planes de vuelo');
             }).catch(error =>{
@@ -294,9 +311,10 @@ export default {
                 })
             });
         },
+        /*
         customizeMarkers(){
             console.log("Modificar opciones de markers");
-            this.$refs.gmarkers.forEach(gmarker => {
+            for(let gmarker of (this.$refs.gmarkers)){
                 //console.log(gmarker);
                 var firstLetter = gmarker.title.toUpperCase()[0];
                 var expresion = /[A-Z0-9]/;
@@ -304,22 +322,44 @@ export default {
                 //console.log("Coincidencias: "+arrayMatched);
                 if(arrayMatched != null){ //Solo personaliza valores alfanuméricos
                     let customIcon = "http://maps.google.com/mapfiles/kml/paddle/"+firstLetter+"-lv.png";
-                    console.log(customIcon);
-                    console.log(gmarker.options.icon.url);
+                    //console.log(customIcon);
+                    //console.log(gmarker.options.icon.url);
                     gmarker.options.icon.url = customIcon;
                 }                
-            });
+            };
+        },*/
+        customedMarkerOptions(options, marker){
+            var firstLetter = marker.title.toUpperCase()[0];
+            var expresion = /[A-Z0-9]/;
+            var arrayMatched = firstLetter.match(expresion);
+            //console.log("Coincidencias: "+arrayMatched);
+            if(arrayMatched != null){ //Solo personaliza valores alfanuméricos
+                let customIcon = "http://maps.google.com/mapfiles/kml/paddle/"+firstLetter+"-lv.png";
+                //console.log(customIcon);
+                //console.log(gmarker.options.icon.url);
+                options.icon.url = customIcon;
+            }
+            return options;
         },
+        /*
         customizePolylines(){
             console.log("Modificar opciones de polylines");
-            this.$refs.gpolylines.forEach(gpolyline => {
-                console.log(gpolyline.options);
+            for(let gpolyline of (this.$refs.gpolylines)){
+                //console.log(gpolyline.options);
                 gpolyline.options.strokeColor = this.colorLegend[4].color;
                 //Animación de vuelo
                 this.animateRouteIcon(gpolyline);
-                //Modificar color de línea según capacidad ingresada 
-            });
-            this.$refs.gpolylines[0].options.strokeColor = this.colorLegend[3].color;
+                //Modificar color de línea según capacidad i ngresada 
+            };
+            //this.$refs.gpolylines[0].options.strokeColor = this.colorLegend[3].color;
+        },*/
+        customedPolylineOptions(options, polyline){
+            let rInd = Math.floor(Math.random() * 5);
+            options.strokeColor = this.colorLegend[rInd].color;
+            //Animación de vuelo
+            this.animateRouteIcon(polyline);
+            //Modificar color de línea según capacidad i ngresada
+            return options;
         }
     }
 }

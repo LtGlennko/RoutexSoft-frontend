@@ -203,7 +203,7 @@ export default new Vuex.Store({
           continente : marker.continente,
           abrev : marker.abrev,
           capacidad : marker.capacidad,
-          title: marker.codAero + ' - ' + marker.ciudad + ', ' + marker.pais,
+          title: marker.ciudad + ', ' + marker.pais + ' - ' + marker.codAero,
           position: {
             lat: marker.latitud,
             lng: marker.longitud
@@ -212,23 +212,46 @@ export default new Vuex.Store({
         state.lstLat.push(marker.latitud)
         state.lstLng.push(marker.longitud)
       }
+      console.log("Se completaron las listas de latitudes y longitudes: " + state.lstLat + state.lstLng);
       //Centrar el mapa
-      state.mapCenter.lat = (Math.min.apply(null, state.lstLat) + Math.max.apply(null, state.lstLat))/2
-      state.mapCenter.lng = (Math.min.apply(null, state.lstLng) + Math.max.apply(null, state.lstLng))/2
+      state.mapCenter.lat = (Math.min.apply(null, state.lstLat) + Math.max.apply(null, state.lstLat))/2;
+      state.mapCenter.lng = (Math.min.apply(null, state.lstLng) + Math.max.apply(null, state.lstLng))/2;
     },
 
     fillPaths(state,paths_data){
       state.paths=[];
       for (let path of paths_data){
+        let line=[];
+        //console.log('Path: '+path);
+        //console.log('LatOri: '+path.origen.latitud);
+
+        //Generar ruta para el polyline
+        let ori = {
+          lat : path.origen.latitud,
+          lng : path.origen.longitud
+        };
+        line.push(ori);
+
+        let des = {
+          lat : path.destino.latitud,
+          lng : path.destino.longitud
+        };        
+        line.push(des);
+        
+        //console.log('Coord ' + line);
+
+        //Datos del plan de vuelo
         state.paths.push({
           idPlan : path.idPlan,
           horaIni : path.horaIni,
           horaFin : path.horaFin,
           capacidad : path.capacidad,
-          //Aqui se almacenan las coordenadas del origen y destino en una lista de 2 elementos
-          route: path.route
+          detallePorDia : path.detallePorDia,
+          route : line
         });
+        //console.log('Pushed');
       }
+      //console.log('Paths ' + state.paths);
     },
 
   },
