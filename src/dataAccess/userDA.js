@@ -80,3 +80,8 @@ export function createClient(docIden,nombres,apellidos,correo,nroTelef){
 
     return axios.post(url,body);
 }
+
+export function getAllPathsOfplans(){
+    let url = process.env.VUE_APP_API_URL + 'api/plans/';
+    return axios.get(url);
+}

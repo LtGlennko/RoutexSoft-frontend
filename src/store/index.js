@@ -12,6 +12,18 @@ export default new Vuex.Store({
     clients:[],
     packages:[],
     countries: [],
+
+    //PARA SIMULACIÓN GRÁFICA
+    markers: [],
+    paths: [],
+    lstLat: [],
+    lstLng: [],
+    mapCenter :{
+      lat: -1,
+      lng: -1
+    },
+    mapZoom: 3,
+
     originCountry:'',
     destinationCountry:'',
     SenderCreate :{
@@ -177,6 +189,47 @@ export default new Vuex.Store({
       state.PackageData.ruta = package_data.ruta;
     },
 
+    //PARA COMPLETAR EL MAPA DE SIMULACIÓN
+    fillMarkers(state,markers_data){
+      state.markers=[];
+      state.lstLat=[];
+      state.lstLng=[];
+      for (let marker of markers_data){
+        state.markers.push({
+          idAeropuerto : marker.idAeropuerto,
+          codAero : marker.codAero,
+          pais : marker.pais,
+          ciudad : marker.ciudad,
+          continente : marker.continente,
+          abrev : marker.abrev,
+          capacidad : marker.capacidad,
+          title: marker.codAero + ' - ' + marker.ciudad + ', ' + marker.pais,
+          position: {
+            lat: marker.latitud,
+            lng: marker.longitud
+          }
+        });
+        state.lstLat.push(marker.latitud)
+        state.lstLng.push(marker.longitud)
+      }
+      //Centrar el mapa
+      state.mapCenter.lat = (Math.min.apply(null, state.lstLat) + Math.max.apply(null, state.lstLat))/2
+      state.mapCenter.lng = (Math.min.apply(null, state.lstLng) + Math.max.apply(null, state.lstLng))/2
+    },
+
+    fillPaths(state,paths_data){
+      state.paths=[];
+      for (let path of paths_data){
+        state.paths.push({
+          idPlan : path.idPlan,
+          horaIni : path.horaIni,
+          horaFin : path.horaFin,
+          capacidad : path.capacidad,
+          //Aqui se almacenan las coordenadas del origen y destino en una lista de 2 elementos
+          route: path.route
+        });
+      }
+    },
 
   },
   actions: {
@@ -232,6 +285,14 @@ export default new Vuex.Store({
       context.commit('fillPackageData',package_data);
     },
 
+
+    //PARA COMPLETAR EL MAPA DE SIMULACIÓN
+    completeMarkers(context,markers_data){
+      context.commit('fillMarkers',markers_data);
+    },
+    completePaths(context,paths_data){
+      context.commit('fillPaths',paths_data);
+    },
 
     async obtainCountry (context) {
       let response = await userDA.getAllAirports()
