@@ -15,7 +15,8 @@ export default new Vuex.Store({
 
     //PARA SIMULACIÓN GRÁFICA
     markers: [],
-    paths: [],
+    paths: [], //Todos los datos de vuelos
+    actualPaths: [], //Los vuelos que se van a mostrar en pantalla
     lstLat: [],
     lstLng: [],
     mapCenter :{
@@ -254,6 +255,17 @@ export default new Vuex.Store({
       //console.log('Paths ' + state.paths);
     },
 
+    fillActualPaths(state,curTime){
+      state.actualPaths=[];
+      console.log(curTime);
+      if(curTime>=0){
+        for (let path of state.paths){ //Filtra y escoge solo los paths que se van a mostrar
+          console.log(path);
+          state.actualPaths.push(path);
+        }
+      }
+    }
+
   },
   actions: {
     setActionUser(context,edit){
@@ -315,6 +327,9 @@ export default new Vuex.Store({
     },
     completePaths(context,paths_data){
       context.commit('fillPaths',paths_data);
+    },
+    completeActualPaths(context,curTime){
+      context.commit('fillActualPaths',curTime);
     },
 
     async obtainCountry (context) {
