@@ -101,7 +101,23 @@ Vue.use(VueRouter)
         path: '/RouteDetail',
         name: 'RouteDetail',
         component: () => import('../components/Registrar/RouteDetail.vue')
+      },
+      {
+        path: '/CollapseCapacityReport',
+        name: 'CollapseCapacityReport',
+        component: () => import('../components/Manager/CollapseCapacityReport.vue')
+      },
+      {
+        path: '/ManageComplains',
+        name: 'ManageComplains',
+        component: () => import('../components/Registrar/ManageComplains.vue')
+      },
+      {
+        path: '/ViewComplain',
+        name: 'ViewComplain',
+        component: () => import('../components/Registrar/ViewComplain.vue')
       }
+      
     ]
   },
   {
@@ -118,7 +134,13 @@ Vue.use(VueRouter)
     path: '/TrackPackage',
     name: 'TrackPackage',
     component: () => import('../views/Principal/SubViews/TrackPackage.vue')
-  }
+  },
+  {
+    path: '/RegisterComplain',
+    name: 'RegisterComplain',
+    component: () => import('../views/Principal/SubViews/RegisterComplain.vue')
+  },
+  
   
 ]
 

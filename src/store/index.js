@@ -12,7 +12,7 @@ export default new Vuex.Store({
     clients:[],
     packages:[],
     countries: [],
-
+    complains:[],
     //PARA SIMULACIÓN GRÁFICA
     markers: [],
     paths: [], //Todos los datos de vuelos
@@ -51,6 +51,19 @@ export default new Vuex.Store({
       abrev:'',
       capacidad:-1,
     },
+
+    packageCreate:{
+      idPaquete:-1, 
+      codigoEnvio:'', 
+      nombre:'',  
+      descripcion:'',  
+      estadoEnvio:'',  
+      fechahoraRegistro:'',
+      origen:{},
+      destino:{},
+      ruta:{}, 
+    },
+
     PackageData:{
       idPaquete:-1, 
       codigoEnvio:'', 
@@ -68,7 +81,20 @@ export default new Vuex.Store({
       apellidos : '',
       correo : '',
       nroTelef : ''
-    }
+    },
+
+    complainCreate:{
+      idQueja:-1,
+      codigoQueja : '',
+      nombresReclamante : '',
+      apellidosReclamante : '',
+      numdocumento : '',
+      correo : '',
+      queja : '',
+      fechaRegistro : '',
+      paquete : {},
+    },
+
   },
   mutations: {
     setActUser(state,edit){
@@ -131,7 +157,9 @@ export default new Vuex.Store({
           origen : packageSW.origen,
           destino : packageSW.destino,
           latitud : packageSW.latitud,
-          longitud : packageSW.longitud
+          longitud : packageSW.longitud,
+          fechaRegistro : packageSW.fechaRegistro,
+          horaRegistro : packageSW.horaRegistro
         });
       }
     },
@@ -255,6 +283,51 @@ export default new Vuex.Store({
       //console.log('Paths ' + state.paths);
     },
 
+
+    setPackageInd(state,index){
+      state.selectedPackageIndex = index;
+      state.packageCreate.idPaquete = state.packages[index].idPaquete;
+      state.packageCreate.codigoEnvio = state.packages[index].codigoEnvio;
+      state.packageCreate.nombre = state.packages[index].nombre;
+      state.packageCreate.descripcion = state.packages[index].descripcion;
+      state.packageCreate.estadoEnvio = state.packages[index].estadoEnvio;
+      state.packageCreate.origen = state.packages[index].origen;
+      state.packageCreate.destino = state.packages[index].destino;
+      state.packageCreate.fechahoraRegistro = state.packages[index].fechahoraRegistro;
+      state.packageCreate.ruta = state.packages[index].ruta;
+    },
+
+
+    fillComplains(state,complain_data){
+      state.complains=[];
+      for (let complain of complain_data){
+        state.complains.push({
+          idQueja : complain.idQueja,
+          codigoQueja : complain.codigoQueja,
+          nombresReclamante : complain.nombresReclamante,
+          apellidosReclamante : complain.apellidosReclamante,
+          numdocumento : complain.numdocumento,
+          correo : complain.correo,
+          queja : complain.queja,
+          fechaRegistro : complain.fechaRegistro,
+          paquete : complain.paquete
+        });
+      }
+    },
+
+    setComplainInd(state,index){
+      state.selectedComplainndex = index;
+      state.complainCreate.idQueja = state.complains[index].idQueja;
+      state.complainCreate.codigoQueja = state.complains[index].codigoQueja;
+      state.complainCreate.nombresReclamante = state.complains[index].nombresReclamante;
+      state.complainCreate.apellidosReclamante = state.complains[index].apellidosReclamante;
+      state.complainCreate.numdocumento = state.complains[index].numdocumento;
+      state.complainCreate.correo = state.complains[index].correo;
+      state.complainCreate.queja = state.complains[index].queja;
+      state.complainCreate.fechaRegistro = state.complains[index].fechaRegistro;
+      state.complainCreate.paquete = state.complains[index].paquete;
+    },
+
     fillActualPaths(state,curTime){
       state.actualPaths=[];
       console.log(curTime);
@@ -265,6 +338,7 @@ export default new Vuex.Store({
         }
       }
     }
+
 
   },
   actions: {
@@ -318,6 +392,18 @@ export default new Vuex.Store({
 
     completePackageData(context,package_data){
       context.commit('fillPackageData',package_data);
+    },
+
+    setPackageIndex(context,index){
+      context.commit('setPackageInd',index);
+    },
+
+    completeComplains(context,complain_data){
+      context.commit('fillComplains',complain_data);
+    },
+
+    setComplainIndex(context,index){
+      context.commit('setComplainInd',index);
     },
 
 

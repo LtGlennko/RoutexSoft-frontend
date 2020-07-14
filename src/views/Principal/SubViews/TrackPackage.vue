@@ -4,7 +4,7 @@
             <v-col >
             </v-col>
         </v-row>
-        <v-row >
+        <v-row class="rowPrincipal">
             <v-col>
                 <v-card class="mt-5 ml-8 mr-8 " >
                     <v-row class="cardTopBar">
@@ -98,13 +98,33 @@
                             
                         </v-row>
                     </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-text class="cardTextComplain">
+                        <v-card-title class="cardTitleComplain">
+                            Estamos para ayudarte, contáctanos
+                        </v-card-title>
+                        <v-card-subtitle class="mt-1 cardSubTitleComplain">
+                            Si tienes alguna queja acerca de tu paquete, puedes escribirnos.
+                        </v-card-subtitle>
+                        <v-row >
+                            <v-col cols="12">
+                                <v-btn class="buttonCreate" @click=sendComplain()>
+                                    <v-icon class="mr-2">mdi-file-document</v-icon>
+                                    <span>Enviar una queja</span>
+                                </v-btn>
+                            </v-col> 
+                        </v-row>
+                    </v-card-text>
                 </v-card>
             </v-col>
+            
         </v-row>
+        <v-footer absolute class="footerClient">
         <v-row class="topBar">
             <v-col >
             </v-col>
         </v-row>
+        </v-footer>
     </v-content>
 </template>
 
@@ -133,6 +153,9 @@ export default {
     },
 
     methods: {
+        sendComplain(){
+            this.$router.push('/RegisterComplain');
+        }
     },
 }
 </script>
