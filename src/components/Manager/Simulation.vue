@@ -44,7 +44,7 @@
                                     >
                                     </gmap-marker>
 
-                                    <gmap-polyline v-for="(path) in paths"
+                                    <gmap-polyline v-for="(path) in actualPaths"
                                         :key="path.key"
                                         :path.sync="path.route"
                                         :options="customedPolylineOptions(JSON.parse(JSON.stringify(polylineOptions)), path)"
@@ -69,6 +69,26 @@
                                 </v-sheet>
                             </v-card>
                         </v-col>
+
+                        <v-col>
+                            <div class="text-center" v-if="currentTime">
+                                <span v-if="days">
+                                    Days: {{ days }}<br/>
+                                </span>
+                                <span v-if="hours">
+                                    Hours: {{ hours | formatTime }} <br/>
+                                </span>
+                                    Minutes: {{ minutes | formatTime }} <br/>
+                                    Seconds: {{ seconds | formatTime }} <br/>
+                                <br/>
+                                <span v-if="days">{{ days }}</span
+                                >:<span v-if="hours">{{ hours | formatTime }}:</span><span>{{ minutes | formatTime }}:{{ seconds | formatTime }}</span><br />
+                            </div>
+                            <div class="text-center" v-if="!currentTime">
+                                Time's Up!
+                            </div>
+                        </v-col>
+
                         <v-row>
                             <v-col class="nani">
                                 <br><v-btn class="mb-3" @click=$router.go(-1)>Regresar</v-btn>
@@ -100,6 +120,17 @@ Vue.use(VueGoogleMaps, {
 
 export default {
     name: 'Simulation',
+    props: {
+        deadline: {
+            type: String,
+            required: true,
+            default: "05/01/2021"
+        },
+        speed: {
+            type: Number,
+            default: 1000 //1 segundo
+        }
+    },
     data(){
         return{
             /*
@@ -138,12 +169,6 @@ export default {
                     title: 'Baby dont hurt me',
                     position: {
                         lat: 36.31007199999999, lng: -4.882447400000046
-                    }
-                },
-                { 
-                    title: 'No more',
-                    position: {
-                        lat: 36.10007199999999, lng: -4.922447400000046
                     }
                 }
             ],
@@ -198,24 +223,36 @@ export default {
                     state:'En Proceso'
                 },
             ],*/
+
+            //TIMER
+            currentTime: 0 //Inicio del contador
         }
     },
 
     created(){
-        this.getMarkers();
-        this.getPaths();
+        
     },
 
     mounted(){
-        //this.customizeMarkers();
-        //this.customizePolylines();
+        this.getMarkers();
+        this.getPaths();
+        setTimeout(this.contadorTiempo, this.speed); //Inicia 
+        /*
+        setInterval(function(){
+            //this.contadorTiempo();
+            if(this.currentTime == null || this.currentTime>2000)
+                this.currentTime = 0;
+            else
+                this.currentTime += 1;
+            console.log(1000000);
+        }, this.speed)*/
     },
     updated(){
         //this.customizeMarkers();
     },
 
     computed: {
-        ...mapState(['markers', 'paths', 'mapCenter', 'mapZoom']),
+        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom']),
         headers () {
             let items = []
             items.push({
@@ -251,9 +288,33 @@ export default {
             
             return items
         },
+        //TIMER
+        /*getHora(){
+            return this.hora+":"+this.minuto+":"+this.segundo;
+        }*/
+        seconds() {
+            return Math.floor((this.currentTime / 1000) % 60);
+        },
+        minutes() {
+            return Math.floor((this.currentTime / 1000 / 60) % 60);
+        },
+        hours() {
+            return Math.floor((this.currentTime / (1000 * 60 * 60)) % 24);
+        },
+        days() {
+            return Math.floor(this.currentTime / (1000 * 60 * 60 * 24));
+        },
+    },
+    filters: {
+        formatTime(value) {
+            if (value < 10) {
+                return "0" + value;
+            }
+            return value;
+        }
     },
     methods:{
-        ...mapActions(['completeMarkers', 'completePaths']),
+        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths']),
 
         GenerateSim(){
             Swal.fire({
@@ -263,7 +324,7 @@ export default {
         },
         animateRouteIcon(line){
             var count = 0;
-            console.log("Linea con icon a animar")
+            //console.log("Linea con icon a animar")
             /*window.setInterval(function(){
                 count = (count+1) % 200;
                 console.log("icono");
@@ -299,9 +360,10 @@ export default {
                 const subList = res.data.slice(1, 3+1);
                 console.log('Sublista: '+subList);
                 //console.log('Tam sublista vuelos: '+res.data.size());
-                console.log('Primer path sub: '+res.data[0].idPlan);
-                console.log('Tercer path sub: '+res.data[2].idPlan);
+                //console.log('Primer path sub: '+res.data[0].idPlan);
+                //console.log('Tercer path sub: '+res.data[2].idPlan);
                 this.completePaths(res.data);
+                this.completeActualPaths(this.currentTime);
                 console.log('Se recibió el servicio de planes de vuelo');
             }).catch(error =>{
                 Swal.fire({
@@ -360,6 +422,23 @@ export default {
             this.animateRouteIcon(polyline);
             //Modificar color de línea según capacidad i ngresada
             return options;
+        },
+        //TIMER
+        contadorTiempo(){
+            this.currentTime+=this.speed;
+            /*if(this.currentTime == null)
+                this.currentTime = 0;
+            else
+                this.currentTime += 1;*/
+            if(this.currentTime > 0){
+                if(this.currentTime == 5000)
+                    this.completeActualPaths(-1);
+
+                setTimeout(this.contadorTiempo, this.speed);
+            }else{
+                this.currentTime = null;
+            }
+            //console.log(this.currentTime);
         }
     }
 }
