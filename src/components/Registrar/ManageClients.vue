@@ -117,9 +117,9 @@ export default {
                 console.log('Se recibió el servicio de clientes');
             }).catch(error =>{
                 Swal.fire({
-                    title: 'Error',
+                    title: '<p style="font-family:Roboto;">Error</p>',
                     icon: 'error',
-                    text: 'Error obteniendo los clientes'
+                    html: '<p style="font-family:Roboto;">Error obteniendo los clientes</p>'
                 })
             });
         },

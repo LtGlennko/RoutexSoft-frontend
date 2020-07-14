@@ -1,0 +1,41 @@
+.titleCard{
+    font-size: 28px !important;
+}
+
+.buttonCreate{
+    color: white;
+    background-color: #137073 !important;
+}
+
+.buttonCancel{
+    color: white;
+    background-color: #137073 !important;
+}
+
+.colButton{
+    text-align: center;
+}
+
+.subtitleComplain{
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    padding-bottom: 0px;
+}
+
+.colSubtitle{
+    padding-bottom: 0px;
+}
+
+.colSubtitlePackage{
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.subtitlePackage{
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}

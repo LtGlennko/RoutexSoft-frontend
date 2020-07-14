@@ -33,7 +33,7 @@
     font-weight: 500;
     padding-bottom: 0px;
     height: 23%;
-    color: black;
+    color: rgba(0, 0, 0, 0.7)
 }
 
 .timelinePrincipal{
@@ -57,4 +57,31 @@
 
 .divItemTimeline{
     width: 250px;
+}
+
+.footerClient{
+    padding: 0px;
+}
+
+.cardTextComplain{
+    text-align: center !important;
+}
+
+.cardTitleComplain{
+    text-align: center !important;
+    display: inline-flex;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.cardSubTitleComplain{
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.buttonCreate{
+    color: white;
+    background-color: #137073 !important;
+}
+
+.rowPrincipal{
+    padding-bottom: 70px;
 }

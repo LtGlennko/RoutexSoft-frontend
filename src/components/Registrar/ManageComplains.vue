@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Gestionar Aeropuertos
+                        Visualizar Quejas
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -13,20 +13,16 @@
                                     <v-text-field
                                         v-model="search"
                                         append-icon="mdi-magnify"
-                                        label="Buscar Almacén"
+                                        label="Buscar Quejas"
                                         single-line
                                         hide-details
                                     ></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    
                                 </v-col>
                             </v-row>
                         </v-card-subtitle>
                     
                         <v-data-table   :headers="headers"
-                                        :items="airports"
-                                        :item-key="idAero"
+                                        :items="complains"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
@@ -35,8 +31,8 @@
                                         :search="search"
                                         class="elevation-1">
                             <template v-slot:item.actions="{ item}" >
-                                <v-icon medium class="mr-5" @click="editWarehouses(item)" >
-                                    mdi-pencil
+                                <v-icon  medium class="mr-5" @click="viewItem(item)" >
+                                    mdi-eye
                                 </v-icon>
                             </template>
                         </v-data-table>
@@ -47,7 +43,7 @@
     </v-container>
 </template>
 
-<style src="@/styles/Administrator/ManageWarehouses.css" scoped>
+<style src="@/styles/Administrator/ManageUsers.css" scoped>
 
 </style>
 
@@ -58,55 +54,53 @@ import {mapState, mapActions} from 'vuex'
 import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
-    name: 'ManageWarehouses',
+    name: 'ManageComplains',
     data () {
         return {
             footerProps:{'items-per-page-Text':'Filas por página:  ', 'items-per-page-options': [5,10,15]},
             search: '',
-            loadingText: 'Cargando almacenes',
-            filterNoResultsText: 'No se encontraron almacenes que cumplan con los filtros',
-            noDataText: 'No hay almacenes para mostrar',
+            loadingText: 'Cargando quejas',
+            filterNoResultsText: 'No se encontraron quejas que cumplan con los filtros',
+            noDataText: 'No hay quejas para mostrar',
         }
     },
-
     mounted(){
-        this.getAirports();
+        this.getComplains();
     },
-    
     computed: {
-        ...mapState (['airports']),
+        ...mapState (['complains']),
 
         headers () {
             let items = []
             items.push({
-                text: 'CÓDIGO AEREO',
+                text: 'FECHA REGISTRO',
                 align: 'center',
                 sortable: true,
-                value: 'codAero',
+                value: 'fechaRegistro',
             })
             items.push({
-                text: 'CONTINENTE',
+                text: 'CODIGO QUEJA',
                 align: 'center',
                 sortable: true,
-                value: 'continente',
+                value: 'codigoQueja',
             })
             items.push({
-                text: 'PAIS',
+                text: 'NÚMERO DOCUMENTO',
                 align: 'center',
                 sortable: true,
-                value: 'pais',
+                value: 'numdocumento',
+            })
+            items.push({ 
+                text: 'CORREO',
+                align: 'center',
+                sortable: true,
+                value: 'correo',
             })
             items.push({
-                text: 'CIUDAD',
+                text: 'CÓDIGO ENVÍO',
                 align: 'center',
                 sortable: true,
-                value: 'ciudad',
-            })
-            items.push({
-                text: 'CAPACIDAD',
-                align: 'center',
-                sortable: true,
-                value: 'capacidad'
+                value: 'paquete.codigoEnvio',
             })
             items.push({ 
                 text: 'ACCIONES',
@@ -120,29 +114,30 @@ export default {
         
     },    
     methods:{
-        ...mapActions(['completeAirports','setAirportIndex']),
-        
-        editWarehouses(item){
-            const index = this.airports.indexOf(item)
-            console.log('index: ',index);
-            console.log('codigo: ',item.ciudad);
-            this.$router.push('/ModifyWarehouses');
-            this.setAirportIndex(index)
-        },
-        
+        //...mapActions(['setActionUser']),
+        ...mapActions(['completeComplains','setComplainIndex']),
 
-        getAirports: function() {
-            userDA.getAllAirports().then((res) =>{
-                this.completeAirports(res.data);
-                console.log('Se recibió el servicio de aeropuertos');
+        getComplains: function() {
+            userDA.getAllComplains().then((res) =>{
+                this.completeComplains(res.data);
+                console.log('Se recibió el servicio de quejas');
+                console.log(res.data);
             }).catch(error =>{
                 Swal.fire({
                     title: '<p style="font-family:Roboto;">Error</p>',
                     icon: 'error',
-                    html: '<p style="font-family:Roboto;">Error obteniendo los aeropuertos</p>'
+                    html: '<p style="font-family:Roboto;">Error obteniendo las quejas</p>'
                 })
             });
         },
+
+        viewItem(item){
+            const index = this.complains.indexOf(item)
+            console.log('index: ',index);
+            this.$router.push('/ViewComplain');
+            this.setComplainIndex(index)
+        },
     }
+
 }
 </script>

@@ -69,12 +69,13 @@
                 { text: 'Crear Envios', icon: 'mdi-send', to:'/CreateSending'},
                 { text: 'Paquetes', icon: 'mdi-package-variant', to:'/ManagePackages' },
                 { text: 'Clientes', icon: 'mdi-account-box', to:'/ManageClients' },
+                { text: 'Quejas', icon: 'mdi-file-document', to:'/ManageComplains' },
             ],
             optionManager: [
-                { text: 'Cargar Historial', icon: 'mdi-upload', to:'/GestHistory'},
+                //{ text: 'Cargar Historial', icon: 'mdi-upload', to:'/GestHistory'},
                 { text: 'Simulacion', icon: 'mdi-chart-donut-variant', to:'/GestSimulation' },
-                { text: 'Reporte Rutas', icon: 'mdi-map-check', to:'/GestRutes' },
-                { text: 'Reporte Paquetes', icon: 'mdi-package-variant', to:'/GestPackages' },
+                { text: 'Reporte Capacidad', icon: 'mdi-map-check', to:'/CollapseCapacityReport' },
+                //{ text: 'Reporte Paquetes', icon: 'mdi-package-variant', to:'/GestPackages' },
             ],
         }),
         computed :{

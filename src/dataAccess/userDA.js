@@ -85,3 +85,33 @@ export function getAllPathsOfplans(){
     let url = process.env.VUE_APP_API_URL + 'api/flightPlan/';
     return axios.get(url);
 }
+
+export function editPackage(packageId,destinationId){
+    let url = process.env.VUE_APP_API_URL + 'api/package/updateDestination'
+
+    return axios.post(url,null,{ params:{
+        packageId, destinationId
+    }
+});
+}
+
+
+export function createComplain(codigoPaquete,nombresReclamante,apellidosReclamante,numdocumento,correo,queja){
+    let url = process.env.VUE_APP_API_URL + 'api/complaint'
+    
+    var body ={
+        "codigoPaquete" : codigoPaquete,
+        "nombresReclamante" : nombresReclamante,
+        "apellidosReclamante" : apellidosReclamante,
+        "numdocumento" : numdocumento,
+        "correo" : correo,
+        "queja" : queja
+    }
+
+    return axios.post(url,body);
+}
+
+export function getAllComplains(){
+    let url = process.env.VUE_APP_API_URL + 'api/complaint';  /*Switch to real url*/
+    return axios.get(url);
+}

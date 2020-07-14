@@ -14,8 +14,8 @@
                                 <v-text-field
                                     v-model="docIden"
                                     :rules="[rules.required,rules.necessary]"
-                                    label="DNI"
-                                    maxlength="8"
+                                    label="Número de documento"
+                                    maxlength="20"
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" >
@@ -109,7 +109,7 @@ export default {
     }),    
     computed :{
          ...mapState (['editClient']),
-         form () {
+        form () {
             return {
                 docIden: this.docIden,
                 nombres: this.nombres,
