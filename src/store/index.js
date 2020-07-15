@@ -24,6 +24,13 @@ export default new Vuex.Store({
       lng: -1
     },
     mapZoom: 3,
+    colorLegend: [ //Escala de colores
+      {text: ' > 0 - 20', color: 'light-green'},
+      {text: ' >20 - 40', color: 'lime'},
+      {text: ' >40 - 60', color: 'yellow'},
+      {text: ' >60 - 80', color: 'orange'},
+      {text: ' >80 - 100', color: 'red'}
+    ],
 
     originCountry:'',
     destinationCountry:'',
@@ -260,7 +267,7 @@ export default new Vuex.Store({
       console.log(curTime);
       if(curTime>=0){
         for (let path of state.paths){ //Filtra y escoge solo los paths que se van a mostrar
-          console.log(path);
+          //console.log(path);
           state.actualPaths.push(path);
         }
       }

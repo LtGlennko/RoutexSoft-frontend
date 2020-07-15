@@ -9,7 +9,7 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-play-circle </v-icon>
+                                    <v-icon medium class="mr-5" @click="getDataSimulation">mdi-play-circle </v-icon>
                                 </v-col>
                                 <v-col cols="2">
                                     <v-icon medium class="mr-5" @click="detailSim()">mdi-pause-circle </v-icon>
@@ -28,31 +28,19 @@
                         </v-card-actions>
                         <v-row>
                             <v-col class="cosa-rara">
-                                <gmap-map
-                                    :center="mapCenter"
-                                    :zoom="mapZoom"
-                                    ref="gmap"
-                                    style="width: 100%; height: 750px;">
+                                <button 
+                                    @click="getDataSimulation"
+                                    class="btn btn-primary"
+                                >
+                                    Ejecutar simulación       
+                                </button>
 
-                                    <gmap-marker v-for="(marker) in markers"
-                                        :key="marker.key"
-                                        :position="marker.position"
-                                        :title="marker.title"
-                                        :options="customedMarkerOptions(JSON.parse(JSON.stringify(markerOptions)), marker)"
-                                        @click="showInfo(marker)"
-                                        ref="gmarkers"
-                                    >
-                                    </gmap-marker>
+                                <!--El componente que quieres mostrar después recibir resultados en las llamadas de las apis-->
+                                <SimulationMap v-if="showComponent">
 
-                                    <gmap-polyline v-for="(path) in actualPaths"
-                                        :key="path.key"
-                                        :path.sync="path.route"
-                                        :options="customedPolylineOptions(JSON.parse(JSON.stringify(polylineOptions)), path)"
-                                        ref="gpolylines"
-                                    >
-                                    </gmap-polyline>
-                                    
-                                </gmap-map>
+                                </SimulationMap>
+
+                                <h2 v-if="showLoading">Cargando...</h2>
                             </v-col>
                         </v-row>
                         <v-col class="leyenda">
@@ -111,12 +99,38 @@ import Vue from 'vue'
 //import * as math from 'Math'
 import * as userDA from '@/dataAccess/userDA.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import SimulationMap from '@/components/Manager/SimulationMap.vue'
 
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: 'AIzaSyDKjcVHMCTYKk2keZygPn7LJ3IdF5ekfac'
-  }
-})
+/*
+Vue.component('comp-mapa-simulacion', {
+    template: `
+        <gmap-map
+            :center="mapCenter"
+            :zoom="mapZoom"
+            ref="gmap"
+            style="width: 100%; height: 750px;">
+
+            <gmap-marker v-for="(marker) in markers"
+                :key="marker.key"
+                :position="marker.position"
+                :title="marker.title"
+                :options="customedMarkerOptions(JSON.parse(JSON.stringify(markerOptions)), marker)"
+                @click="showInfo(marker)"
+                ref="gmarkers"
+            >
+            </gmap-marker>
+
+            <gmap-polyline v-for="(path) in actualPaths"
+                :key="path.key"
+                :path.sync="path.route"
+                :options="customedPolylineOptions(JSON.parse(JSON.stringify(polylineOptions)), path)"
+                ref="gpolylines"
+            >
+            </gmap-polyline>
+            
+        </gmap-map>
+    `
+});*/
 
 export default {
     name: 'Simulation',
@@ -130,6 +144,10 @@ export default {
             type: Number,
             default: 1000 //1 segundo
         }
+
+    },
+    components: {
+        SimulationMap
     },
     data(){
         return{
@@ -139,13 +157,13 @@ export default {
                 lng: -4.643738644531254
             },
             */
-            colorLegend: [
+            /*colorLegend: [
                 {text: ' > 0 - 20', color: 'light-green'},
                 {text: ' >20 - 40', color: 'lime'},
                 {text: ' >40 - 60', color: 'yellow'},
                 {text: ' >60 - 80', color: 'orange'},
                 {text: ' >80 - 100', color: 'red'}
-            ],
+            ],*/
             /*markers: [
                 { 
                     title: 'Hola',
@@ -157,18 +175,6 @@ export default {
                     title: 'Mundo',
                     position: {
                         lat: 36.51007199999999, lng: -4.882447400000046
-                    }
-                },
-                { 
-                    title: 'What is Love',
-                    position: {
-                        lat: 36.51007199999999, lng: -4.032447400000046
-                    }
-                }, 
-                { 
-                    title: 'Baby dont hurt me',
-                    position: {
-                        lat: 36.31007199999999, lng: -4.882447400000046
                     }
                 }
             ],
@@ -186,29 +192,11 @@ export default {
                     ]
                 }
             ],*/
-            markerOptions:{ //Opciones predeterminadas de cada marcador
-              clickable: true,
-              draggable: false,
-              visible: true,
-              icon: {
-                  url: "http://maps.google.com/mapfiles/kml/paddle/red-circle-lv.png"
-              }
-            },
-            polylineOptions:{ //Opciones predeterminadas de cada linea
-                strokeColor: '#000000', //Color de la línea
-                strokeWeight: 0.5, //Ancho de borde de la línea
-                icons:[
-                    { icon:
-                        {
-                            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                            scale: 3, //Tamaño del símbolo
-                            strokeColor: '#000000', //Color del símbolo
-                            strokeWeight: 1 //Ancho de borde del símbolo
-                        },
-                        offset: '75%'
-                    }
-                ]
-            },
+            showComponent: false,//Muestra al componente que se quiere cargar
+            showLoading: false,//Muestra el mensaje de Cargando...
+
+            markersRecibidos: false,
+            pathsRecibidos: false,
 
             /*search: '',
             loadingText: 'Cargando usuarios',
@@ -225,7 +213,7 @@ export default {
             ],*/
 
             //TIMER
-            currentTime: 0 //Inicio del contador
+            currentTime: 1 //Inicio del contador
         }
     },
 
@@ -236,7 +224,6 @@ export default {
     mounted(){
         this.getMarkers();
         this.getPaths();
-        setTimeout(this.contadorTiempo, this.speed); //Inicia 
         /*
         setInterval(function(){
             //this.contadorTiempo();
@@ -252,7 +239,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom']),
+        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend']),
         headers () {
             let items = []
             items.push({
@@ -322,21 +309,6 @@ export default {
             })
             this.$router.push('/Simulation');
         },
-        animateRouteIcon(line){
-            var count = 0;
-            //console.log("Linea con icon a animar")
-            /*window.setInterval(function(){
-                count = (count+1) % 200;
-                console.log("icono");
-                console.log(iconMobile);
-                line.options.icons[0].offset = count / 2 + "%";
-                console.log(iconMobile);
-            }, 20);*/
-        },
-        showInfo(marker){ //Mostrar información del aeropuerto
-            this.$refs.gmap.center = marker.position; //Centrar el mapa
-            console.log("Show info of: " + marker.title);
-        },
         getMarkers: function() {
             userDA.getAllAirports().then((res) =>{ //Obtiene los mismos datos que los aeropuertos
                 console.log('Primer marker: '+res.data[0].codAero);
@@ -344,6 +316,7 @@ export default {
                 //console.log('Tam lista markers: '+res.data.size());
                 this.completeMarkers(res.data);
                 console.log('Se recibió el servicio de aeropuertos');
+                this.markersRecibidos = true;
             }).catch(error =>{
                 Swal.fire({
                     title: 'Error',
@@ -365,6 +338,8 @@ export default {
                 this.completePaths(res.data);
                 this.completeActualPaths(this.currentTime);
                 console.log('Se recibió el servicio de planes de vuelo');
+                this.pathsRecibidos = true;
+                console.log('Holi');
             }).catch(error =>{
                 Swal.fire({
                     title: 'Error',
@@ -390,19 +365,6 @@ export default {
                 }                
             };
         },*/
-        customedMarkerOptions(options, marker){
-            var firstLetter = marker.title.toUpperCase()[0];
-            var expresion = /[A-Z0-9]/;
-            var arrayMatched = firstLetter.match(expresion);
-            //console.log("Coincidencias: "+arrayMatched);
-            if(arrayMatched != null){ //Solo personaliza valores alfanuméricos
-                let customIcon = "http://maps.google.com/mapfiles/kml/paddle/"+firstLetter+"-lv.png";
-                //console.log(customIcon);
-                //console.log(gmarker.options.icon.url);
-                options.icon.url = customIcon;
-            }
-            return options;
-        },
         /*
         customizePolylines(){
             console.log("Modificar opciones de polylines");
@@ -415,30 +377,42 @@ export default {
             };
             //this.$refs.gpolylines[0].options.strokeColor = this.colorLegend[3].color;
         },*/
-        customedPolylineOptions(options, polyline){
-            let rInd = Math.floor(Math.random() * 5);
-            options.strokeColor = this.colorLegend[rInd].color;
-            //Animación de vuelo
-            this.animateRouteIcon(polyline);
-            //Modificar color de línea según capacidad i ngresada
-            return options;
-        },
         //TIMER
+        iniciaContador(){
+            setTimeout(this.contadorTiempo, this.speed); //Inicia 
+        },
         contadorTiempo(){
+            
             this.currentTime+=this.speed;
             /*if(this.currentTime == null)
                 this.currentTime = 0;
             else
                 this.currentTime += 1;*/
-            if(this.currentTime > 0){
-                if(this.currentTime == 5000)
-                    this.completeActualPaths(-1);
+            if(this.currentTime >= 0){
+                if(this.currentTime % 7000 == 0){
+                    if((this.currentTime / 7000) % 2 == 0)
+                        this.completeActualPaths(-1);
+                    else
+                        this.completeActualPaths(0);
+                }
 
                 setTimeout(this.contadorTiempo, this.speed);
             }else{
                 this.currentTime = null;
             }
             //console.log(this.currentTime);
+        },
+        getDataSimulation(){
+            this.showLoading = true;
+            //this.getMarkers();
+            //this.getPaths();
+            console.log("M: " + this.markersRecibidos + " P: " + this.pathsRecibidos);
+            if(this.markersRecibidos && this.pathsRecibidos){
+                console.log("Se cargaron");
+                this.showLoading = false;
+                this.showComponent = true;
+                this.iniciaContador();
+            }
         }
     }
 }
