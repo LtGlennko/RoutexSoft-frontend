@@ -32,6 +32,8 @@ export default new Vuex.Store({
       {text: ' >80 - 100', color: 'red'}
     ],
 
+    //PARA TIMER
+
     originCountry:'',
     destinationCountry:'',
     SenderCreate :{
@@ -264,12 +266,55 @@ export default new Vuex.Store({
 
     fillActualPaths(state,curTime){
       state.actualPaths=[];
-      console.log(curTime);
+      //console.log(curTime);
+      let nIn = 0;
+      let nOut = 0;
       if(curTime>=0){
         for (let path of state.paths){ //Filtra y escoge solo los paths que se van a mostrar
-          //console.log(path);
-          state.actualPaths.push(path);
+          //console.log('Path' + path);
+          //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
+          //Calculo de hora inicio
+          let h, m, s;
+          h = parseInt(path.horaIni.substring(0,2));
+          m = parseInt(path.horaIni.substring(3,5));
+          s = parseInt(path.horaIni.substring(6,8));
+          let hIni = h*3600 + m*60 + s;
+          //Calculo de hora fin
+          h = parseInt(path.horaFin.substring(0,2));
+          m = parseInt(path.horaFin.substring(3,5));
+          s = parseInt(path.horaFin.substring(6,8));
+          let hFin = h*3600 + m*60 + s;
+          //console.log(hIni);
+          //console.log(hFin);
+          //console.log(hIni + ' < ' + curTime + ' < ' + hFin);
+          path.offset = -1;
+
+          //Si en la hora actual hay un vuelo y la hora de llegada es mayor a la de partida
+          if(hIni <= curTime && curTime <= hFin){
+            path.offset = ((curTime-hIni)/(hFin-hIni))*100;
+            nIn++;
+            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
+            state.actualPaths.push(path);
+          }
+
+          //Si en la hora actual hay un vuelo y la hora de partida es mayor a la de llegada
+          else if(hIni > hFin && (hIni <= curTime || curTime <= hFin)){
+            //Ajustes para calculo del porcentaje de camino
+            hFin += 24*3600;
+            let auxCurTime = curTime;
+            if(curTime <= hIni)
+              auxCurTime += 24*3600;
+            path.offset = ((auxCurTime-hIni)/(hFin-hIni))*100;
+            nIn++;
+            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
+            state.actualPaths.push(path);
+          }
+
+          else
+            nOut++;
         }
+        //console.log('Nro In: ' + nIn);
+        //console.log('Nro Out: ' + nOut);
       }
     }
 

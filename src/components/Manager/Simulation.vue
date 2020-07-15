@@ -9,19 +9,25 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" @click="getDataSimulation">mdi-play-circle </v-icon>
+                                    <v-btn 
+                                        icon
+                                        @click="getDataSimulation"
+                                        medium class="mr-5"
+                                    >
+                                        <v-icon>mdi-play-circle</v-icon>
+                                    </v-btn>
                                 </v-col>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-pause-circle </v-icon>
+                                    <v-icon  >mdi-pause-circle </v-icon>
                                 </v-col>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-step-forward </v-icon>
+                                    <v-icon medium class="mr-5" >mdi-step-forward </v-icon>
                                 </v-col>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-step-backward </v-icon>
+                                    <v-icon medium class="mr-5" >mdi-step-backward </v-icon>
                                 </v-col>
                                 <v-col cols="3">
-                                    <v-icon medium class="mr-5" @click="detailSim()">mdi-stop-circle </v-icon>
+                                    <v-icon medium class="mr-5" >mdi-stop-circle </v-icon>
                                 </v-col>
                             </v-row>
                             
@@ -60,17 +66,11 @@
 
                         <v-col>
                             <div class="text-center" v-if="currentTime">
-                                <span v-if="days">
-                                    Days: {{ days }}<br/>
-                                </span>
-                                <span v-if="hours">
-                                    Hours: {{ hours | formatTime }} <br/>
-                                </span>
-                                    Minutes: {{ minutes | formatTime }} <br/>
-                                    Seconds: {{ seconds | formatTime }} <br/>
-                                <br/>
-                                <span v-if="days">{{ days }}</span
-                                >:<span v-if="hours">{{ hours | formatTime }}:</span><span>{{ minutes | formatTime }}:{{ seconds | formatTime }}</span><br />
+                                Días: {{ days }}<br/>
+                                Horas: {{ hours | formatTime }} <br/>
+                                Minutos: {{ minutes | formatTime }} <br/>
+                                Segundos: {{ seconds | formatTime }} <br/>
+                                <span>Día {{ days+1 }} - {{ hours | formatTime }}:{{ minutes | formatTime }}:{{ seconds | formatTime }}</span><br />
                             </div>
                             <div class="text-center" v-if="!currentTime">
                                 Time's Up!
@@ -132,6 +132,12 @@ Vue.component('comp-mapa-simulacion', {
     `
 });*/
 
+const DAY = 24*3600*1000; //1 dia en milisegundos
+const SECOND = 1000; //1 segundo
+const F_REFRESH = 2;
+const REFRESH = SECOND/F_REFRESH;
+const F_TIME = 1200; //Cantidad de tiempo por un segundo
+
 export default {
     name: 'Simulation',
     props: {
@@ -139,12 +145,7 @@ export default {
             type: String,
             required: true,
             default: "05/01/2021"
-        },
-        speed: {
-            type: Number,
-            default: 1000 //1 segundo
         }
-
     },
     components: {
         SimulationMap
@@ -213,7 +214,7 @@ export default {
             ],*/
 
             //TIMER
-            currentTime: 1 //Inicio del contador
+            currentTime: 1 //Inicio del contador (1 para que muestre componente)
         }
     },
 
@@ -333,13 +334,13 @@ export default {
                 const subList = res.data.slice(1, 3+1);
                 console.log('Sublista: '+subList);
                 //console.log('Tam sublista vuelos: '+res.data.size());
+                console.log('Horas primer path: '+ res.data[0].horaIni + ' - ' + res.data[0].horaFin);
                 //console.log('Primer path sub: '+res.data[0].idPlan);
                 //console.log('Tercer path sub: '+res.data[2].idPlan);
                 this.completePaths(res.data);
-                this.completeActualPaths(this.currentTime);
+                this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo
                 console.log('Se recibió el servicio de planes de vuelo');
                 this.pathsRecibidos = true;
-                console.log('Holi');
             }).catch(error =>{
                 Swal.fire({
                     title: 'Error',
@@ -379,24 +380,18 @@ export default {
         },*/
         //TIMER
         iniciaContador(){
-            setTimeout(this.contadorTiempo, this.speed); //Inicia 
+            setTimeout(this.contadorTiempo, SECOND*3); //Inicia 
         },
         contadorTiempo(){
             
-            this.currentTime+=this.speed;
+            this.currentTime+=REFRESH*F_TIME;
             /*if(this.currentTime == null)
                 this.currentTime = 0;
             else
                 this.currentTime += 1;*/
             if(this.currentTime >= 0){
-                if(this.currentTime % 7000 == 0){
-                    if((this.currentTime / 7000) % 2 == 0)
-                        this.completeActualPaths(-1);
-                    else
-                        this.completeActualPaths(0);
-                }
-
-                setTimeout(this.contadorTiempo, this.speed);
+                this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo
+                setTimeout(this.contadorTiempo, REFRESH);
             }else{
                 this.currentTime = null;
             }
