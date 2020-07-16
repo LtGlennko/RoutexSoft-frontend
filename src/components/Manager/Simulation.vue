@@ -11,36 +11,59 @@
                                 <v-col cols="2">
                                     <v-btn 
                                         icon
+                                        x-large
                                         @click="getDataSimulation"
-                                        medium class="mr-5"
+                                        color=#137073
+                                        width=100
                                     >
                                         <v-icon>mdi-play-circle</v-icon>
                                     </v-btn>
                                 </v-col>
                                 <v-col cols="2">
-                                    <v-icon  >mdi-pause-circle </v-icon>
+                                    <v-btn 
+                                        icon
+                                        x-large
+                                        color=#137073
+                                        width=100
+                                    >
+                                        <v-icon>mdi-play-pause</v-icon>
+                                    </v-btn>
                                 </v-col>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" >mdi-step-forward </v-icon>
+                                    <v-btn 
+                                        icon
+                                        x-large
+                                        color=#137073
+                                        width=100
+                                    >
+                                        <v-icon>mdi-step-forward</v-icon>
+                                    </v-btn>
                                 </v-col>
                                 <v-col cols="2">
-                                    <v-icon medium class="mr-5" >mdi-step-backward </v-icon>
+                                    <v-btn 
+                                        icon
+                                        x-large
+                                        color=#137073
+                                        width=100
+                                    >
+                                        <v-icon>mdi-step-backward</v-icon>
+                                    </v-btn>
                                 </v-col>
-                                <v-col cols="3">
-                                    <v-icon medium class="mr-5" >mdi-stop-circle </v-icon>
+                                <v-col cols="2">
+                                    <v-btn 
+                                        icon
+                                        x-large
+                                        color=#137073
+                                        width=100
+                                    >
+                                        <v-icon>mdi-stop-circle</v-icon>
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                             
                         </v-card-actions>
                         <v-row>
                             <v-col class="cosa-rara">
-                                <button 
-                                    @click="getDataSimulation"
-                                    class="btn btn-primary"
-                                >
-                                    Ejecutar simulación       
-                                </button>
-
                                 <!--El componente que quieres mostrar después recibir resultados en las llamadas de las apis-->
                                 <SimulationMap v-if="showComponent">
 
@@ -101,42 +124,12 @@ import * as userDA from '@/dataAccess/userDA.js'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import SimulationMap from '@/components/Manager/SimulationMap.vue'
 
-/*
-Vue.component('comp-mapa-simulacion', {
-    template: `
-        <gmap-map
-            :center="mapCenter"
-            :zoom="mapZoom"
-            ref="gmap"
-            style="width: 100%; height: 750px;">
-
-            <gmap-marker v-for="(marker) in markers"
-                :key="marker.key"
-                :position="marker.position"
-                :title="marker.title"
-                :options="customedMarkerOptions(JSON.parse(JSON.stringify(markerOptions)), marker)"
-                @click="showInfo(marker)"
-                ref="gmarkers"
-            >
-            </gmap-marker>
-
-            <gmap-polyline v-for="(path) in actualPaths"
-                :key="path.key"
-                :path.sync="path.route"
-                :options="customedPolylineOptions(JSON.parse(JSON.stringify(polylineOptions)), path)"
-                ref="gpolylines"
-            >
-            </gmap-polyline>
-            
-        </gmap-map>
-    `
-});*/
-
-const DAY = 24*3600*1000; //1 dia en milisegundos
 const SECOND = 1000; //1 segundo
-const F_REFRESH = 2;
+const DAY = 24*3600*SECOND; //1 dia en milisegundos
+const F_REFRESH = 1; //Número de refresheos por segundo
 const REFRESH = SECOND/F_REFRESH;
-const F_TIME = 1200; //Cantidad de tiempo por un segundo
+const F_TIME = 1200; //Cantidad de tiempo que transcurre por un segundo
+const LIMIT_D = 1;
 
 export default {
     name: 'Simulation',
@@ -157,15 +150,7 @@ export default {
                 lat: 36.60338869729776,
                 lng: -4.643738644531254
             },
-            */
-            /*colorLegend: [
-                {text: ' > 0 - 20', color: 'light-green'},
-                {text: ' >20 - 40', color: 'lime'},
-                {text: ' >40 - 60', color: 'yellow'},
-                {text: ' >60 - 80', color: 'orange'},
-                {text: ' >80 - 100', color: 'red'}
-            ],*/
-            /*markers: [
+            markers: [
                 { 
                     title: 'Hola',
                     position: {
@@ -199,20 +184,6 @@ export default {
             markersRecibidos: false,
             pathsRecibidos: false,
 
-            /*search: '',
-            loadingText: 'Cargando usuarios',
-            filterNoResultsText: 'No se encontraron usuarios que cumplan con los filtros',
-            noDataText: 'No hay usuarios para mostrar',
-            simulation: [
-                {
-                    id_simulation: '3',
-                    date_created: '25/06/20',
-                    time_created: '18:55',
-                    time_duration: '-',
-                    state:'En Proceso'
-                },
-            ],*/
-
             //TIMER
             currentTime: 1 //Inicio del contador (1 para que muestre componente)
         }
@@ -240,7 +211,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend']),
+        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend', 'simDay']),
         headers () {
             let items = []
             items.push({
@@ -329,16 +300,17 @@ export default {
         getPaths: function() {
             userDA.getAllPathsOfplans().then((res) =>{
                 console.log('Primer path: '+res.data[0].idPlan);
-                console.log('Datos: '+res.data);
+                //console.log('Datos: '+res.data);
                 //console.log('Tam lista vuelos: '+res.data.size());
-                const subList = res.data.slice(1, 3+1);
-                console.log('Sublista: '+subList);
+                const subList = res.data.slice(1, 25+1);
+                //console.log('Sublista: '+subList);
                 //console.log('Tam sublista vuelos: '+res.data.size());
                 console.log('Horas primer path: '+ res.data[0].horaIni + ' - ' + res.data[0].horaFin);
                 //console.log('Primer path sub: '+res.data[0].idPlan);
                 //console.log('Tercer path sub: '+res.data[2].idPlan);
+                //this.completePaths(subList);
                 this.completePaths(res.data);
-                this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo
+                this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000),this.days); //Transforma milisegundo a segundo
                 console.log('Se recibió el servicio de planes de vuelo');
                 this.pathsRecibidos = true;
             }).catch(error =>{
@@ -349,35 +321,6 @@ export default {
                 })
             });
         },
-        /*
-        customizeMarkers(){
-            console.log("Modificar opciones de markers");
-            for(let gmarker of (this.$refs.gmarkers)){
-                //console.log(gmarker);
-                var firstLetter = gmarker.title.toUpperCase()[0];
-                var expresion = /[A-Z0-9]/;
-                var arrayMatched = firstLetter.match(expresion);
-                //console.log("Coincidencias: "+arrayMatched);
-                if(arrayMatched != null){ //Solo personaliza valores alfanuméricos
-                    let customIcon = "http://maps.google.com/mapfiles/kml/paddle/"+firstLetter+"-lv.png";
-                    //console.log(customIcon);
-                    //console.log(gmarker.options.icon.url);
-                    gmarker.options.icon.url = customIcon;
-                }                
-            };
-        },*/
-        /*
-        customizePolylines(){
-            console.log("Modificar opciones de polylines");
-            for(let gpolyline of (this.$refs.gpolylines)){
-                //console.log(gpolyline.options);
-                gpolyline.options.strokeColor = this.colorLegend[4].color;
-                //Animación de vuelo
-                this.animateRouteIcon(gpolyline);
-                //Modificar color de línea según capacidad i ngresada 
-            };
-            //this.$refs.gpolylines[0].options.strokeColor = this.colorLegend[3].color;
-        },*/
         //TIMER
         iniciaContador(){
             setTimeout(this.contadorTiempo, SECOND*3); //Inicia 
@@ -385,15 +328,24 @@ export default {
         contadorTiempo(){
             
             this.currentTime+=REFRESH*F_TIME;
-            /*if(this.currentTime == null)
-                this.currentTime = 0;
-            else
-                this.currentTime += 1;*/
-            if(this.currentTime >= 0){
-                this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo
-                setTimeout(this.contadorTiempo, REFRESH);
-            }else{
-                this.currentTime = null;
+            if(this.days < LIMIT_D){
+                
+                //Actualiza día para la elección de la ocupación de este
+                if(this.simDay != this.days)
+                    this.simDay = this.days;
+
+                if(this.currentTime >= 0){
+                    this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000),this.days); //Transforma milisegundo a segundo
+                    setTimeout(this.contadorTiempo, REFRESH);
+                }else{
+                    this.currentTime = null;
+                }
+            }
+            else{
+                Swal.fire({
+                    html: '<p style="font-family:Roboto;">Simulación finalizada</p>'
+                })
+                this.$router.push('/Simulation');
             }
             //console.log(this.currentTime);
         },

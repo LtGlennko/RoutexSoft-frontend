@@ -11,7 +11,7 @@
             :position="marker.position"
             :title="marker.title"
             :options="customedMarkerOptions(markerOptions, marker)"
-            @click="showInfo(marker)"
+            @click="showInfoMarker(marker)"
             ref="gmarkers"
         >
         </gmap-marker>
@@ -20,6 +20,7 @@
             :key="path.key"
             :path.sync="path.route"
             :options="customedPolylineOptions(polylineOptions, path)"
+            @click="showInfoPolyline(path)"
             ref="gpolylines"
         >
         </gmap-polyline>
@@ -65,8 +66,8 @@ export default {
             },
             polylineOptions:{ //Opciones predeterminadas de cada linea
                 strokeColor: '#000000', //Color de la línea
-                strokeWeight: 0.5, //Ancho de borde de la línea
-                strokeOpacity: 0.1,
+                strokeWeight: 1, //Ancho de borde de la línea
+                strokeOpacity: 1,
                 icons:[
                     {
                         icon: {
@@ -97,13 +98,23 @@ export default {
     },
 
     computed: {
-        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend'])
+        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend', 'simDay'])
     },
     methods:{
         ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths']),
-        showInfo(marker){ //Mostrar información del aeropuerto
+        showInfoMarker(marker){ //Mostrar información del aeropuerto
             this.$refs.gmap.center = marker.position; //Centrar el mapa
             console.log("Show info of: " + marker.title);
+        },
+        showInfoPolyline(polyline){ //Mostrar información del plan de vuelo
+            const lines = ['Origen: ' + polyline.horaIni + ' - ' + polyline.origen,
+            'Destino: ' + polyline.horaFin + ' - ' + polyline.destino,
+            'Ocupación',
+            polyline.detallePorDia[this.simDay].nroPaquetesSim + '/' + polyline.capacidad];
+            let texto = lines.join('<br>');
+            Swal.fire({
+                html: '<p style="font-family:Roboto;">' + texto + '</p>'
+            });
         },
         customedMarkerOptions(baseOptionsM, marker){
             //console.log(baseOptionsM);
@@ -120,11 +131,30 @@ export default {
             }
             return options;
         },
+        hallaColor(porcentaje){
+            for (let i = 0; i < this.colorLegend.length; i++) {
+                let minValue = this.colorLegend[i].min;
+                let maxValue = this.colorLegend[i].max;
+                if(minValue < porcentaje && porcentaje <= maxValue)
+                    return i;
+            }
+            return -1;
+        },
         customedPolylineOptions(baseOptionsP, polyline){
             let options = JSON.parse(JSON.stringify(baseOptionsP)); //Se instancia una nueva lista de opciones
-            let rInd = Math.floor(Math.random() * 5);
-            //console.log(this.colorLegend);
-            options.strokeColor = this.colorLegend[3].color;
+            
+            //console.log('polyline detalle: ' + polyline.detallePorDia);
+            //console.log('dia ' + this.simDay);
+            let porcOcup = (polyline.detallePorDia[this.simDay].nroPaquetesSim)/(polyline.capacidad);
+
+            let indColor = this.hallaColor(porcOcup);
+            //console.log('indColor' + indColor);
+
+            if(indColor != -1)
+                options.strokeColor = this.colorLegend[indColor].color;
+            else{
+                console.log('No Color: ' + porcOcup);
+            }
             
             //Animación de vuelo
             //if(polyline.offset >= 0)
