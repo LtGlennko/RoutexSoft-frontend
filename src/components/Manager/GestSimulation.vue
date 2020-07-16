@@ -30,10 +30,9 @@
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
                                         :no-results-text="filterNoResultsText"
-                                        :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
-                                        <template v-slot:item.actions="{ items }">
+                                        <template v-slot:item.actions="{  }">
                                             <v-icon medium class="mr-5" @click="detailSim()" >
                                                 mdi-eye
                                             </v-icon>
@@ -54,6 +53,7 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import Swal from 'sweetalert2'
+import * as userDA from '@/dataAccess/userDA.js'
 import 'sweetalert2/src/sweetalert2.scss'
 export default {
     name: 'GestSimulation',
@@ -79,6 +79,8 @@ export default {
                     state:'En proceso'
                 }
             ],
+            showComponent: false,//Muestra al componente que se quiere cargar
+            showLoading: false,//Muestra el mensaje de Cargando...
         }
     },
     computed: {
@@ -128,10 +130,32 @@ export default {
         ...mapActions(['setActionSimulation']),
         GenerateSim(){
             Swal.fire({
-                html: '<p style="font-family:Roboto;">Se ha iniciado la ejecución de la simulación</p>'
-            })
-            this.$router.push('/Simulation');
-            this.setActionSimulation('Simulación > Generar Simulación');
+                onOpen: () => {
+                    Swal.showLoading();
+                },
+                title: 'Cargando',
+                html: '<p style="font-family:Roboto;">Generando paquetes simulados</p>',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            userDA.getAllPathsOfplans().then(res =>{ //Se cambiará al servicio de simulación
+                console.log('Se recibió el servicio que simula paquetes');
+                this.showLoading = false;
+                this.showComponent = true;
+                Swal.fire({
+                    html: '<p style="font-family:Roboto;">Se generaron los paquetes para la simulación</p>'
+                })
+                this.$router.push('/Simulation');
+                this.setActionSimulation('Simulación > Generar Simulación');
+                //return swal("Error al generar paquetes para la simulación");
+            }).catch(error => {
+                Swal.stopLoading();
+                swal({ 
+                    type: 'success',
+                })
+                //swal.close();
+            });
+            
         },
         detailSim(){
             this.$router.push('/Simulation');

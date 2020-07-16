@@ -134,11 +134,11 @@ const LIMIT_D = 1;
 export default {
     name: 'Simulation',
     props: {
-        deadline: {
+        /*deadline: {
             type: String,
             required: true,
             default: "05/01/2021"
-        }
+        }*/
     },
     components: {
         SimulationMap
@@ -323,7 +323,7 @@ export default {
         },
         //TIMER
         iniciaContador(){
-            setTimeout(this.contadorTiempo, SECOND*3); //Inicia 
+            setTimeout(this.contadorTiempo, SECOND*5); //Inicia después de 5 segundsos (aprox carga del componente)
         },
         contadorTiempo(){
             
