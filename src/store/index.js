@@ -25,14 +25,15 @@ export default new Vuex.Store({
     },
     mapZoom: 3,
     colorLegend: [ //Escala de colores
-      {text: ' > 0 - 20', color: 'light-green'},
-      {text: ' >20 - 40', color: 'lime'},
-      {text: ' >40 - 60', color: 'yellow'},
-      {text: ' >60 - 80', color: 'orange'},
-      {text: ' >80 - 100', color: 'red'}
+      {text: ' > 0 - 20', color: 'blue', min: 0, max: 0.2},
+      {text: ' >20 - 40', color: 'lime', min: 0.2, max: 0.4},
+      {text: ' >40 - 60', color: 'yellow', min: 0.4, max: 0.6},
+      {text: ' >60 - 80', color: 'orange', min: 0.6, max: 0.8},
+      {text: ' >80 - 100', color: 'red', min: 0.8, max: 1}
     ],
 
     //PARA TIMER
+    simDay: 0,
 
     originCountry:'',
     destinationCountry:'',
@@ -276,16 +277,29 @@ export default new Vuex.Store({
         };        
         line.push(des);
         
-        //console.log('Coord ' + line);
+        //Prueba con ocupación aleatoria
+        //console.log(path.capacidad);
+        let rInd = Math.floor(Math.random() * path.capacidad + 1);
+        //console.log('rInd ' + rInd);
+        let arrOcupacion = [];
+        for (let i = 0; i < 5; i++) {
+          arrOcupacion.push({
+            nroPaquetesSim : rInd
+          })          
+        }
+        //console.log('Arr Ocup ' + arrOcupacion)
 
         //Datos del plan de vuelo
         state.paths.push({
           idPlan : path.idPlan,
+          origen : path.origen.ciudad + ', ' + path.origen.pais,
+          destino : path.destino.ciudad + ', ' + path.destino.pais,
           horaIni : path.horaIni,
           horaFin : path.horaFin,
           capacidad : path.capacidad,
-          detallePorDia : path.detallePorDia,
-          route : line
+          route : line,
+          //detallePorDia : path.detallePorDia
+          detallePorDia : arrOcupacion
         });
         //console.log('Pushed');
       }
@@ -342,6 +356,7 @@ export default new Vuex.Store({
       //console.log(curTime);
       let nIn = 0;
       let nOut = 0;
+      let nOut2 = 0;
       if(curTime>=0){
         for (let path of state.paths){ //Filtra y escoge solo los paths que se van a mostrar
           //console.log('Path' + path);
@@ -361,33 +376,37 @@ export default new Vuex.Store({
           //console.log(hFin);
           //console.log(hIni + ' < ' + curTime + ' < ' + hFin);
           path.offset = -1;
-
-          //Si en la hora actual hay un vuelo y la hora de llegada es mayor a la de partida
-          if(hIni <= curTime && curTime <= hFin){
-            path.offset = ((curTime-hIni)/(hFin-hIni))*100;
-            nIn++;
-            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
-            state.actualPaths.push(path);
+          
+          if(path.detallePorDia[state.simDay].nroPaquetesSim > 0){ //Solo muestra si en el vuelo de ese día hay paquetes
+            //Si en la hora actual hay un vuelo y la hora de llegada es mayor a la de partida
+            if((hIni <= curTime) && (curTime <= hFin)){
+              //console.log(hIni + ' < ' + curTime + ' < ' + hFin);
+              //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
+              path.offset = ((curTime-hIni)/(hFin-hIni))*100;
+              nIn++;
+              //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
+              state.actualPaths.push(path);
+            }
+            //Si en la hora actual hay un vuelo y la hora de partida es mayor a la de llegada
+            else if((hIni > hFin) && (hIni <= curTime || curTime <= hFin)){
+              //Ajustes para calculo del porcentaje de camino
+              hFin += 24*3600;
+              let auxCurTime = curTime;
+              if(curTime <= hIni)
+                auxCurTime += 24*3600;
+              path.offset = ((auxCurTime-hIni)/(hFin-hIni))*100;
+              nIn++;
+              //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
+              state.actualPaths.push(path);
+            }
+            else
+              nOut++;
           }
-
-          //Si en la hora actual hay un vuelo y la hora de partida es mayor a la de llegada
-          else if(hIni > hFin && (hIni <= curTime || curTime <= hFin)){
-            //Ajustes para calculo del porcentaje de camino
-            hFin += 24*3600;
-            let auxCurTime = curTime;
-            if(curTime <= hIni)
-              auxCurTime += 24*3600;
-            path.offset = ((auxCurTime-hIni)/(hFin-hIni))*100;
-            nIn++;
-            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
-            state.actualPaths.push(path);
-          }
-
           else
-            nOut++;
+            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin + ' NroPaquetes: ' + path.detallePorDia[state.simDay].nroPaquetesSim);
+            nOut2++;
         }
-        //console.log('Nro In: ' + nIn);
-        //console.log('Nro Out: ' + nOut);
+        //console.log('In: ' + nIn + ' Out: ' + nOut + ' OutCapac: ' + nOut2);
       }
     }
 
