@@ -251,7 +251,7 @@ export default new Vuex.Store({
         state.lstLat.push(marker.latitud)
         state.lstLng.push(marker.longitud)
       }
-      console.log("Se completaron las listas de latitudes y longitudes: " + state.lstLat + state.lstLng);
+      //console.log("Se completaron las listas de latitudes y longitudes: " + state.lstLat + state.lstLng);
       //Centrar el mapa
       state.mapCenter.lat = (Math.min.apply(null, state.lstLat) + Math.max.apply(null, state.lstLat))/2;
       state.mapCenter.lng = (Math.min.apply(null, state.lstLng) + Math.max.apply(null, state.lstLng))/2;
@@ -279,7 +279,7 @@ export default new Vuex.Store({
         
         //Prueba con ocupación aleatoria
         //console.log(path.capacidad);
-        let rInd = Math.floor(Math.random() * path.capacidad + 1);
+        let rInd = Math.floor(Math.random() * (path.capacidad + 1));
         //console.log('rInd ' + rInd);
         let arrOcupacion = [];
         for (let i = 0; i < 5; i++) {

@@ -103,7 +103,7 @@ export default {
     methods:{
         ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths']),
         showInfoMarker(marker){ //Mostrar información del aeropuerto
-            this.$refs.gmap.center = marker.position; //Centrar el mapa
+            this.mapCenter = marker.position; //Centrar el mapa
             console.log("Show info of: " + marker.title);
         },
         showInfoPolyline(polyline){ //Mostrar información del plan de vuelo
