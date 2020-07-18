@@ -325,7 +325,7 @@ export default {
                 Swal.fire({
                     icon: 'success',
                     title: '<p style="font-family:Roboto;">Enhorabuena</p>',
-                    html: '<p style="font-family:Roboto;">Envío del paquete registrado, se le notificará cuando la ruta haya sido creada</p>'
+                    html: '<p style="font-family:Roboto;">Envío del paquete registrado, ruta en proceso de generación</p>'
                 })
             }).catch(error =>{
                 const API_RESULT = error.response.data

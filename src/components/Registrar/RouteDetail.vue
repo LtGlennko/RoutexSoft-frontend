@@ -57,10 +57,15 @@
                                                     
                                                     <div class="divItemTimeline">
                                                         <v-layout align-center>
-                                                            <span>{{ item.origen.ciudad}}, {{ item.origen.pais}}</span>
+                                                            <span>{{ item.flightPlan.origen.ciudad}}, {{ item.flightPlan.origen.pais}}</span>
                                                         </v-layout>
                                                     </div>
-                                                    <div class="divItemTimeline">
+                                                    <div class="divItemHoursTimeline">
+                                                        <v-layout align-center>
+                                                            <span>{{ item.flightPlan.horaIni}}</span>
+                                                        </v-layout>
+                                                    </div>
+                                                    <div class="divItemIconTimeline">
                                                         <v-layout align-center>
                                                             <span>
                                                                 <v-icon medium color="#003A3C" >
@@ -71,10 +76,15 @@
                                                     </div>
                                                     <div class="divItemTimeline">
                                                         <v-layout align-center>
-                                                            <span>{{ item.destino.ciudad}}, {{ item.destino.pais}}</span>
+                                                            <span>{{ item.flightPlan.destino.ciudad}}, {{ item.flightPlan.destino.pais}}</span>
                                                         </v-layout>
                                                     </div>
-                                                    
+                                                    <div class="divItemHoursTimeline">
+                                                        <v-layout align-center>
+                                                            <span>{{ item.flightPlan.horaFin}}</span>
+                                                        </v-layout>
+                                                    </div>
+
                                                 </v-layout>
                                             </v-card-title>
                                         </v-card>

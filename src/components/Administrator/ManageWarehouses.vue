@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Gestionar Aeropuertos
+                        Visualizar Aeropuertos
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -34,11 +34,11 @@
                                         :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
-                            <template v-slot:item.actions="{ item}" >
+                            <!--<template v-slot:item.actions="{ item}" >
                                 <v-icon medium class="mr-5" @click="editWarehouses(item)" >
                                     mdi-pencil
                                 </v-icon>
-                            </template>
+                            </template>-->
                         </v-data-table>
                     </v-card-text>
                 </v-col>
@@ -108,12 +108,12 @@ export default {
                 sortable: true,
                 value: 'capacidad'
             })
-            items.push({ 
+            /*items.push({ 
                 text: 'ACCIONES',
                 align: 'center',
                 sortable: false,
                 value: 'actions'
-            })
+            })*/
             
             return items
         },

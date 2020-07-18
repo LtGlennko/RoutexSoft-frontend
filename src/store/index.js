@@ -15,6 +15,7 @@ export default new Vuex.Store({
     complains:[],
     //PARA SIMULACIÓN GRÁFICA
     markers: [],
+    flightPaths:[],
     paths: [], //Todos los datos de vuelos
     actualPaths: [], //Los vuelos que se van a mostrar en pantalla
     lstLat: [],
@@ -408,8 +409,21 @@ export default new Vuex.Store({
         }
         //console.log('In: ' + nIn + ' Out: ' + nOut + ' OutCapac: ' + nOut2);
       }
-    }
+    },
 
+    fillPathsAdmi(state,flightPath_data){
+      state.flightPaths=[];
+      for (let flightPath of flightPath_data){
+        state.flightPaths.push({
+          idPlan : flightPath.idPlan,
+          capacidad : flightPath.capacidad,
+          destino : flightPath.destino,
+          origen : flightPath.origen,
+          horaFin : flightPath.horaFin,
+          horaIni : flightPath.horaIni
+        });
+      }
+    },
 
   },
   actions: {
@@ -487,6 +501,10 @@ export default new Vuex.Store({
     },
     completeActualPaths(context,curTime){
       context.commit('fillActualPaths',curTime);
+    },
+
+    completeFlightPaths(context,flightPath_data){
+      context.commit('fillPathsAdmi',flightPath_data);
     },
 
     async obtainCountry (context) {

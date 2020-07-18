@@ -60,10 +60,10 @@
             user1: "Administrador",
             item: 0,
             optionAdministrator: [
-                { text: 'Gestionar Usuarios', icon: 'mdi-account-circle', to:'/ManageUsers'},
-                { text: 'Gestionar Aeropuertos', icon: 'mdi-store', to:'/ManageWarehouses' },
-                { text: 'Gestionar Planes de Vuelo', icon: 'mdi-airplane', to:'/ManageFlightPlans' },
-                { text: 'Configurar Parametros', icon: 'mdi-brightness-7', to:'/ConfigureParameters' },
+                { text: 'Usuarios', icon: 'mdi-account-circle', to:'/ManageUsers'},
+                { text: 'Aeropuertos', icon: 'mdi-store', to:'/ManageWarehouses' },
+                { text: 'Planes de Vuelo', icon: 'mdi-airplane', to:'/ManageFlightPlans' },
+                /*{ text: 'Configurar Parametros', icon: 'mdi-brightness-7', to:'/ConfigureParameters' },*/
             ],
             optionRegistrar: [
                 { text: 'Crear Envios', icon: 'mdi-send', to:'/CreateSending'},

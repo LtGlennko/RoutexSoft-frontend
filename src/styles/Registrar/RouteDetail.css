@@ -33,6 +33,14 @@
     width: 250px;
 }
 
+.divItemIconTimeline{
+    width: 150px;
+}
+
+.divItemHoursTimeline{
+    width: 150px;
+}
+
 .origenTitle{
     text-align: center;
     font-size: 16px;
