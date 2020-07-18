@@ -66,10 +66,10 @@
                             </template>
 
                             <template v-slot:item.actions="{ item}" >
-                                <v-icon v-if="item.estadoEnvio==='REGISTRADO' || item.estadoEnvio==='RUTA ASIGNADA' || item.estadoEnvio==='CONFIRMADO'" medium class="mr-5" @click="editItem(item)" >
+                                <v-icon v-if="item.estadoEnvio==='REGISTRADO' || item.estadoEnvio==='RUTA ASIGNADA'" medium class="mr-5" @click="editItem(item)" >
                                     mdi-pencil
                                 </v-icon>
-                                <v-icon v-if="item.estadoEnvio==='RUTA ASIGNADA' || item.estadoEnvio==='EN RUTA' || item.estadoEnvio==='RECOGIDO' || item.estadoEnvio==='CONFIRMADO'" medium class="mr-5" @click="viewRute(item)" >
+                                <v-icon v-if="item.estadoEnvio==='RUTA ASIGNADA' || item.estadoEnvio==='EN RUTA' || item.estadoEnvio==='RECOGIDO'" medium class="mr-5" @click="viewRute(item)" >
                                     mdi-call-split
                                 </v-icon>
                             </template>

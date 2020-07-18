@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Gestionar Planes de Vuelo
+                        Visualizar Planes de Vuelo
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -19,13 +19,13 @@
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=createFightPlan()>Añadir Plan de vuelo</v-btn>
+                                    <!--<br><v-btn class="mb-2" @click=createFightPlan()>Añadir Plan de vuelo</v-btn>-->
                                 </v-col>
                             </v-row>
                         </v-card-subtitle>
                     
                         <v-data-table   :headers="headers"
-                                        :items="flightPlans"
+                                        :items="flightPaths"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
@@ -33,14 +33,14 @@
                                         :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
-                            <template v-slot:item.actions="{ items }">
+                            <!--<template v-slot:item.actions="{ items }">
                                 <v-icon medium class="mr-5" @click="editFightPlan()" >
                                     mdi-pencil
                                 </v-icon>
                                 <v-icon medium class="iconTable" v-on:click="deleteFightPlan()">
                                     mdi-delete
                                 </v-icon>
-                            </template>
+                            </template>-->
                         </v-data-table>
                     </v-card-text>
                 </v-col>
@@ -58,6 +58,7 @@
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import {mapState, mapActions} from 'vuex'
+import * as userDA from '@/dataAccess/userDA.js'
 
 export default {
     name: 'ManageFlightPlans',
@@ -68,86 +69,71 @@ export default {
             loadingText: 'Cargando planes de vuelo',
             filterNoResultsText: 'No se encontraron planes de vuelo que cumplan con los filtros',
             noDataText: 'No hay planes de vuelo para mostrar',
-            flightPlans: [
-                {
-                    originAirport: 'SKBO',
-                    destinationAirport: 'SEQM',
-                    departureTime: '11:34',
-                    arrivalTime: '15:42',
-                },
-                {
-                    originAirport: 'SBBR',
-                    destinationAirport: 'SPIM',
-                    departureTime: '3:48',
-                    arrivalTime: '7:51',
-                },
-                {
-                    originAirport: 'SCEL',
-                    destinationAirport: 'SABE',
-                    departureTime: '3:48',
-                    arrivalTime: '7:51',
-                },
-                {
-                    originAirport: 'LATI',
-                    destinationAirport: 'LOWW',
-                    departureTime: '3:48',
-                    arrivalTime: '7:51',
-                },
-                {
-                    originAirport: 'LBSF',
-                    destinationAirport: 'LZIB',
-                    departureTime: '3:48',
-                    arrivalTime: '7:51',
-                },
-                {
-                    originAirport: 'EFHK',
-                    destinationAirport: 'LHBP',
-                    departureTime: '3:48',
-                    arrivalTime: '7:51',
-                }
-            ],
+            
         }
     },
     computed: {
+        ...mapState (['flightPaths']),
+
         headers () {
             let items = []
             items.push({
                 text: 'AEROPUERTO ORIGEN',
                 align: 'center',
                 sortable: true,
-                value: 'originAirport',
+                value: 'origen.codAero',
             })
             items.push({
                 text: 'AEROPUERTO DESTINO',
                 align: 'center',
                 sortable: true,
-                value: 'destinationAirport',
+                value: 'destino.codAero',
             })
             items.push({
                 text: 'HORA PARTIDA',
                 align: 'center',
                 sortable: true,
-                value: 'departureTime',
+                value: 'horaIni',
             })
             items.push({
                 text: 'HORA LLEGADA',
                 align: 'center',
                 sortable: true,
-                value: 'arrivalTime'
+                value: 'horaFin'
             })
-            items.push({ 
+            /*items.push({ 
                 text: 'ACCIONES',
                 align: 'center',
                 sortable: false,
                 value: 'actions'
-            })
+            })*/
             
             return items
         },
         
-    },    
+    },
+    
+    mounted(){
+        this.getPaths();
+    },
+
     methods:{
-        ...mapActions(['setActionFightPlans']),
+        ...mapActions(['setActionFightPlans','completeFlightPaths']),
+
+         getPaths: function() {
+            userDA.getAllPathsOfplans().then((res) =>{
+                this.completeFlightPaths(res.data);
+                console.log('Se recibió el servicio de planes de vuelo');
+                console.log(res.data)
+            }).catch(error =>{
+                Swal.fire({
+                    title: '<p style="font-family:Roboto;">Error</p>',
+                    icon: 'error',
+                    html: '<p style="font-family:Roboto;">Error obteniendo los planes de vuelo</p>'
+                })
+            });
+        },
+
         createFightPlan(){
             this.$router.push('/CreateFlightPlan');
             this.setActionFightPlans(false);

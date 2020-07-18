@@ -59,6 +59,16 @@
     width: 250px;
 }
 
+
+.divItemIconTimeline{
+    width: 150px;
+}
+
+.divItemHoursTimeline{
+    width: 150px;
+}
+
+
 .footerClient{
     padding: 0px;
 }

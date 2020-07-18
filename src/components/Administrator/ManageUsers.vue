@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Gestionar Usuarios
+                        Visualizar Usuarios
                     </v-card-title>
                     <v-card-text>
                         <v-card-subtitle>
@@ -19,7 +19,7 @@
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="6">
-                                    <br><v-btn class="mb-2" @click=createUser()>Añadir Usuario</v-btn>
+                                    <!--<br><v-btn class="mb-2" @click=createUser()>Añadir Usuario</v-btn>-->
                                 </v-col>
                             </v-row>
                         </v-card-subtitle>
@@ -33,14 +33,14 @@
                                         :footer-props="footerProps"
                                         :search="search"
                                         class="elevation-1">
-                            <template v-slot:item.actions="{ items }">
+                            <!--<template v-slot:item.actions="{ items }">
                                 <v-icon medium class="mr-5" @click="editUser()" >
                                     mdi-pencil
                                 </v-icon>
                                 <v-icon medium class="iconTable" v-on:click="deleteUser()">
                                     mdi-delete
                                 </v-icon>
-                            </template>
+                            </template>-->
                         </v-data-table>
                     </v-card-text>
                 </v-col>
@@ -128,12 +128,12 @@ export default {
                 sortable: true,
                 value: 'userName'
             })
-            items.push({ 
+            /*items.push({ 
                 text: 'ACCIONES',
                 align: 'center',
                 sortable: false,
                 value: 'actions'
-            })
+            })*/
             
             return items
         },
