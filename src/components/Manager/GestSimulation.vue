@@ -84,6 +84,7 @@ export default {
         }
     },
     computed: {
+        ...mapState(['simDay']),
         headers () {
             let items = []
             items.push({
@@ -129,6 +130,16 @@ export default {
     methods:{
         ...mapActions(['setActionSimulation']),
         GenerateSim(){
+            //Calcula día actual (respecto al 11 de junio)
+            var fechaInicio = new Date('2020-06-11').getTime(); //Día 1
+            var fechaFin = new Date().getTime(); //Hoy
+
+            var diff = fechaFin - fechaInicio + 1000*60*60*24; //Le aumento un día
+
+            console.log(diff/(1000*60*60*24)); //Nro de días del que se realizará simulación
+
+            this.simDay = diff/(1000*60*60*24);
+            
             Swal.fire({
                 onOpen: () => {
                     Swal.showLoading();
@@ -138,18 +149,35 @@ export default {
                 allowEscapeKey: false,
                 allowOutsideClick: false,
             });
-            userDA.getAllPathsOfplans().then(res =>{ //Se cambiará al servicio de simulación
-                console.log('Se recibió el servicio que simula paquetes');
-                this.showLoading = false;
-                this.showComponent = true;
-                Swal.fire({
-                    html: '<p style="font-family:Roboto;">Se generaron los paquetes para la simulación</p>'
-                })
-                this.$router.push('/Simulation');
-                this.setActionSimulation('Simulación > Generar Simulación');
-                //return swal("Error al generar paquetes para la simulación");
+            userDA.loadSimulation(this.simDay-2).then(res =>{ //Se cambiará al servicio de simulación
+                console.log('Se realizó la simulación de anteayer');
+                userDA.loadSimulation(this.simDay-1).then(res =>{
+                    console.log('Se realizó la simulación de ayer');
+                    userDA.loadSimulation(this.simDay).then(res =>{
+                        console.log('Se realizó la simulación de hoy');
+                        this.showLoading = false;
+                        this.showComponent = true;
+                        Swal.fire({
+                            html: '<p style="font-family:Roboto;">Se asignaron las rutas correspondientes a los días anteriores más próximos</p>'
+                        })
+                        this.$router.push('/Simulation');
+                        this.setActionSimulation('Simulación > Generar Simulación');
+                    }).catch(error => {
+                        //Swal.stopLoading();
+                        swal({ 
+                            type: 'success',
+                        })
+                        //swal.close();
+                    });
+                }).catch(error => {
+                    //Swal.stopLoading();
+                    swal({ 
+                        type: 'success',
+                    })
+                    //swal.close();
+                });
             }).catch(error => {
-                Swal.stopLoading();
+                //Swal.stopLoading();
                 swal({ 
                     type: 'success',
                 })

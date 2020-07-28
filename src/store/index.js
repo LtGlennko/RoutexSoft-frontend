@@ -267,40 +267,40 @@ export default new Vuex.Store({
 
         //Generar ruta para el polyline
         let ori = {
-          lat : path.origen.latitud,
-          lng : path.origen.longitud
+          lat : path.flightPlan.origen.latitud,
+          lng : path.flightPlan.longitud
         };
         line.push(ori);
 
         let des = {
-          lat : path.destino.latitud,
-          lng : path.destino.longitud
+          lat : path.flightPlan.destino.latitud,
+          lng : path.flightPlan.destino.longitud
         };        
         line.push(des);
         
         //Prueba con ocupación aleatoria
         //console.log(path.capacidad);
-        let rInd = Math.floor(Math.random() * (path.capacidad + 1));
+        let rInd = Math.floor(Math.random() * (path.flightPlan.capacidad + 1));
         //console.log('rInd ' + rInd);
-        let arrOcupacion = [];
+        /*let arrOcupacion = []; //Aplicable cuando se tenía una arreglo de ocupaciones
         for (let i = 0; i < 5; i++) {
           arrOcupacion.push({
             nroPaquetesSim : rInd
           })          
-        }
+        }*/
         //console.log('Arr Ocup ' + arrOcupacion)
 
         //Datos del plan de vuelo
         state.paths.push({
-          idPlan : path.idPlan,
-          origen : path.origen.ciudad + ', ' + path.origen.pais,
-          destino : path.destino.ciudad + ', ' + path.destino.pais,
-          horaIni : path.horaIni,
-          horaFin : path.horaFin,
-          capacidad : path.capacidad,
+          idPlan : path.flightPlan.idPlan,
+          origen : path.flightPlan.origen.ciudad + ', ' + path.flightPlan.origen.pais,
+          destino : path.flightPlan.destino.ciudad + ', ' + path.flightPlan.destino.pais,
+          horaIni : path.flightPlan.horaIni,
+          horaFin : path.flightPlan.horaFin,
+          capacidad : path.flightPlan.capacidad,
           route : line,
           //detallePorDia : path.detallePorDia
-          detallePorDia : arrOcupacion
+          detallePorDia : rInd //Ocupación en el día actual
         });
         //console.log('Pushed');
       }
@@ -378,7 +378,7 @@ export default new Vuex.Store({
           //console.log(hIni + ' < ' + curTime + ' < ' + hFin);
           path.offset = -1;
           
-          if(path.detallePorDia[state.simDay].nroPaquetesSim > 0){ //Solo muestra si en el vuelo de ese día hay paquetes
+          if(path.detallePorDia > 0){ //Solo muestra si en el vuelo de ese día hay paquetes
             //Si en la hora actual hay un vuelo y la hora de llegada es mayor a la de partida
             if((hIni <= curTime) && (curTime <= hFin)){
               //console.log(hIni + ' < ' + curTime + ' < ' + hFin);
@@ -404,7 +404,7 @@ export default new Vuex.Store({
               nOut++;
           }
           else
-            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin + ' NroPaquetes: ' + path.detallePorDia[state.simDay].nroPaquetesSim);
+            //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin + ' NroPaquetes: ' + path.detallePorDia.nroPaquetesSim);
             nOut2++;
         }
         //console.log('In: ' + nIn + ' Out: ' + nOut + ' OutCapac: ' + nOut2);

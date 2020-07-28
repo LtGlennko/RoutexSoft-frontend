@@ -110,7 +110,7 @@ export default {
             const lines = ['Origen: ' + polyline.horaIni + ' - ' + polyline.origen,
             'Destino: ' + polyline.horaFin + ' - ' + polyline.destino,
             'Ocupación',
-            polyline.detallePorDia[this.simDay].nroPaquetesSim + '/' + polyline.capacidad];
+            polyline.detallePorDia + '/' + polyline.capacidad];
             let texto = lines.join('<br>');
             Swal.fire({
                 html: '<p style="font-family:Roboto;">' + texto + '</p>'
@@ -145,7 +145,7 @@ export default {
             
             //console.log('polyline detalle: ' + polyline.detallePorDia);
             //console.log('dia ' + this.simDay);
-            let porcOcup = (polyline.detallePorDia[this.simDay].nroPaquetesSim)/(polyline.capacidad);
+            let porcOcup = (polyline.detallePorDia)/(polyline.capacidad);
 
             let indColor = this.hallaColor(porcOcup);
             //console.log('indColor' + indColor);

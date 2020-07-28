@@ -83,7 +83,10 @@ export function createClient(docIden,nombres,apellidos,correo,nroTelef){
 
 export function getAllPathsOfplans(){
     let url = process.env.VUE_APP_API_URL + 'api/flightPlan/';
-    return axios.get(url);
+    return axios.get(url,{ params:{
+            simDay
+        }
+    });
 }
 
 export function editPackage(packageId,destinationId){
@@ -114,4 +117,12 @@ export function createComplain(codigoPaquete,nombresReclamante,apellidosReclaman
 export function getAllComplains(){
     let url = process.env.VUE_APP_API_URL + 'api/complaint';  /*Switch to real url*/
     return axios.get(url);
+}
+
+export function loadSimulation(){
+    let url = process.env.VUE_APP_API_URL + 'api/loadSimulation/';
+    return axios.get(url,{ params:{
+            simDay
+        }
+    });
 }
