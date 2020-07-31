@@ -101,16 +101,22 @@ export default {
         ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend', 'simDay'])
     },
     methods:{
-        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths']),
+        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths', 'setValueMapCenter']),
         showInfoMarker(marker){ //Mostrar información del aeropuerto
-            this.mapCenter = marker.position; //Centrar el mapa
+            this.setValueMapCenter(marker.position); //Centrar el mapa
             console.log("Show info of: " + marker.title);
         },
         showInfoPolyline(polyline){ //Mostrar información del plan de vuelo
-            const lines = ['Origen: ' + polyline.horaIni + ' - ' + polyline.origen,
-            'Destino: ' + polyline.horaFin + ' - ' + polyline.destino,
+            var oriHusoStr = ''+polyline.oriHuso;
+            if(polyline.oriHuso >= 0)
+                oriHusoStr = '+'+oriHusoStr;
+            var desHusoStr = ''+polyline.desHuso;
+            if(polyline.desHuso >= 0)
+                desHusoStr = '+'+desHusoStr;
+            const lines = ['Origen: ' + polyline.horaIni + ' (UTC' + oriHusoStr + ') - ' + polyline.origen,
+            'Destino: ' + polyline.horaFin + ' (UTC' + desHusoStr + ') - ' + polyline.destino,
             'Ocupación',
-            polyline.detallePorDia[this.simDay].nroPaquetesSim + '/' + polyline.capacidad];
+            polyline.detallePorDia + '/' + polyline.capacidad];
             let texto = lines.join('<br>');
             Swal.fire({
                 html: '<p style="font-family:Roboto;">' + texto + '</p>'
@@ -145,7 +151,7 @@ export default {
             
             //console.log('polyline detalle: ' + polyline.detallePorDia);
             //console.log('dia ' + this.simDay);
-            let porcOcup = (polyline.detallePorDia[this.simDay].nroPaquetesSim)/(polyline.capacidad);
+            let porcOcup = (polyline.detallePorDia)/(polyline.capacidad);
 
             let indColor = this.hallaColor(porcOcup);
             //console.log('indColor' + indColor);
