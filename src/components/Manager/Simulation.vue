@@ -125,11 +125,13 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 import SimulationMap from '@/components/Manager/SimulationMap.vue'
 
 const SECOND = 1000; //1 segundo
-const DAY = 24*3600*SECOND; //1 dia en milisegundos
+const MINUTE = 60*SECOND; //1 minuto en    milisegundos
+const HOUR = 60*MINUTE; //1 hora en milisegundos
+const DAY = 24*HOUR; //1 dia en milisegundos
 const F_REFRESH = 1; //Número de refresheos por segundo
 const REFRESH = SECOND/F_REFRESH;
-const F_TIME = 1200; //Cantidad de tiempo que transcurre por un segundo
-const LIMIT_D = 140;
+const F_TIME = 4; //Cantidad de tiempo que transcurre por un segundo
+const LIMIT_D = 95; //Día límite de simulación 
 
 export default {
     name: 'Simulation',
@@ -183,6 +185,8 @@ export default {
 
             markersRecibidos: false,
             pathsRecibidos: false,
+
+            obtuvoPathsSgtes: false, //Ayuda a la obtención previa de rutas del día sgte
 
             //TIMER
             currentTime: 1 //Inicio del contador (1 para que muestre componente)
@@ -273,7 +277,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths']),
+        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths', 'completeDailyPaths']),
 
         GenerateSim(){
             Swal.fire({
@@ -299,9 +303,9 @@ export default {
         },
         getFirstsPaths: function() {
             this.currentTime = 1000*60*60*24*this.simDay; //Actualiza el tiempo transcurrido
-
+            console.log('SimDay: '+this.days);
             userDA.getAllPathsOfplans(this.days).then((res) =>{
-                console.log('Primer path: '+res.data[0].flightPlan.idPlan);
+                console.log('Primer path: '+res.data[0].flightPlan.idPlan+' '+res.data[0].dia+' '+res.data[0].nroPaquetesSim);
                 //console.log('Datos: '+res.data);
                 //console.log('Tam lista vuelos: '+res.data.size());
                 const subList = res.data.slice(1, 25+1);
@@ -312,6 +316,7 @@ export default {
                 //console.log('Tercer path sub: '+res.data[2].idPlan);
                 //this.completePaths(subList);
                 this.completePaths(res.data);
+                this.completeDailyPaths();
                 this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000),this.days); //Transforma milisegundo a segundo
                 console.log('Se recibió el servicio de planes de vuelo');
                 this.pathsRecibidos = true;
@@ -324,32 +329,25 @@ export default {
             });
         },
 
-        getPaths: function() {
-            userDA.loadSimulation(this.days+1).then(() =>{
-                userDA.getAllPathsOfplans(this.days+1).then((res) =>{
-                    console.log('Primer path: '+res.data[0].flightPlan.idPlan);
-                    //console.log('Datos: '+res.data);
-                    //console.log('Tam lista vuelos: '+res.data.size());
-                    const subList = res.data.slice(1, 25+1);
-                    //console.log('Sublista: '+subList);
-                    //console.log('Tam sublista vuelos: '+res.data.size());
-                    console.log('Horas primer path: '+ res.data[0].flightPlan.horaIni + ' - ' + res.data[0].flightPlan.horaFin);
-                    //console.log('Primer path sub: '+res.data[0].idPlan);
-                    //console.log('Tercer path sub: '+res.data[2].idPlan);
-                    //this.completePaths(subList);
-                    this.completePaths(res.data);
-                }).catch(error =>{
-                    Swal.fire({
-                        title: 'Error',
-                        icon: 'error',
-                        text: 'Error obteniendo los planes de vuelo del día siguiente'
-                    })
-                });
+        getPaths: function(diaPaths) {     
+            console.log('SimDay: '+diaPaths);       
+            userDA.getAllPathsOfplans(diaPaths).then((res) =>{
+                console.log('Primer path: '+res.data[0].flightPlan.idPlan);
+                //console.log('Datos: '+res.data);
+                //console.log('Tam lista vuelos: '+res.data.size());
+                const subList = res.data.slice(1, 25+1);
+                //console.log('Sublista: '+subList);
+                //console.log('Tam sublista vuelos: '+res.data.size());
+                console.log('Horas primer path: '+ res.data[0].flightPlan.horaIni + ' - ' + res.data[0].flightPlan.horaFin);
+                //console.log('Primer path sub: '+res.data[0].idPlan);
+                //console.log('Tercer path sub: '+res.data[2].idPlan);
+                //this.completePaths(subList);
+                this.completePaths(res.data);
             }).catch(error =>{
                 Swal.fire({
                     title: 'Error',
                     icon: 'error',
-                    text: 'Error calculando las rutas para el día siguiente'
+                    text: 'Error obteniendo los planes de vuelo del día siguiente'
                 })
             });
         },
@@ -359,15 +357,19 @@ export default {
             setTimeout(this.contadorTiempo, SECOND*5); //Inicia después de 5 segundsos (aprox carga del componente)
         },
         contadorTiempo(){
-            
             this.currentTime+=REFRESH*F_TIME;
             if(this.days < LIMIT_D){
 
                 if(this.currentTime >= 0){
-                    if(this.currentTime % DAY == 0){ //Calcula rutas del día siguiente
-                        this.getPaths();
+                    if(this.obtuvoPathsSgtes == false && this.currentTime % DAY >= 23*HOUR){ //0btiene rutas del día siguiente 1 hora antes (porque demora)
+                        this.getPaths(this.days+1);
+                        this.obtuvoPathsSgtes = true;
                     }
-                    this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo
+                    if(this.currentTime % DAY == 0){ //Asigna rutas del día siguiente
+                        this.completeDailyPaths();
+                        this.obtuvoPathsSgtes = false;
+                    }
+                    this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo             
                     setTimeout(this.contadorTiempo, REFRESH);
                 }else{
                     this.currentTime = null;

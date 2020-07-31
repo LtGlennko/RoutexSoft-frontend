@@ -16,8 +16,9 @@ export default new Vuex.Store({
     //PARA SIMULACIÓN GRÁFICA
     markers: [],
     flightPaths:[],
-    paths: [], //Todos los datos de vuelos
+    paths: [], //Todos los datos de vuelos de un día cargados al inicio
     actualPaths: [], //Los vuelos que se van a mostrar en pantalla
+    dailyPaths: [], //Los vuelos de un día actual
     lstLat: [],
     lstLng: [],
     mapCenter :{
@@ -262,13 +263,13 @@ export default new Vuex.Store({
       state.paths=[];
       for (let path of paths_data){
         let line=[];
-        //console.log('Path: '+path);
+        //console.log('Path: '+JSON.stringify(path));
         //console.log('LatOri: '+path.origen.latitud);
 
         //Generar ruta para el polyline
         let ori = {
           lat : path.flightPlan.origen.latitud,
-          lng : path.flightPlan.longitud
+          lng : path.flightPlan.origen.longitud
         };
         line.push(ori);
 
@@ -280,7 +281,7 @@ export default new Vuex.Store({
         
         //Prueba con ocupación aleatoria
         //console.log(path.capacidad);
-        let rInd = Math.floor(Math.random() * (path.flightPlan.capacidad + 1));
+        //let rInd = Math.floor(Math.random() * (path.flightPlan.capacidad + 1));
         //console.log('rInd ' + rInd);
         /*let arrOcupacion = []; //Aplicable cuando se tenía una arreglo de ocupaciones
         for (let i = 0; i < 5; i++) {
@@ -294,14 +295,21 @@ export default new Vuex.Store({
         state.paths.push({
           idPlan : path.flightPlan.idPlan,
           origen : path.flightPlan.origen.ciudad + ', ' + path.flightPlan.origen.pais,
+          oriHuso: path.flightPlan.origen.huso,
           destino : path.flightPlan.destino.ciudad + ', ' + path.flightPlan.destino.pais,
+          desHuso: path.flightPlan.destino.huso,
           horaIni : path.flightPlan.horaIni,
           horaFin : path.flightPlan.horaFin,
           capacidad : path.flightPlan.capacidad,
           route : line,
-          //detallePorDia : path.detallePorDia
-          detallePorDia : rInd //Ocupación en el día actual
+          detallePorDia : path.nroPaquetesSim
+          //detallePorDia : rInd //Ocupación en el día actual
         });
+        //if(path.nroPaquetesSim > 0){
+          //console.log('Paquetes: '+path.nroPaquetesSim);
+          //console.log('Horas vuelo: '+path.flightPlan.horaIni+' - '+path.flightPlan.horaFin);
+        //}
+        
         //console.log('Pushed');
       }
       //console.log('Paths ' + state.paths);
@@ -359,17 +367,17 @@ export default new Vuex.Store({
       let nOut = 0;
       let nOut2 = 0;
       if(curTime>=0){
-        for (let path of state.paths){ //Filtra y escoge solo los paths que se van a mostrar
+        for (let path of state.dailyPaths){ //Filtra y escoge solo los paths que se van a mostrar
           //console.log('Path' + path);
           //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
           //Calculo de hora inicio
           let h, m, s;
-          h = parseInt(path.horaIni.substring(0,2));
+          h = (parseInt(path.horaIni.substring(0,2))-path.oriHuso)%24;
           m = parseInt(path.horaIni.substring(3,5));
           s = parseInt(path.horaIni.substring(6,8));
           let hIni = h*3600 + m*60 + s;
           //Calculo de hora fin
-          h = parseInt(path.horaFin.substring(0,2));
+          h = (parseInt(path.horaFin.substring(0,2))-path.desHuso)%24;
           m = parseInt(path.horaFin.substring(3,5));
           s = parseInt(path.horaFin.substring(6,8));
           let hFin = h*3600 + m*60 + s;
@@ -386,7 +394,8 @@ export default new Vuex.Store({
               path.offset = ((curTime-hIni)/(hFin-hIni))*100;
               nIn++;
               //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
-              state.actualPaths.push(path);
+              if(path.offset >=0 && path.offset<=100)
+                state.actualPaths.push(path);
             }
             //Si en la hora actual hay un vuelo y la hora de partida es mayor a la de llegada
             else if((hIni > hFin) && (hIni <= curTime || curTime <= hFin)){
@@ -398,7 +407,8 @@ export default new Vuex.Store({
               path.offset = ((auxCurTime-hIni)/(hFin-hIni))*100;
               nIn++;
               //console.log('Horas path: '+ path.horaIni + ' - ' + path.horaFin);
-              state.actualPaths.push(path);
+              if(path.offset >=0 && path.offset<=100)
+                state.actualPaths.push(path);
             }
             else
               nOut++;
@@ -409,6 +419,11 @@ export default new Vuex.Store({
         }
         //console.log('In: ' + nIn + ' Out: ' + nOut + ' OutCapac: ' + nOut2);
       }
+    },
+
+    fillDailyPaths(state){
+      state.dailyPaths = [];
+      state.dailyPaths = state.paths.slice(); //Saca un duplicado
     },
 
     fillPathsAdmi(state,flightPath_data){
@@ -423,6 +438,14 @@ export default new Vuex.Store({
           horaIni : flightPath.horaIni
         });
       }
+    },
+
+    setValSimDay (state, edit) {
+      state.simDay = edit;
+    },
+
+    setValMapCenter (state, edit) {
+      state.mapCenter = edit;
     },
 
   },
@@ -491,6 +514,13 @@ export default new Vuex.Store({
       context.commit('setComplainInd',index);
     },
 
+    setValueSimDay(context,index){
+      context.commit('setValSimDay',index);
+    },
+
+    setValueMapCenter(context,index){
+      context.commit('setValMapCenter',index);
+    },
 
     //PARA COMPLETAR EL MAPA DE SIMULACIÓN
     completeMarkers(context,markers_data){
@@ -501,6 +531,9 @@ export default new Vuex.Store({
     },
     completeActualPaths(context,curTime){
       context.commit('fillActualPaths',curTime);
+    },
+    completeDailyPaths(context){
+      context.commit('fillDailyPaths');
     },
 
     completeFlightPaths(context,flightPath_data){
