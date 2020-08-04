@@ -136,7 +136,7 @@ export default {
 
             var diff = fechaFin - fechaInicio; //Le aumento un día
 
-            var diaSimulacion = Math.trunc(diff/(1000*60*60*24))-2;
+            var diaSimulacion = Math.trunc(diff/(1000*60*60*24))-1;
 
             console.log(diaSimulacion); //Nro de días del que se realizará simulación
 
