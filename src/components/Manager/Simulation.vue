@@ -89,6 +89,7 @@
 
                         <v-col>
                             <div class="text-center" v-if="currentTime">
+                                Tomando de referencia 06/11/2020 como Día 1<br/>
                                 Días: {{ days }}<br/>
                                 Horas: {{ hours | formatTime }} <br/>
                                 Minutos: {{ minutes | formatTime }} <br/>
@@ -130,7 +131,7 @@ const HOUR = 60*MINUTE; //1 hora en milisegundos
 const DAY = 24*HOUR; //1 dia en milisegundos
 const F_REFRESH = 1; //Número de refresheos por segundo
 const REFRESH = SECOND/F_REFRESH;
-const F_TIME = 300; //Cantidad de tiempo que transcurre por un segundo
+const F_TIME = 120; //Cantidad de tiempo que transcurre por un segundo
 const LIMIT_D = 95; //Día límite de simulación 
 
 export default {
@@ -189,7 +190,9 @@ export default {
             obtuvoPathsSgtes: false, //Ayuda a la obtención previa de rutas del día sgte
 
             //TIMER
-            currentTime: 1 //Inicio del contador (1 para que muestre componente)
+            currentTime: 1, //Inicio del contador (1 para que muestre componente)
+
+            timeColapse: 0
         }
     },
 
@@ -215,7 +218,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend', 'simDay']),
+        ...mapState(['markers', 'actualPaths', 'mapCenter', 'mapZoom', 'colorLegend', 'simDay', 'fechaColapso']),
         headers () {
             let items = []
             items.push({
@@ -277,7 +280,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths', 'completeDailyPaths']),
+        ...mapActions(['completeMarkers', 'completePaths', 'completeActualPaths', 'completeDailyPaths', 'setFechaColapso']),
 
         GenerateSim(){
             Swal.fire({
@@ -302,8 +305,11 @@ export default {
             });
         },
         getFirstsPaths: function() {
+            //console.log('Antes de fecha colapso');
+            this.getFechaColapso(); //Verifica si está registrado colapso
+            //console.log('Después de fecha colapso');
             this.currentTime = 1000*60*60*24*this.simDay; //Actualiza el tiempo transcurrido
-            console.log('SimDay: '+this.days);
+            console.log('SimDay: '+this.days + ' o ' + this.currentTime);
             userDA.getAllPathsOfplans(this.days).then((res) =>{
                 console.log('Primer path: '+res.data[0].flightPlan.idPlan+' '+res.data[0].dia+' '+res.data[0].nroPaquetesSim);
                 //console.log('Datos: '+res.data);
@@ -325,6 +331,21 @@ export default {
                     title: 'Error',
                     icon: 'error',
                     text: 'Error obteniendo los planes de vuelo del primer día'
+                })
+            });
+        },
+
+        getFechaColapso: function() {
+            userDA.getSimulation().then((res) =>{
+                console.log(res.data);
+                console.log('Se imprimio rpta');
+                this.setFechaColapso(res.data);
+                console.log('Se recibió la fecha de simulacion');
+            }).catch(error =>{
+                Swal.fire({
+                    title: '<p style="font-family:Roboto;">Error</p>',
+                    icon: 'error',
+                    html: '<p style="font-family:Roboto;">Error obteniendo la fecha de simulacion</p>'
                 })
             });
         },
@@ -359,20 +380,46 @@ export default {
         contadorTiempo(){
             this.currentTime+=REFRESH*F_TIME;
             if(this.days < LIMIT_D){
-
-                if(this.currentTime >= 0){
-                    if(this.obtuvoPathsSgtes == false && this.currentTime % DAY >= 23*HOUR){ //0btiene rutas del día siguiente 1 hora antes (porque demora)
-                        this.getPaths(this.days+1);
-                        this.obtuvoPathsSgtes = true;
+                if(this.fechaColapso == 0){
+                    this.getFechaColapso();
+                }
+                if(this.fechaColapso != 0){ //Recibio fecha
+                    this.timeColapse = this.fechaColapso;
+                }
+                if(this.timeColapse == 0 || this.timeColapse > this.currentTime){
+                    if(this.currentTime >= 0){
+                        if(this.obtuvoPathsSgtes == false && this.currentTime % DAY >= 23*HOUR){ //0btiene rutas del día siguiente 1 hora antes (porque demora)
+                            this.getPaths(this.days+1);
+                            this.obtuvoPathsSgtes = true;
+                        }
+                        if(this.currentTime % DAY == 0){ //Asigna rutas del día siguiente
+                            this.completeDailyPaths();
+                            this.obtuvoPathsSgtes = false;
+                        }
+                        this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo             
+                        setTimeout(this.contadorTiempo, REFRESH);
+                    }else{
+                        this.currentTime = null;
                     }
-                    if(this.currentTime % DAY == 0){ //Asigna rutas del día siguiente
-                        this.completeDailyPaths();
-                        this.obtuvoPathsSgtes = false;
-                    }
-                    this.completeActualPaths(Math.trunc((this.currentTime % DAY)/1000)); //Transforma milisegundo a segundo             
-                    setTimeout(this.contadorTiempo, REFRESH);
-                }else{
-                    this.currentTime = null;
+                }
+                else{
+                    var h = Math.floor((this.fechaColapso / (1000 * 60 * 60)) % 24) + '';
+                    var m = Math.floor((this.fechaColapso / 1000 / 60) % 60) + '';
+                    var s = Math.floor((this.fechaColapso / 1000) % 60) + '';
+                    var hS = h;
+                    if(hS<10)
+                        hS = '0'+hS;
+                    var mS = m;
+                    if(mS<10)
+                        mS = '0'+mS;
+                    var sS = s;
+                    if(sS<10)
+                        sS = '0'+sS;
+                    var colapsoStr = hS + ':' + mS + ':' + sS
+                    Swal.fire({
+                        
+                        html: '<p style="font-family:Roboto;">Se produjo un colapso<br/> Día '+ this.days + ' a las ' + colapsoStr +'</p>'
+                    })
                 }
             }
             else{

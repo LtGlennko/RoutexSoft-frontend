@@ -36,6 +36,7 @@ export default new Vuex.Store({
 
     //PARA TIMER
     simDay: 0,
+    fechaColapso: 0,
 
     originCountry:'',
     destinationCountry:'',
@@ -296,7 +297,7 @@ export default new Vuex.Store({
         //console.log('Arr Ocup ' + arrOcupacion)
 
         
-        console.log('nroPaquetesSim: '+path.nroPaquetesSim);
+        //console.log('nroPaquetesSim: '+path.nroPaquetesSim);
 
         //Datos del plan de vuelo
         state.paths.push({
@@ -455,6 +456,43 @@ export default new Vuex.Store({
       state.mapCenter = edit;
     },
 
+    setFecColapso (state, edit){
+      //console.log('mmm');
+      //console.log(edit);
+      //console.log('Long: '+edit.lenght);
+      //if(edit.lenght>0){
+        console.log(edit[0].fechaColapso);
+        var fechahoraStr = edit[0].fechaColapso;
+        var fechaStr = fechahoraStr.substring(0,10);
+        var horaStr = fechahoraStr.substring(11,21);
+        console.log(horaStr);
+        var h = parseInt(horaStr.substring(0,2));
+        var m = parseInt(horaStr.substring(3,5));
+        var s = parseInt(horaStr.substring(6,8));
+        console.log(h+' '+m+' '+s);
+        
+        var dd = fechaStr.substring(0,2);
+        var mm = fechaStr.substring(3,5);
+        var aaaa = fechaStr.substring(6,10);
+        var fechaStr = aaaa+'-'+mm+'-'+dd;
+
+        console.log(fechaStr);
+        
+        var fechaLng = (new Date(fechaStr)).getTime(); //5 Horas adelantado
+        
+        //console.log('Antes: ' + fechaLng);
+        fechaLng += 1000*(h*3600 + m*60 + s); //Agrega hora
+        //console.log('Antes2: ' + fechaLng);
+        fechaLng -= 1000*60*60*5; //Resta 5 horas
+        //console.log('Dsps: ' + fechaLng);
+        var fechaInicio = new Date('2020-06-11').getTime(); //Día 1
+        fechaLng -= fechaInicio; //Resta dia 1 horas
+        console.log('Colapso: ' + fechaLng);
+
+        state.fechaColapso = fechaLng;
+      //}
+    },
+
 
     fillCapacityAirport(state,airportCapacity_data){
       state.airportsCapacity=[];
@@ -563,6 +601,11 @@ export default new Vuex.Store({
 
     setValueSimDay(context,index){
       context.commit('setValSimDay',index);
+    },
+
+    setFechaColapso(context,index){
+      //console.log('Index: '+index);
+      context.commit('setFecColapso',index);
     },
 
     setValueMapCenter(context,index){
