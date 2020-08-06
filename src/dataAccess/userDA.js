@@ -44,6 +44,11 @@ export function getAllPackages(){
     return axios.get(url);
 }
 
+export function getSimulation(){
+    let url = process.env.VUE_APP_API_URL + 'api/Simulation';
+    //console.log(url);
+    return axios.get(url);
+}
 
 export function editAirport(idAeropuerto,capacidad){
     let url = process.env.VUE_APP_API_URL + 'api/airport/' + idAeropuerto
