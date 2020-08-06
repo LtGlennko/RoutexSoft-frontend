@@ -128,3 +128,12 @@ export function getAllComplains(){
         }
     });
 }*/
+
+
+export function getCapacityAirport(type){
+    let url = process.env.VUE_APP_API_URL + 'api/ReportAirport';
+    return axios.get(url,{ params:{
+            type
+        }
+    });
+}
