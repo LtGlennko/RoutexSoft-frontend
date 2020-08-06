@@ -106,7 +106,7 @@ export default {
 				this.setActionEmail(this.email)
 			}
 			else if(this.email=="jdueñas"){
-				this.$router.push('/GestHistory')
+				this.$router.push('/GestSimulation')
 				console.log('Se pasara el rol3')
 				this.setActionRole("Gerente")
 				this.setActionEmail(this.email)

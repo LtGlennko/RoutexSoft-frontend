@@ -4,9 +4,10 @@
             <v-row>
                 <v-col>
                     <v-card-title class="titleCard">
-                        Reporte de Estado de capacidad de almacenes y aviones
+                        Reporte de Estado de capacidad de almacenes
                     </v-card-title>
                     <v-row>
+                        <!--
                         <v-col cols="12">
                             <v-card-subtitle class="subtitleCard">
                                 América
@@ -37,9 +38,10 @@
                                 <apexchart height="241"  type="donut" :options="optionsDonutEuropa" :series="europaDonut"></apexchart>
                             </v-card>
                         </v-col>
+                        -->
                         <v-col cols="12">
                             <v-card-subtitle class="subtitleCard">
-                                Lista de capacidades de almacenes y aviones de América y Europa
+                                Lista de capacidades de almacenes de América y Europa
                             </v-card-subtitle>
                             <v-card-text>
                                 <v-card-subtitle>
@@ -56,7 +58,7 @@
                                     </v-row>
                                 </v-card-subtitle>
                                 <v-data-table   :headers="headers"
-                                        :items="item"
+                                        :items="airportsCapacity"
                                         :items-per-page="5"
                                         :loading-text="loadingText"
                                         :no-data-text="noDataText"
@@ -101,97 +103,61 @@ export default {
         europaSerieBar:{},
         europaDonut:{},
 
+        typeGlobal:0,
+        typeEurope:1,
+        typeAmerica:2,
+
         footerProps:{'items-per-page-Text':'Filas por página:  ', 'items-per-page-options': [5,10,15]},
         search: '',
         loadingText: 'Cargando capacidades de aeropuertos y aviones',
         filterNoResultsText: 'No se encontraron capacidades de aeropuertos y aviones que cumplan con los filtros',
         noDataText: 'No hay capacidades de aeropuertos y aviones para mostrar',
-        item: [
-            {
-                originAirport: 'AMÉRICA',
-                destinationAirport: 'BRASIL',
-                departureTime: 'BRASILIA',
-                arrivalTime: '230',
-                capacity:'50',
-            },
-            {
-                originAirport: 'EUROPA',
-                destinationAirport: 'ITALIA',
-                departureTime: 'ROMA',
-                arrivalTime: '8',
-                capacity:'75',
-            },
-            {
-                originAirport: 'AMÉRICA',
-                destinationAirport: 'BOLIVIA',
-                departureTime: 'LA PAZ',
-                arrivalTime: '150',
-                capacity:'121',
-            },
-            {
-                originAirport: 'EUROPA',
-                destinationAirport: 'FRANCIA',
-                departureTime: 'PARIS',
-                arrivalTime: '235',
-                capacity:'195',
-            },
-            {
-                originAirport: 'EUROPA',
-                destinationAirport: 'ESPAÑA',
-                departureTime: 'MADRID',
-                arrivalTime: '125',
-                capacity:'47',
-            },
-            {
-                originAirport: 'AMÉRICA',
-                destinationAirport: 'CHILE',
-                departureTime: 'SANTIAGO DE CHILE',
-                arrivalTime: '85',
-                capacity:'100',
-            }
-        ],
+        
       }
       
     },    
     mounted(){
+        this.getCapacityAirport();
+        this.getCapacityAirportEurope();
+        this.getCapacityAirportAmerica();
     },
     created(){
         this.fillDataCollapseCapacity();
         console.log('Se creo', this.series);
     },
     computed :{
-         ...mapState (['editClient']),
+         ...mapState (['editClient', 'airportsCapacity','airportsCapacityEurope','airportsCapacityAmerica']),
         headers () {
             let items = []
             items.push({
                 text: 'CONTINENTE',
                 align: 'center',
                 sortable: true,
-                value: 'originAirport',
+                value: 'airport.continente',
             })
             items.push({
                 text: 'PAIS',
                 align: 'center',
                 sortable: true,
-                value: 'destinationAirport',
+                value: 'airport.pais',
             })
             items.push({
                 text: 'CIUDAD',
                 align: 'center',
                 sortable: true,
-                value: 'departureTime',
+                value: 'airport.ciudad',
             })
             items.push({
-                text: 'CAPACIDAD ALMACÉN',
+                text: 'CÓDIGO AÉREO',
                 align: 'center',
                 sortable: true,
-                value: 'arrivalTime'
+                value: 'airport.codAero'
             })
             items.push({ 
-                text: 'CAPACIDAD AVIÓN',
+                text: 'CAPACIDAD ALMACÉN',
                 align: 'center',
                 sortable: false,
-                value: 'capacity'
+                value: 'nroPaquetesSim'
             })
             
             return items
@@ -199,6 +165,7 @@ export default {
          
     },
     methods:{
+        ...mapActions(['completeAirportCapacity','completeAirportCapacityEurope','completeAirportCapacityAmerica']),
         fillDataCollapseCapacity(){
             //BAR CHART AMERICA
             this.optionsBarAmerica= {
@@ -233,7 +200,7 @@ export default {
                     },
                 },
                 xaxis: {
-                    categories: ['Perú', 'Ecuador', 'Brasil', 'Bolivia','Venezuela'],
+                    categories: [this.airportsCapacityAmerica.airport.pais],
                      labels: {
                         style: {
                             fontFamily:  'Roboto',
@@ -370,7 +337,52 @@ export default {
             //SERIE DONUT EUROPA
             this.europaDonut =[30, 40, 45, 50, 49]
            
-        }
+        },
+
+        getCapacityAirport: function() {
+            userDA.getCapacityAirport(this.typeGlobal).then((res) =>{
+                this.completeAirportCapacity(res.data);
+                console.log('Tipo de reporte: ',this.typeGlobal );
+                console.log('Se recibió el servicio de reporte');
+                console.log(res.data);
+            }).catch(error =>{
+                Swal.fire({
+                    title: '<p style="font-family:Roboto;">Error</p>',
+                    icon: 'error',
+                    html: '<p style="font-family:Roboto;">Error obteniendo los reportes</p>'
+                })
+            });
+        },
+
+        getCapacityAirportEurope: function() {
+            userDA.getCapacityAirport(this.typeEurope).then((res) =>{
+                this.completeAirportCapacityEurope(res.data);
+                console.log('Tipo de reporte: ',this.typeEurope );
+                console.log('Se recibió el servicio de reporte');
+                console.log(res.data);
+            }).catch(error =>{
+                Swal.fire({
+                    title: '<p style="font-family:Roboto;">Error</p>',
+                    icon: 'error',
+                    html: '<p style="font-family:Roboto;">Error obteniendo los reportes</p>'
+                })
+            });
+        },
+
+        getCapacityAirportAmerica: function() {
+            userDA.getCapacityAirport(this.typeAmerica).then((res) =>{
+                this.completeAirportCapacityAmerica(res.data);
+                console.log('Tipo de reporte: ',this.typeAmerica );
+                console.log('Se recibió el servicio de reporte');
+                console.log(res.data);
+            }).catch(error =>{
+                Swal.fire({
+                    title: '<p style="font-family:Roboto;">Error</p>',
+                    icon: 'error',
+                    html: '<p style="font-family:Roboto;">Error obteniendo los reportes</p>'
+                })
+            });
+        },
         
     }    
 }

@@ -27,11 +27,11 @@ export default new Vuex.Store({
     },
     mapZoom: 3,
     colorLegend: [ //Escala de colores
-      {text: ' > 0 - 20', color: 'blue', min: 0, max: 0.2},
-      {text: ' >20 - 40', color: 'lime', min: 0.2, max: 0.4},
-      {text: ' >40 - 60', color: 'yellow', min: 0.4, max: 0.6},
-      {text: ' >60 - 80', color: 'orange', min: 0.6, max: 0.8},
-      {text: ' >80 - 100', color: 'red', min: 0.8, max: 1}
+      {text: ' > 0 - 10', color: 'blue', min: 0, max: 0.1},
+      {text: ' >10 - 25', color: 'lime', min: 0.1, max: 0.25},
+      {text: ' >25 - 45', color: 'yellow', min: 0.25, max: 0.45},
+      {text: ' >45 - 70', color: 'orange', min: 0.45, max: 0.7},
+      {text: ' >70 - 100', color: 'red', min: 0.7, max: 1}
     ],
 
     //PARA TIMER
@@ -106,6 +106,10 @@ export default new Vuex.Store({
       fechaRegistro : '',
       paquete : {},
     },
+
+    airportsCapacity:[],
+    airportsCapacityEurope:[],
+    airportsCapacityAmerica:[],
 
   },
   mutations: {
@@ -291,6 +295,9 @@ export default new Vuex.Store({
         }*/
         //console.log('Arr Ocup ' + arrOcupacion)
 
+        
+        console.log('nroPaquetesSim: '+path.nroPaquetesSim);
+
         //Datos del plan de vuelo
         state.paths.push({
           idPlan : path.flightPlan.idPlan,
@@ -448,6 +455,46 @@ export default new Vuex.Store({
       state.mapCenter = edit;
     },
 
+
+    fillCapacityAirport(state,airportCapacity_data){
+      state.airportsCapacity=[];
+      for (let airportCapacity of airportCapacity_data){
+        state.airportsCapacity.push({
+          idAeropuertoxDiaxHora : airportCapacity.idAeropuertoxDiaxHora,
+          airport : airportCapacity.airport,
+          fechaHoraIni : airportCapacity.fechaHoraIni,
+          nroPaquetes : airportCapacity.nroPaquetes,
+          nroPaquetesSim : airportCapacity.nroPaquetesSim
+        });
+      }
+    },
+
+    fillCapacityAirportEurope(state,airportCapacityEurope_data){
+      state.airportsCapacityEurope=[];
+      for (let airportCapacity of airportCapacityEurope_data){
+        state.airportsCapacityEurope.push({
+          idAeropuertoxDiaxHora : airportCapacity.idAeropuertoxDiaxHora,
+          airport : airportCapacity.airport,
+          fechaHoraIni : airportCapacity.fechaHoraIni,
+          nroPaquetes : airportCapacity.nroPaquetes,
+          nroPaquetesSim : airportCapacity.nroPaquetesSim
+        });
+      }
+    },
+
+    fillCapacityAirportAmerica(state,airportCapacityAmerica_data){
+      state.airportsCapacityAmerica=[];
+      for (let airportCapacity of airportCapacityAmerica_data){
+        state.airportsCapacityAmerica.push({
+          idAeropuertoxDiaxHora : airportCapacity.idAeropuertoxDiaxHora,
+          airport : airportCapacity.airport,
+          fechaHoraIni : airportCapacity.fechaHoraIni,
+          nroPaquetes : airportCapacity.nroPaquetes,
+          nroPaquetesSim : airportCapacity.nroPaquetesSim
+        });
+      }
+    },
+
   },
   actions: {
     setActionUser(context,edit){
@@ -538,6 +585,18 @@ export default new Vuex.Store({
 
     completeFlightPaths(context,flightPath_data){
       context.commit('fillPathsAdmi',flightPath_data);
+    },
+
+    completeAirportCapacity(context,airportCapacity_data){
+      context.commit('fillCapacityAirport',airportCapacity_data);
+    },
+
+    completeAirportCapacityEurope(context,airportCapacityEurope_data){
+      context.commit('fillCapacityAirportEurope',airportCapacityEurope_data);
+    },
+
+    completeAirportCapacityAmerica(context,airportCapacityAmerica_data){
+      context.commit('fillCapacityAirportAmerica',airportCapacityAmerica_data);
     },
 
     async obtainCountry (context) {

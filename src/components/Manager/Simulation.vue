@@ -130,7 +130,7 @@ const HOUR = 60*MINUTE; //1 hora en milisegundos
 const DAY = 24*HOUR; //1 dia en milisegundos
 const F_REFRESH = 1; //Número de refresheos por segundo
 const REFRESH = SECOND/F_REFRESH;
-const F_TIME = 4; //Cantidad de tiempo que transcurre por un segundo
+const F_TIME = 300; //Cantidad de tiempo que transcurre por un segundo
 const LIMIT_D = 95; //Día límite de simulación 
 
 export default {
